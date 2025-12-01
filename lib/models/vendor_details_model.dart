@@ -1,0 +1,100 @@
+import 'package:equatable/equatable.dart';
+
+class VendorsDetailsModel extends Equatable {
+  final int? id;
+  final String? vendorName;
+  final String? address;
+  final String? createdAt;
+  final String? deletedAt;
+  final String? email;
+  final String? gstNumber;
+  final String? phoneNumber;
+  final double? totalBalanceVendor;
+  final String? updatedAt;
+
+  const VendorsDetailsModel({
+    this.id,
+    this.vendorName,
+    this.address,
+    this.createdAt,
+    this.deletedAt,
+    this.email,
+    this.gstNumber,
+    this.phoneNumber,
+    this.totalBalanceVendor,
+    this.updatedAt,
+  });
+
+  @override
+  List<Object?> get props => [
+        id,
+        vendorName,
+        address,
+        createdAt,
+        deletedAt,
+        email,
+        gstNumber,
+        phoneNumber,
+        totalBalanceVendor,
+        updatedAt,
+      ];
+
+  VendorsDetailsModel copyWith({
+    int? id,
+    String? vendorName,
+    String? address,
+    String? createdAt,
+    String? deletedAt,
+    String? email,
+    String? gstNumber,
+    String? phoneNumber,
+    double? totalBalanceVendor,
+    String? updatedAt,
+  }) {
+    return VendorsDetailsModel(
+      id: id ?? this.id,
+      vendorName: vendorName ?? this.vendorName,
+      address: address ?? this.address,
+      createdAt: createdAt ?? this.createdAt,
+      deletedAt: deletedAt ?? this.deletedAt,
+      email: email ?? this.email,
+      gstNumber: gstNumber ?? this.gstNumber,
+      phoneNumber: phoneNumber ?? this.phoneNumber,
+      totalBalanceVendor: totalBalanceVendor ?? this.totalBalanceVendor,
+      updatedAt: updatedAt ?? this.updatedAt,
+    );
+  }
+
+  factory VendorsDetailsModel.fromJson(Map<String, dynamic> json) {
+    return VendorsDetailsModel(
+      id: json['id'],
+      vendorName: json['vendor_name'] ?? "",
+      address: json['address'] ?? "",
+      createdAt: json['created_at'] ?? "",
+      deletedAt: json['deleted_at'] ?? "",
+      email: json['email'] ?? "",
+      gstNumber: json['gst_number'] ?? "",
+      phoneNumber: json['phone_number'] ?? "",
+      totalBalanceVendor: json['total_balance_vendor'] != null
+          ? double.tryParse(json['total_balance_vendor'].toString())
+          : 0.0,
+      updatedAt: json['updated_at'] ?? "",
+    );
+  }
+  static const empty = VendorsDetailsModel(
+    id: 0,
+    vendorName: "",
+    address: "",
+    createdAt: "",
+    deletedAt: "",
+    email: "",
+    gstNumber: "",
+    phoneNumber: "",
+    totalBalanceVendor: 0,
+    updatedAt: "",
+  );
+
+  @override
+  String toString() =>
+      '{id: $id, vendorName: $vendorName, address: $address, createdAt: $createdAt, deletedAt: $deletedAt, email: $email, gstNumber: $gstNumber, phoneNumber: $phoneNumber, totalBalanceVendor: $totalBalanceVendor, updatedAt: $updatedAt}';
+}
