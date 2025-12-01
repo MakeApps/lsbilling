@@ -27,14 +27,11 @@ part 'job_sheet_details_state.dart';
 class JobSheetDetailsBloc
     extends Bloc<JobSheetDetailsEvent, JobSheetDetailsState> {
   JobSheetDetailsBloc() : super(JobSheetDetailsState()) {
-    //jobsheet  call event
-    on<UpdateCustomerComplaints>(_onUpdateCustomerComplaints);
-
     //invoce event call
     on<GenerateInvoiceEvent>(_onGenerateInvoice);
     on<GetInvoiceByInvoice>(_onGetInvoiceByInvoice);
     on<DownloadInvoicePdf>(_onDownloadInvoicebyInvoicePdf);
-    on<GetInvoiceByJobSheet>(_onGetInvoiceByJobSheet);
+
     on<GetInvoicePayment>(_onGetInvoicePayment);
     on<AddUpdatePayment>(_onAddUpdatePayment);
 
@@ -61,20 +58,6 @@ class JobSheetDetailsBloc
 
     //gst update
     on<UpdateGstBillEvent>(_onUpdateGstBillEvent, transformer: restartable());
-  }
-
-  _onUpdateCustomerComplaints(UpdateCustomerComplaints event,
-      Emitter<JobSheetDetailsState> emit) async {
-    dynamic jwtToken = await app_instance.storage.read(key: "token");
-    Map<String, Object> jsonData = {
-      "token": jwtToken.toString(),
-      "formData": jsonEncode(event.formData)
-    };
-
-    await app_instance.jobSheetRepository.updateCustomerComplaints(
-      jsonData,
-      event.id.toString(),
-    );
   }
 
   //--------------------------Estimate events-------------------------------
@@ -249,6 +232,7 @@ class JobSheetDetailsBloc
       );
     }
   }
+
   //--------------------------Search Api call event-------------------------------
   _onUpdateCustomer(
       UpdateCustomer event, Emitter<JobSheetDetailsState> emit) async {
@@ -515,40 +499,6 @@ class JobSheetDetailsBloc
     } else {
       emit(
         state.copyWith(status: JobSheetDetailsStatus.failed),
-      );
-    }
-  }
-
-  //create new invoice using jobsheet id
-  Future<void> _onGetInvoiceByJobSheet(
-      GetInvoiceByJobSheet event, Emitter<JobSheetDetailsState> emit) async {
-    emit(
-      state.copyWith(
-        status: JobSheetDetailsStatus.invoiceLoadingJobcard,
-      ),
-    );
-    dynamic jwtToken = await app_instance.storage.read(key: "token");
-
-    Map<String, Object> jsonData = {
-      "token": jwtToken.toString(),
-      "id": event.id.toString(),
-      "filter": 'jobsheet',
-    };
-
-    final result =
-        await app_instance.jobSheetRepository.getInvoiceByJobsheet(jsonData);
-    if (result != null && result.isNotEmpty) {
-      return emit(
-        state.copyWith(
-          status: JobSheetDetailsStatus.invoiceSuccessJobcard,
-          invoiceModel: InvoiceModel.fromJson(result),
-        ),
-      );
-    } else {
-      emit(
-        state.copyWith(
-          status: JobSheetDetailsStatus.invoicefailedJobcard,
-        ),
       );
     }
   }

@@ -9,9 +9,11 @@ import 'package:local_shout_billing/config/app_icons.dart';
 import 'package:local_shout_billing/config/colors.dart';
 import 'package:local_shout_billing/discard_dailog_component/discard_from_page/discard_create_estimate_form.dart';
 import 'package:local_shout_billing/main_layout.dart';
+import 'package:local_shout_billing/models/customer_model.dart';
 import 'package:local_shout_billing/modules/estimate/estimate_listing.dart';
 import 'package:local_shout_billing/modules/job_sheet/bloc/job_sheet_details_bloc/job_sheet_details_bloc.dart';
 import 'package:local_shout_billing/config.dart' as app_instance;
+import 'package:local_shout_billing/modules/job_sheet/bloc/search_bloc/search_bloc_bloc.dart';
 import '../job_sheet/bloc/job_sheet_bloc/job_sheet_bloc.dart';
 import 'estimate_page.dart';
 
@@ -57,19 +59,34 @@ class _CreateEstimateFormState extends State<CreateEstimateForm> {
   }
 
   void _validateEmail(String value) {
+    // Empty case
+    if (value.isEmpty) {
+      setState(() {
+        emailErrorMessage = null;
+      });
+      return;
+    }
+
+    // '@@' case
     if (value.contains('@@')) {
       setState(() {
         emailErrorMessage = 'Please enter a valid email';
       });
-    } else if (!RegExp(r"^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$")
-        .hasMatch(value)) {
-      setState(() {});
-      emailErrorMessage = 'Invalid email format';
-    } else {
-      setState(() {
-        emailErrorMessage = null;
-      });
+      return;
     }
+
+    // Regex invalid
+    if (!RegExp(r"^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$")
+        .hasMatch(value)) {
+      setState(() {
+        emailErrorMessage = 'Invalid email format';
+      });
+      return;
+    }
+
+    setState(() {
+      emailErrorMessage = null;
+    });
   }
 
   @override
@@ -221,71 +238,168 @@ class _CreateEstimateFormState extends State<CreateEstimateForm> {
                             if (fullNameController.text.isNotEmpty &&
                                 phoneNumberController.text.isNotEmpty) {
                               // GST confirmation dialog
-                              final bool? gstConfirmed = await showDialog<bool>(
+                              final gstConfirmed = await showDialog(
                                 context: context,
                                 barrierDismissible: false,
-                                builder: (context) => AlertDialog(
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(10),
-                                  ),
-                                  contentPadding: const EdgeInsets.all(20),
-                                  title: Stack(
-                                    children: [
-                                      Column(
-                                        mainAxisSize: MainAxisSize.min,
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        children: [
-                                          const SizedBox(height: 4),
-                                          const Text(
-                                            "Do you want to activate GST?",
-                                            textAlign: TextAlign.start,
-                                            style: TextStyle(
-                                              fontSize: 15,
-                                              fontWeight: FontWeight.w600,
-                                              color: blackColor,
+                                builder: (context) {
+                                  String billingType =
+                                      "gst"; // DEFAULT: GST Invoice
+                                  String gstOption =
+                                      "CGST/SGST"; // DEFAULT: CGST/SGST
+
+                                  return StatefulBuilder(
+                                    builder: (context, setState) {
+                                      return AlertDialog(
+                                        backgroundColor: whiteColor,
+                                        shape: RoundedRectangleBorder(
+                                          borderRadius:
+                                              BorderRadius.circular(8),
+                                        ),
+                                        title: Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceBetween,
+                                          children: [
+                                            const Text(
+                                              "Billing Type",
+                                              style: TextStyle(
+                                                  fontSize: 15,
+                                                  color: blackColor,
+                                                  fontWeight: FontWeight.w600),
                                             ),
-                                          ),
-                                          const SizedBox(height: 10),
-                                          const Text(
-                                            "Select \"Yes\" to enable GST billing feature",
-                                            textAlign: TextAlign.start,
-                                            style: TextStyle(
-                                              fontSize: 13,
-                                              color: blackColor,
+                                            InkWell(
+                                              onTap: () =>
+                                                  Navigator.pop(context),
+                                              child: const Icon(Icons.close,
+                                                  size: 20, color: blackColor),
+                                            )
+                                          ],
+                                        ),
+                                        content: Column(
+                                          mainAxisSize: MainAxisSize.min,
+                                          children: [
+                                            /// Regular Invoice
+                                            RadioListTile(
+                                              title: const Text(
+                                                "Regular Invoice",
+                                                style: TextStyle(
+                                                    fontSize: 13,
+                                                    color: blackColor,
+                                                    fontWeight:
+                                                        FontWeight.w500),
+                                              ),
+                                              value: "regular",
+                                              groupValue: billingType,
+                                              onChanged: (value) => setState(
+                                                  () => billingType =
+                                                      value.toString()),
                                             ),
-                                          ),
-                                          const SizedBox(height: 24),
-                                          Row(
-                                            children: [
-                                              Expanded(
-                                                child: TextButton(
-                                                  style:
-                                                      OutlinedButton.styleFrom(
-                                                    side: const BorderSide(
-                                                        color: Colors.grey),
-                                                    shape:
-                                                        RoundedRectangleBorder(
-                                                      borderRadius:
-                                                          BorderRadius.circular(
-                                                              8),
-                                                    ),
-                                                  ),
-                                                  onPressed: () =>
-                                                      Navigator.of(context)
-                                                          .pop(false),
-                                                  child: const Text(
-                                                    'No',
-                                                    style: TextStyle(
-                                                        fontSize: 14,
-                                                        color: blackColor),
+
+                                            /// GST Invoice
+                                            RadioListTile(
+                                              title: const Text(
+                                                "GST Invoice",
+                                                style: TextStyle(
+                                                    fontSize: 13,
+                                                    color: blackColor,
+                                                    fontWeight:
+                                                        FontWeight.w500),
+                                              ),
+                                              value: "gst",
+                                              groupValue: billingType,
+                                              onChanged: (value) => setState(
+                                                  () => billingType =
+                                                      value.toString()),
+                                            ),
+
+                                            const SizedBox(height: 10),
+
+                                            /// Dropdown only when GST Invoice selected
+                                            if (billingType == "gst") ...[
+                                              const Align(
+                                                alignment: Alignment.centerLeft,
+                                                child: Text(
+                                                  "Select:",
+                                                  style: TextStyle(
+                                                      fontSize: 14,
+                                                      color: blackColor,
+                                                      fontWeight:
+                                                          FontWeight.w600),
+                                                ),
+                                              ),
+                                              const SizedBox(height: 5),
+                                              Container(
+                                                width: double.infinity,
+                                                padding:
+                                                    const EdgeInsets.symmetric(
+                                                        horizontal: 12),
+                                                decoration: BoxDecoration(
+                                                  border: Border.all(
+                                                      color: Colors.grey),
+                                                  borderRadius:
+                                                      BorderRadius.circular(6),
+                                                ),
+                                                child:
+                                                    DropdownButtonHideUnderline(
+                                                  child: DropdownButton(
+                                                    value: gstOption,
+                                                    items: const [
+                                                      DropdownMenuItem(
+                                                        value: "CGST/SGST",
+                                                        child: Text(
+                                                          "CGST/SGST",
+                                                          style: TextStyle(
+                                                              fontSize: 12,
+                                                              color: blackColor,
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .w500),
+                                                        ),
+                                                      ),
+                                                      DropdownMenuItem(
+                                                        value: "IGST",
+                                                        child: Text(
+                                                          "IGST",
+                                                          style: TextStyle(
+                                                              fontSize: 12,
+                                                              color: blackColor,
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .w500),
+                                                        ),
+                                                      ),
+                                                    ],
+                                                    onChanged: (val) =>
+                                                        setState(() =>
+                                                            gstOption =
+                                                                val.toString()),
                                                   ),
                                                 ),
                                               ),
-                                              const SizedBox(width: 12),
-                                              Expanded(
-                                                child: ElevatedButton(
+                                            ],
+
+                                            const SizedBox(height: 20),
+
+                                            Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.end,
+                                              children: [
+                                                TextButton(
+                                                  child: const Text(
+                                                    "Cancel",
+                                                    style: TextStyle(
+                                                        fontSize: 13,
+                                                        color: bluecolorprimary,
+                                                        fontWeight:
+                                                            FontWeight.w500),
+                                                  ),
+                                                  onPressed: () =>
+                                                      Navigator.pop(context),
+                                                ),
+                                                ElevatedButton(
                                                   style: ButtonStyle(
+                                                    backgroundColor:
+                                                        WidgetStateProperty.all<
+                                                            Color>(indigo),
                                                     shape: WidgetStateProperty.all<
                                                         RoundedRectangleBorder>(
                                                       RoundedRectangleBorder(
@@ -294,47 +408,47 @@ class _CreateEstimateFormState extends State<CreateEstimateForm> {
                                                                 .circular(5),
                                                       ),
                                                     ),
-                                                    foregroundColor:
-                                                        const WidgetStatePropertyAll(
-                                                            whiteColor),
-                                                    backgroundColor:
-                                                        const WidgetStatePropertyAll(
-                                                            successDarkColor),
                                                   ),
-                                                  onPressed: () =>
-                                                      Navigator.of(context)
-                                                          .pop(true),
-                                                  child: const Text('Yes'),
+                                                  child: const Text(
+                                                    "Continue",
+                                                    style: TextStyle(
+                                                        fontSize: 13,
+                                                        color: whiteColor,
+                                                        fontWeight:
+                                                            FontWeight.w500),
+                                                  ),
+                                                  onPressed: () {
+                                                    Navigator.pop(context, {
+                                                      "billingType":
+                                                          billingType,
+                                                      "igst":
+                                                          gstOption == "IGST"
+                                                              ? "1"
+                                                              : "0"
+                                                    });
+                                                  },
                                                 ),
-                                              ),
-                                            ],
-                                          )
-                                        ],
-                                      ),
-                                      Positioned(
-                                        top: 0,
-                                        right: 0,
-                                        child: InkWell(
-                                          onTap: () =>
-                                              Navigator.of(context).pop(),
-                                          borderRadius:
-                                              BorderRadius.circular(20),
-                                          child: const Padding(
-                                            padding: EdgeInsets.all(4.0),
-                                            child: Icon(
-                                              Icons.close,
-                                              size: 20,
-                                              color: greyColor,
-                                            ),
-                                          ),
+                                              ],
+                                            )
+                                          ],
                                         ),
-                                      ),
-                                    ],
-                                  ),
-                                ),
+                                      );
+                                    },
+                                  );
+                                },
                               );
 
                               if (gstConfirmed != null) {
+                                String billingType =
+                                    gstConfirmed["billingType"];
+                                String igst = gstConfirmed["igst"];
+
+                                String gstBill = "0"; // default regular invoice
+
+                                if (billingType == "gst") {
+                                  gstBill = "1"; // GST Invoice
+                                }
+
                                 Map<String, dynamic> formData = {
                                   "full_name":
                                       fullNameController.text.toString(),
@@ -344,8 +458,10 @@ class _CreateEstimateFormState extends State<CreateEstimateForm> {
                                       phoneNumberController.text.toString(),
                                   "gst_number":
                                       gstNumberController.text.toString(),
-                                  "gst_bill": gstConfirmed ? "1" : "0",
+                                  "gst_bill": gstBill,
+                                  "igst": billingType == "regular" ? "0" : igst,
                                 };
+
                                 context.read<JobSheetBloc>().add(
                                       AddEstimate(formData: formData),
                                     );
@@ -401,41 +517,145 @@ class _CreateEstimateFormState extends State<CreateEstimateForm> {
                       const SizedBox(
                         height: 5,
                       ),
-                      TextFormField(
-                        controller: fullNameController,
-                        keyboardType: TextInputType.text,
-                        style: const TextStyle(color: blackColor, fontSize: 14),
-                        inputFormatters: [
-                          NoLeadingSpaceFormatter(),
-                          LengthLimitingTextInputFormatter(30)
-                        ],
-                        decoration: InputDecoration(
-                          hintText: "Enter customer name",
-                          hintStyle: const TextStyle(
-                              color: hintTextColor,
-                              fontFamily: 'Mulish',
-                              fontSize: 13),
-                          contentPadding: const EdgeInsets.only(
-                            left: 15,
-                            right: 20.0,
-                          ),
-                          filled: true,
-                          fillColor: whiteColor,
-                          errorText: _nameValidate
-                              ? "The customer name field is required"
-                              : null,
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(5),
-                            borderSide: const BorderSide(
-                              width: 0,
-                              style: BorderStyle.none,
-                            ),
-                          ),
-                        ),
-                        onChanged: (value) {
-                          setState(() {
-                            _nameValidate = value.isEmpty;
-                          });
+                      BlocBuilder<SearchBloc, SearchBlocState>(
+                        builder: (context, state) {
+                          return Autocomplete<CustomerModel>(
+                            optionsBuilder:
+                                (TextEditingValue textEditingValue) {
+                              if (textEditingValue.text == '') {
+                                return const Iterable<CustomerModel>.empty();
+                              }
+                              return state.customerList!.where(
+                                (element) => element.fullName!
+                                    .trim()
+                                    .toLowerCase()
+                                    .contains(
+                                      textEditingValue.text
+                                          .trim()
+                                          .toLowerCase(),
+                                    ),
+                              );
+                            },
+                            displayStringForOption: (vehicle) =>
+                                vehicle.fullName!,
+                            fieldViewBuilder: (BuildContext context,
+                                TextEditingController
+                                    _fieldTextEditingController,
+                                FocusNode fieldFocusNode,
+                                VoidCallback onFieldSubmitted) {
+                              if (fullNameController.text.isEmpty) {
+                                fullNameController =
+                                    _fieldTextEditingController;
+                              }
+                              return TextField(
+                                controller: fullNameController,
+                                focusNode: fieldFocusNode,
+                                textInputAction: TextInputAction.next,
+                                keyboardType: TextInputType.text,
+                                style: const TextStyle(
+                                    fontSize: 14,
+                                    color: blackColor,
+                                    fontWeight: FontWeight.w500),
+                                inputFormatters: [
+                                  NoLeadingSpaceFormatter(),
+                                  FilteringTextInputFormatter.allow(
+                                    RegExp(r'^[a-zA-Z0-9\s]*$'),
+                                  ),
+                                ],
+                                decoration: InputDecoration(
+                                  hintText: "Enter First Name",
+                                  hintStyle: const TextStyle(
+                                      color: hintTextColor,
+                                      fontFamily: 'Mulish',
+                                      fontSize: 13),
+                                  contentPadding: const EdgeInsets.only(
+                                    left: 15,
+                                    right: 20.0,
+                                  ),
+                                  filled: true,
+                                  errorText: _nameValidate
+                                      ? "The full name field is required"
+                                      : null,
+                                  fillColor: whiteColor,
+                                  border: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(8),
+                                    borderSide: const BorderSide(
+                                      width: 0,
+                                      style: BorderStyle.none,
+                                    ),
+                                  ),
+                                ),
+                                onChanged: (text) {
+                                  setState(
+                                    () {
+                                      _nameValidate = text.trim().isEmpty;
+                                    },
+                                  );
+
+                                  if (text.trim().length >= 3) {
+                                    context.read<SearchBloc>().add(
+                                          SearchCustomerDetails(
+                                              searchKeyword: text),
+                                        );
+                                  }
+                                },
+                              );
+                            },
+                            optionsViewBuilder: (context, onSelected, options) {
+                              return Align(
+                                alignment: Alignment.topLeft,
+                                child: Material(
+                                  elevation: 4.0,
+                                  child: Container(
+                                    color: whiteColor,
+                                    constraints: BoxConstraints(
+                                      maxWidth: 290,
+                                      maxHeight: options.isEmpty
+                                          ? 0
+                                          : (options.length * 50).toDouble(),
+                                    ),
+                                    child: ListView.builder(
+                                      padding: EdgeInsets.zero,
+                                      itemCount: options.length,
+                                      itemBuilder:
+                                          (BuildContext context, int index) {
+                                        final CustomerModel option =
+                                            options.elementAt(index);
+                                        return ListTile(
+                                          title: Text(option.fullName!),
+                                          onTap: () {
+                                            onSelected(option);
+                                          },
+                                        );
+                                      },
+                                    ),
+                                  ),
+                                ),
+                              );
+                            },
+                            onSelected: (suggestion) {
+                              setState(
+                                () {
+                                  fullNameController.text =
+                                      suggestion.fullName!;
+
+                                  adressController.text = suggestion.address!;
+
+                                  emailController.text = suggestion.email!;
+
+                                  phoneNumberController.text =
+                                      suggestion.mobileNumber!;
+                                  fullNameController.selection =
+                                      TextSelection.fromPosition(
+                                    TextPosition(
+                                        offset: fullNameController.text.length),
+                                  );
+                                  _nameValidate = false;
+                                  _mobileValidate = false;
+                                },
+                              );
+                            },
+                          );
                         },
                       ),
                       const SizedBox(

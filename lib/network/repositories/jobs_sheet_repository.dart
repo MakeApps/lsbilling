@@ -11,10 +11,6 @@ class JobSheetRepository extends Repository {
   final _estimatePdfUrl = Constants.estimatePdfUrl;
   final _invoicePdfUrl = Constants.invoicePdfUrl;
 
-  Future<dynamic> getServicVehicle(jsonData) async {
-    return jobSheetApi.getServicVehicle(jsonData);
-  }
-
   // fetch all estimate result
   Future<dynamic> getEstimate(jsonData) async {
     return jobSheetApi.getEstimate(jsonData);
@@ -50,11 +46,6 @@ class JobSheetRepository extends Repository {
     return jobSheetApi.generateInvoice(jsonData, id);
   }
 
-  // search mechanics
-  Future<dynamic> searchMechanic(jsonData) async {
-    return jobSheetApi.searchMechanic(jsonData);
-  }
-
   // search labour
   Future<dynamic> searchLabour(jsonData) async {
     return jobSheetApi.searchLabour(jsonData);
@@ -68,11 +59,6 @@ class JobSheetRepository extends Repository {
   // search spare part
   Future<dynamic> searchSparePart(jsonData) async {
     return jobSheetApi.searchSparePart(jsonData);
-  }
-
-  // search vehicle details
-  Future<dynamic> searchVehicleDetails(jsonData) async {
-    return jobSheetApi.searchVehicleDetails(jsonData);
   }
 
   //Search customer complaints
@@ -100,19 +86,9 @@ class JobSheetRepository extends Repository {
     return jobSheetApi.getEstimateDetails(jsonData);
   }
 
-  // get invoice by jobsheet
-  Future<dynamic> getInvoiceByJobsheet(jsonData) {
-    return jobSheetApi.getInvoiceByJobsheet(jsonData);
-  }
-
 // get invoice details by invoice id
   Future<dynamic> getInvoiceByInvoiceId(jsonData) {
     return jobSheetApi.getInvoiceByInvoiceId(jsonData);
-  }
-
-  // get estimate details by jobsheet
-  Future<dynamic> getEstimateDetailsByJobsheet(jsonData) {
-    return jobSheetApi.getEstimateDetailsByJobsheet(jsonData);
   }
 
   // delete estimate
@@ -142,11 +118,6 @@ class JobSheetRepository extends Repository {
   // update customer
   Future<dynamic> updateCustomer(jsonData, String id) {
     return jobSheetApi.updateCustomer(jsonData, id);
-  }
-
-  //update customer complaints
-  Future<dynamic> updateCustomerComplaints(jsonData, String id) {
-    return jobSheetApi.updateCustomerComplaints(jsonData, id);
   }
 
   // search job sheet

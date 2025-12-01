@@ -7,12 +7,6 @@ class JobSheetDetailsEvent extends Equatable {
   List<Object> get props => [];
 }
 
-class UpdateCustomerComplaints extends JobSheetDetailsEvent {
-  final List formData;
-  final String id;
-  const UpdateCustomerComplaints({required this.formData, required this.id});
-}
-
 class GetEstimateDetailsByEstimate extends JobSheetDetailsEvent {
   final String id;
   final JobSheetDetailsStatus? status;
@@ -101,20 +95,6 @@ class DeleteSparePart extends JobSheetDetailsEvent {
   final String? id;
   const DeleteSparePart({required this.id});
 }
-
-// class UpdateInvoiceCustomer extends JobSheetDetailsEvent {
-//   final int? id;
-//   final String? fullName;
-//   final String? address;
-//   final String? email;
-//   final String? mobileNumber;
-//   const UpdateInvoiceCustomer(
-//       {required this.id,
-//         required this.fullName,
-//       required this.address,
-//       required this.email,
-//       required this.mobileNumber});
-// }
 
 class DownloadEstimatePdf extends JobSheetDetailsEvent {
   final String id;

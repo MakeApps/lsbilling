@@ -7,17 +7,6 @@ import 'package:local_shout_billing/isar/update_profile_data/update_profile_data
 import 'package:local_shout_billing/network/api/api.dart';
 
 class JobSheetApi extends Api {
-  Future<dynamic> getServicVehicle(Map<String, String> jsonData) async {
-    try {
-      final serviceVehicle = await requestGET(
-              path: '/get-job-sheets-due-date', parameters: jsonData)
-          .timeout(const Duration(seconds: 30));
-      return serviceVehicle['Jobsheet'];
-    } catch (e, _) {
-      print(e);
-    }
-  }
-
   Future<dynamic> getEstimate(Map<String, String> jsonData) async {
     try {
       final estimateList =
@@ -109,16 +98,6 @@ class JobSheetApi extends Api {
     }
   }
 
-  Future<dynamic> searchMechanic(jsonData) async {
-    try {
-      final apiResponse =
-          await requestGET(path: '/get-mechanics', parameters: jsonData);
-      return apiResponse['mechanics'];
-    } catch (er, _) {
-      print(er);
-    }
-  }
-
   Future<dynamic> searchProduct(jsonData) async {
     try {
       final apiResponse =
@@ -175,34 +154,12 @@ class JobSheetApi extends Api {
     }
   }
 
-//get invocie by job sheet
-  Future<dynamic> getInvoiceByJobsheet(jsonData) async {
-    try {
-      final getInvoiceResponse = await requestGET(
-          path: 'get_invoice_by_id/${jsonData['id']}', parameters: jsonData);
-      return getInvoiceResponse['Invoice'];
-    } catch (er) {
-      print("Error is---------$er");
-    }
-  }
-
   //get invoice Details by invoice id
   Future<dynamic> getInvoiceByInvoiceId(jsonData) async {
     try {
       final getEstimateResponse = await requestGET(
           path: 'get_invoice_by_id/${jsonData['id']}', parameters: jsonData);
       return getEstimateResponse['Invoice'];
-    } catch (er) {
-      print("Error is---------$er");
-    }
-  }
-
-//getEstimateDetailsByJobsheet
-  Future<dynamic> getEstimateDetailsByJobsheet(jsonData) async {
-    try {
-      final getEstimateResponse = await requestGET(
-          path: 'get_estimate/${jsonData['id']}', parameters: jsonData);
-      return getEstimateResponse['Estimate'];
     } catch (er) {
       print("Error is---------$er");
     }
@@ -218,42 +175,10 @@ class JobSheetApi extends Api {
     }
   }
 
-  Future<dynamic> getjobsheetimages(jsonData) async {
-    try {
-      final imageslide = await requestGET(
-          path: '/get_job_sheet_original_img/${jsonData['id']}',
-          parameters: jsonData);
-      return imageslide['Jobsheet'];
-    } catch (er) {
-      print("Error is---------$er");
-    }
-  }
-
   //dashnoard.
   Future<dynamic> dashboardData(jsonData) async {
     try {
       final result = await requestGET(path: '/dashboard', parameters: jsonData);
-      return result;
-    } catch (er) {
-      print("Error is---------$er");
-    }
-  }
-
-//updateJobSheet
-  Future<dynamic> updateJobSheet(jsonData, String id) async {
-    try {
-      final result =
-          await requestPUT(path: '/update_job_sheet/$id', parameters: jsonData);
-      return result;
-    } catch (er) {
-      print("Error is---------$er");
-    }
-  }
-
-  Future<dynamic> updateJobSheetStatus(jsonData, String id) async {
-    try {
-      final result =
-          await requestPUT(path: '/update_status/$id', parameters: jsonData);
       return result;
     } catch (er) {
       print("Error is---------$er");
@@ -267,30 +192,6 @@ class JobSheetApi extends Api {
       return result;
     } catch (er) {
       print("Error is------$er");
-    }
-  }
-
-//update task list
-  Future<dynamic> updateCustomerComplaints(jsonData, String id) async {
-    try {
-      final result = await requestPUT(
-          path: '/update_customer_complaints/$id', parameters: jsonData);
-      return result;
-    } catch (er) {
-      print("Error is------$er");
-    }
-  }
-
-//search vehicle
-  Future<dynamic> searchVehicleDetails(
-    jsonData,
-  ) async {
-    try {
-      final apiResponse =
-          await requestGET(path: '/get_vehicles', parameters: jsonData);
-      return apiResponse['vehicles'];
-    } catch (er) {
-      print("Error is---------$er");
     }
   }
 
@@ -312,7 +213,7 @@ class JobSheetApi extends Api {
   ) async {
     try {
       final apiResponse =
-          await requestGET(path: '/get_customers', parameters: jsonData);
+          await requestGET(path: '/get-customers', parameters: jsonData);
       return apiResponse['customers'];
     } catch (er) {
       print("Error is---------$er");
@@ -795,7 +696,7 @@ class JobSheetApi extends Api {
     }
   }
 
-Future<void> logoutUser(String token) async {
+  Future<void> logoutUser(String token) async {
     try {
       await requestGET(
         path: '/logout',
@@ -806,5 +707,4 @@ Future<void> logoutUser(String token) async {
       throw e;
     }
   }
-  
 }

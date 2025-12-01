@@ -10,7 +10,6 @@ import 'package:local_shout_billing/modules/job_sheet/bloc/job_sheet_details_blo
 import 'package:local_shout_billing/modules/job_sheet/bloc/profile_bloc/profile_section_bloc.dart';
 import 'package:local_shout_billing/modules/job_sheet/bloc/profile_bloc/profile_section_event.dart';
 import 'package:local_shout_billing/modules/job_sheet/bloc/search_bloc/search_bloc_bloc.dart';
-import 'package:local_shout_billing/modules/job_sheet/bloc/search_mechanic/search_mechanic_bloc.dart';
 import 'package:local_shout_billing/modules/login/cubit/login_cubit.dart';
 import 'package:local_shout_billing/modules/purches_invoice/bloc/purches_invoice/purchase_invoice_bloc.dart';
 import 'package:local_shout_billing/modules/purches_invoice/bloc/purches_invoice_details_bloc/purches_invoice_details_bloc.dart';
@@ -86,9 +85,7 @@ class MyApp extends StatelessWidget {
           BlocProvider<JobSheetDetailsBloc>(
             create: (context) => JobSheetDetailsBloc(),
           ),
-          BlocProvider<SearchMechanicBloc>(
-            create: (context) => SearchMechanicBloc(),
-          ),
+
           BlocProvider<SearchBloc>(
             create: (context) => SearchBloc(),
           ),
@@ -172,9 +169,6 @@ class MyApp extends StatelessWidget {
               final isLogin = await auth.checkLogin();
               if (!isLogin) return;
 
-              context.read<JobSheetBloc>().add(
-                    SyncOfflineJobSheets(),
-                  );
               context.read<JobSheetDetailsBloc>().add(
                     const SyncOfflineUpdatedJobSheets(),
                   );

@@ -14,5 +14,4 @@ export 'package:local_shout_billing/config/data.dart';
 export 'package:local_shout_billing/main_layout.dart';
 export 'package:local_shout_billing/models/mechanic_model.dart';
 export 'package:local_shout_billing/modules/job_sheet/bloc/job_sheet_bloc/job_sheet_bloc.dart';
-export 'package:local_shout_billing/modules/job_sheet/bloc/search_mechanic/search_mechanic_bloc.dart';
 export 'package:cached_network_image/cached_network_image.dart';

@@ -58,6 +58,7 @@ class _EstimatePageState extends State<EstimatePage> {
   double cgst = 0.0;
   String? gstFlag;
   String? gstBill;
+  String? igstBill;
   String? roleId;
   bool isQuantityHidden = false;
   bool? isGenerate = false;
@@ -82,6 +83,7 @@ class _EstimatePageState extends State<EstimatePage> {
     estimateTotalValue = state.estimateModel!.estimateTotal.toString();
     gstFlag = state.estimateModel!.gstFlag.toString();
     gstBill = state.estimateModel!.gstBill.toString();
+    igstBill = state.estimateModel!.igstBill.toString();
   }
 
   Future<void> _loadRoleId() async {
@@ -297,17 +299,25 @@ class _EstimatePageState extends State<EstimatePage> {
                               "estimateTotal": gstBill == "1"
                                   ? calculateSubtotalGst()
                                   : calculateSparePartSubtotal(),
-                              "gst_flag": gstFlag.toString(),
-                              "gst_bill": gstBill.toString(),
-                              "taxablevalueTotal": gstBill == "1"
-                                  ? calculateSparePartSubtotal()
-                                  : 0,
-                              "cgstTotal": gstBill == "1" ? calculateCgst() : 0,
-                              "scgtTotal": gstBill == "1" ? calculateCgst() : 0,
                               "estimate_id": state.estimateModel!.estimateId,
                               "estimate_number": state
                                   .estimateModel!.estimateNumber
                                   .toString(),
+                              "gst_flag": gstFlag.toString(),
+                              "igst": igstBill.toString(),
+                              "gst_bill": gstBill.toString(),
+                              "igstTotal": igstBill == "1"
+                                  ? calculateFinalIgstTotal()
+                                  : 0,
+                              "taxablevalueTotal": gstBill == "1"
+                                  ? calculateSparePartSubtotal()
+                                  : 0,
+                              "cgstTotal": (gstBill == "1" && igstBill == "0")
+                                  ? calculateCgst()
+                                  : 0,
+                              "scgtTotal": (gstBill == "1" && igstBill == "0")
+                                  ? calculateCgst()
+                                  : 0,
                               "full_name":
                                   state.estimateModel!.fullName.toString(),
                               "invoice_labours": "",
@@ -427,17 +437,25 @@ class _EstimatePageState extends State<EstimatePage> {
                               "estimateTotal": gstBill == "1"
                                   ? calculateSubtotalGst()
                                   : calculateSparePartSubtotal(),
-                              "gst_flag": gstFlag.toString(),
-                              "gst_bill": gstBill.toString(),
-                              "taxablevalueTotal": gstBill == "1"
-                                  ? calculateSparePartSubtotal()
-                                  : 0,
-                              "cgstTotal": gstBill == "1" ? calculateCgst() : 0,
-                              "scgtTotal": gstBill == "1" ? calculateCgst() : 0,
                               "estimate_id": state.estimateModel!.estimateId,
                               "estimate_number": state
                                   .estimateModel!.estimateNumber
                                   .toString(),
+                              "gst_flag": gstFlag.toString(),
+                              "igst": igstBill.toString(),
+                              "gst_bill": gstBill.toString(),
+                              "igstTotal": igstBill == "1"
+                                  ? calculateFinalIgstTotal()
+                                  : 0,
+                              "taxablevalueTotal": gstBill == "1"
+                                  ? calculateSparePartSubtotal()
+                                  : 0,
+                              "cgstTotal": (gstBill == "1" && igstBill == "0")
+                                  ? calculateCgst()
+                                  : 0,
+                              "scgtTotal": (gstBill == "1" && igstBill == "0")
+                                  ? calculateCgst()
+                                  : 0,
                               "full_name":
                                   state.estimateModel!.fullName.toString(),
                               "invoice_labours": "",
@@ -557,12 +575,20 @@ class _EstimatePageState extends State<EstimatePage> {
                                   ? calculateSubtotalGst()
                                   : calculateSparePartSubtotal(),
                               "gst_flag": gstFlag.toString(),
+                              "igst": igstBill.toString(),
                               "gst_bill": gstBill.toString(),
+                              "igstTotal": igstBill == "1"
+                                  ? calculateFinalIgstTotal()
+                                  : 0,
                               "taxablevalueTotal": gstBill == "1"
                                   ? calculateSparePartSubtotal()
                                   : 0,
-                              "cgstTotal": gstBill == "1" ? calculateCgst() : 0,
-                              "scgtTotal": gstBill == "1" ? calculateCgst() : 0,
+                              "cgstTotal": (gstBill == "1" && igstBill == "0")
+                                  ? calculateCgst()
+                                  : 0,
+                              "scgtTotal": (gstBill == "1" && igstBill == "0")
+                                  ? calculateCgst()
+                                  : 0,
                               "estimate_id": state.estimateModel!.estimateId,
                               "estimate_number": state
                                   .estimateModel!.estimateNumber
@@ -2085,6 +2111,7 @@ class _EstimatePageState extends State<EstimatePage> {
           });
         },
         gstBill: gstBill,
+        igstBill: igstBill,
       ),
     );
   }
@@ -2420,6 +2447,15 @@ class _EstimatePageState extends State<EstimatePage> {
     );
   }
 
+  List<String> get currentGstList {
+    if (gstBill == "1" && igstBill == "1") {
+      return igstList; // IGST list
+    } else if (gstBill == "1" && igstBill == "0") {
+      return gstList; // SGST/CGST list
+    }
+    return []; // default empty
+  }
+
   Future<void> showEditAddSparePartWithGst(
       BuildContext context,
       String productname,
@@ -2751,7 +2787,8 @@ class _EstimatePageState extends State<EstimatePage> {
                           ),
                         ),
                         hint: const Text('None'),
-                        items: gstList.map<DropdownMenuItem<String>>((value) {
+                        items: currentGstList
+                            .map<DropdownMenuItem<String>>((value) {
                           return DropdownMenuItem<String>(
                             value: value,
                             child: Text(
@@ -3474,7 +3511,8 @@ class _EstimatePageState extends State<EstimatePage> {
                           ),
                         ),
                         hint: const Text('None'),
-                        items: gstList.map<DropdownMenuItem<String>>((value) {
+                        items: currentGstList
+                            .map<DropdownMenuItem<String>>((value) {
                           return DropdownMenuItem<String>(
                             value: value,
                             child: Text(
@@ -3915,5 +3953,76 @@ class _EstimatePageState extends State<EstimatePage> {
   double calculateCgst() {
     double totalGst = calculateTotalGst();
     return double.parse((totalGst / 2).toStringAsFixed(2));
+  }
+
+//   ///IGST total calculation
+//   double calculateTotalIgst(List<Map<String, dynamic>> products) {
+//   double totalIgst = 0.0;
+
+//   for (var newProduct in sparePartsListNew) {
+//     double price = newProduct["product_price"] * newProduct["product_qty"];
+//     String gst = newProduct["product_gst"];
+
+//     double igst = calculateIgst(price, gst);
+//     totalIgst += igst;
+
+//     newProduct["igst_amount"] = igst; // store per product IGST
+//   }
+
+//   return double.parse(totalIgst.toStringAsFixed(2));
+// }
+
+  double calculateSubTotalWithIGst() {
+    double subtotalWithGst = 0.0;
+    for (var spareParts in sparePartsList) {
+      if (spareParts is Map<String, dynamic>) {
+        double price =
+            double.tryParse(spareParts['product_price'].toString()) ?? 0.0;
+        double qty =
+            double.tryParse(spareParts['product_qty'].toString()) ?? 0.0;
+        String gstString = spareParts['product_gst'];
+        double baseValue = price * qty;
+        double gstPercentage = getGstPercentage(gstString);
+        double gstAmount = baseValue * (gstPercentage / 100);
+        double finalValue = baseValue + gstAmount;
+        subtotalWithGst += finalValue;
+      }
+    }
+    return subtotalWithGst;
+  }
+
+  double calculateIgstForList(List<Map<String, dynamic>> list) {
+    double totalIgst = 0.0;
+
+    for (var item in list) {
+      double price = double.tryParse(item['product_price'].toString()) ?? 0.0;
+      double qty = double.tryParse(item['product_qty'].toString()) ?? 0.0;
+      String gstString = item['product_gst'];
+
+      double baseValue = price * qty;
+      double gstPercentage = getGstPercentage(gstString);
+
+      double igstAmount = baseValue * (gstPercentage / 100);
+
+      totalIgst += igstAmount;
+
+      item['igst_amount'] = igstAmount; // store per product IGST
+    }
+
+    return double.parse(totalIgst.toStringAsFixed(2));
+  }
+
+  double calculateFinalIgstTotal() {
+    double list1Igst = calculateIgstForList(
+      sparePartsList.whereType<Map<String, dynamic>>().toList(),
+    );
+
+    double list2Igst = calculateIgstForList(
+      sparePartsListNew.whereType<Map<String, dynamic>>().toList(),
+    );
+
+    double finalIgst = list1Igst + list2Igst;
+
+    return double.parse(finalIgst.toStringAsFixed(2));
   }
 }

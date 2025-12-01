@@ -46,57 +46,10 @@ class FormPageChanged extends JobSheetEvent {
   const FormPageChanged(this.pageIndex);
 }
 
-class AddJobSheet extends JobSheetEvent {
-  final Map<String, dynamic>? formData;
-  final File frontImage;
-  final File rightHandSideImage;
-  final File leftHandSideImage;
-  final File rearImage;
-  final File dashboardImage;
-  final File engineImage;
-  final File batteryImage;
-  final File speedometerImage;
-  final File image1;
-  final File image2;
-  final File image3;
-  final File image4;
-
-  const AddJobSheet({
-    this.formData,
-    required this.frontImage,
-    required this.rightHandSideImage,
-    required this.leftHandSideImage,
-    required this.rearImage,
-    required this.dashboardImage,
-    required this.engineImage,
-    required this.batteryImage,
-    required this.speedometerImage,
-    required this.image1,
-    required this.image2,
-    required this.image3,
-    required this.image4,
-  });
-}
-
-class SyncOfflineJobSheets extends JobSheetEvent {}
-
-class DeleteJobSheet extends JobSheetEvent {
-  final String id;
-  const DeleteJobSheet({required this.id});
-}
-
 class ChangeJobSheetStatus extends JobSheetEvent {
   final int jobSheetId;
   final String status;
   const ChangeJobSheetStatus({required this.jobSheetId, required this.status});
-}
-
-class SearchJobSheet extends JobSheetEvent {
-  final String searchKeyword;
-  final String fromDate;
-  final String toDate;
-  const SearchJobSheet(
-      {required this.searchKeyword, this.fromDate = "", this.toDate = ""});
 }
 
 class SearchInvoiceRecord extends JobSheetEvent {

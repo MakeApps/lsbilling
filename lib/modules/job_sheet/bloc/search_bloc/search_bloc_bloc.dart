@@ -14,33 +14,12 @@ part 'search_bloc_state.dart';
 
 class SearchBloc extends Bloc<SearchBlocEvent, SearchBlocState> {
   SearchBloc() : super(SearchBlocState()) {
-    on<SearchVehicleDetails>(_onSearchVehicleDetails);
     on<SearchCustomerDetails>(_onSearchCustomerDetails);
     on<SearchCustomerComplent>(_onSearchCustomerComplent);
     on<SearchVendor>(_onSearchVendor);
   }
 
-  _onSearchVehicleDetails(
-      SearchVehicleDetails event, Emitter<SearchBlocState> emit) async {
-    dynamic token = await app_instance.storage.read(key: "token");
 
-    Map<String, Object> jsonData = {
-      "token": token.toString(),
-      "search": event.searchKeyword.toString()
-    };
-    final result =
-        await app_instance.jobSheetRepository.searchVehicleDetails(jsonData);
-    if (result != null && result.isNotEmpty) {
-      return emit(
-        state.copyWith(
-          status: SearchStatus.success,
-          vehicleDetails: result
-              .map<VehicleModel>((jsonData) => VehicleModel.fromJson(jsonData))
-              .toList(),
-        ),
-      );
-    }
-  }
 
   _onSearchCustomerComplent(
       SearchCustomerComplent event, Emitter<SearchBlocState> emit) async {

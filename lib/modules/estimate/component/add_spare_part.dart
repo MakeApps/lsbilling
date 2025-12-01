@@ -13,10 +13,12 @@ import 'package:local_shout_billing/modules/job_sheet/bloc/job_sheet_details_blo
 class AddSparePartsDialog extends StatefulWidget {
   final Function(Map<String, dynamic>) onSparePartAdded;
   final String? gstBill;
+  final String? igstBill;
   const AddSparePartsDialog(
       {super.key,
       required this.onSparePartAdded,
-      required this.gstBill,});
+      required this.gstBill,
+      required this.igstBill});
 
   @override
   State<AddSparePartsDialog> createState() => _AddSparePartsDialogState();
@@ -53,6 +55,15 @@ class _AddSparePartsDialogState extends State<AddSparePartsDialog> {
   void dispose() {
     _debounce?.cancel();
     super.dispose();
+  }
+
+  List<String> get currentGstList {
+    if (widget.gstBill == "1" && widget.igstBill == "1") {
+      return igstList; // IGST list
+    } else if (widget.gstBill == "1" && widget.igstBill == "0") {
+      return gstList; // SGST/CGST list
+    }
+    return []; // default empty
   }
 
   void addSparePart() {
@@ -272,9 +283,9 @@ class _AddSparePartsDialogState extends State<AddSparePartsDialog> {
                     ),
                   ),
                   hint: const Text('None'),
-                  items: gstList.isEmpty
+                  items: currentGstList.isEmpty
                       ? null
-                      : gstList.map<DropdownMenuItem<String>>((value) {
+                      : currentGstList.map<DropdownMenuItem<String>>((value) {
                           return DropdownMenuItem<String>(
                             value: value,
                             child: Text(

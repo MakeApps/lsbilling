@@ -5,6 +5,7 @@ import 'package:equatable/equatable.dart';
 class EstimateModel extends Equatable {
   final String? address;
   final int? companyId;
+  final double? cgstTotal;
   final String? createdAtDate;
   final String? createdAtTime;
   final int? customerId;
@@ -25,11 +26,13 @@ class EstimateModel extends Equatable {
   final String? tempDate;
   final String? gstFlag;
   final String? gstBill;
+  final String? igstBill;
   final String? updatedAt;
 
   const EstimateModel({
     this.address,
     this.companyId,
+    this.cgstTotal,
     this.createdAtDate,
     this.createdAtTime,
     this.customerId,
@@ -50,12 +53,14 @@ class EstimateModel extends Equatable {
     this.tempDate,
     this.gstFlag,
     this.gstBill,
+    this.igstBill,
     this.updatedAt,
   });
   @override
   List<Object> get props => [
         address!,
         companyId!,
+        cgstTotal!,
         createdAtDate!,
         createdAtTime!,
         customerId!,
@@ -76,11 +81,13 @@ class EstimateModel extends Equatable {
         tempDate!,
         gstFlag!,
         gstBill!,
+        igstBill!,
         updatedAt!,
       ];
   EstimateModel copyWith({
     String? address,
     int? companyId,
+    double? cgstTotal,
     String? createdAtDate,
     String? createdAtTime,
     int? customerId,
@@ -101,11 +108,13 @@ class EstimateModel extends Equatable {
     String? tempDate,
     String? gstFlag,
     String? gstBill,
+    String? igstBill,
     String? updatedAt,
   }) {
     EstimateModel estimateModel = EstimateModel(
       address: address ?? this.address,
       companyId: companyId ?? this.companyId,
+      cgstTotal: cgstTotal ?? this.cgstTotal,
       createdAtDate: createdAtDate ?? this.createdAtDate,
       createdAtTime: createdAtTime ?? this.createdAtTime,
       customerId: customerId ?? this.customerId,
@@ -125,6 +134,7 @@ class EstimateModel extends Equatable {
       tempDate: tempDate ?? this.tempDate,
       gstFlag: gstFlag ?? this.gstFlag,
       gstBill: gstBill ?? this.gstBill,
+      igstBill: igstBill ?? this.igstBill,
       productTotal: productTotal ?? this.productTotal,
       updatedAt: updatedAt ?? this.updatedAt,
     );
@@ -135,6 +145,7 @@ class EstimateModel extends Equatable {
     return EstimateModel(
       address: json['address'] ?? "",
       companyId: json['company_id'] ?? 0,
+      cgstTotal: (json['cgstTotal'] ?? 0).toDouble(),
       createdAtDate: json['created_at_date'] ?? "",
       createdAtTime: json['created_at_time'] ?? "",
       customerId: json['customer_id'] ?? 0,
@@ -146,7 +157,7 @@ class EstimateModel extends Equatable {
       estimateId: json['estimate_id'] ?? 0,
       estimateNumber: json['estimate_number'].toString(),
       fullName: json['full_name'] ?? "",
-      invoiceLabours:"",
+      invoiceLabours: "",
       invoiceProducts: json['invoice_products'] != ""
           ? jsonDecode(json['invoice_products'])
           : [],
@@ -157,6 +168,7 @@ class EstimateModel extends Equatable {
       tempDate: json['temp_date'] ?? "",
       gstFlag: json['gst_flag'] ?? "",
       gstBill: json['gst_bill'] ?? "",
+      igstBill: json['igst'] ?? "",
       productTotal: json['productTotal'].toString(),
       updatedAt: json['updated_at'] ?? "",
     );
@@ -164,6 +176,7 @@ class EstimateModel extends Equatable {
   static const empty = EstimateModel(
     address: "",
     companyId: 0,
+    cgstTotal: 0,
     createdAtDate: "",
     createdAtTime: "",
     customerId: 0,
@@ -184,10 +197,11 @@ class EstimateModel extends Equatable {
     tempDate: "",
     gstFlag: "",
     gstBill: "",
+    igstBill: "",
     updatedAt: "",
   );
 
   @override
   String toString() =>
-      '{address:$address,taxableTotal:$taxableTotal,scgtTotal:$scgtTotal,companyId:$companyId,createdAtDate:$createdAtDate,createdAtTime:$createdAtTime,customerId:$customerId,deletedAt:$deletedAt,email:$email,estimateTotal:$estimateTotal,estimateNumber:$estimateNumber,fullName:$fullName,invoiceLabours:$invoiceLabours,invoiceProducts:$invoiceProducts,labourTotal:$labourTotal,lastEstimateId:$lastEstimateId,mobileNumber:$mobileNumber,temp_date:$tempDate,gstFlag:$gstFlag,gstBill:$gstBill,productTotal:$productTotal,updatedAt:$updatedAt}';
+      '{address:$address,cgstTotal:$cgstTotal,taxableTotal:$taxableTotal,scgtTotal:$scgtTotal,companyId:$companyId,createdAtDate:$createdAtDate,createdAtTime:$createdAtTime,customerId:$customerId,deletedAt:$deletedAt,email:$email,estimateTotal:$estimateTotal,estimateNumber:$estimateNumber,fullName:$fullName,invoiceLabours:$invoiceLabours,invoiceProducts:$invoiceProducts,labourTotal:$labourTotal,lastEstimateId:$lastEstimateId,mobileNumber:$mobileNumber,temp_date:$tempDate,gstFlag:$gstFlag,gstBill:$gstBill,igstBill:$igstBill,productTotal:$productTotal,updatedAt:$updatedAt}';
 }
