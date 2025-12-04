@@ -27,6 +27,7 @@ class InvoiceModel extends Equatable {
   final String? mobileNumber;
   final String? productTotal;
   final String? taxableValue;
+  final String? igstTotal;
   final String? tempDate;
   final String? totalInvoiceBalance;
   final String? paidAmount;
@@ -34,6 +35,7 @@ class InvoiceModel extends Equatable {
   final List<InvoicePaymentSubModel>? totalInvoicePayment;
   final String? gstFlag;
   final String? gstBill;
+  final String? igstBill;
 
   const InvoiceModel({
     this.address,
@@ -58,6 +60,7 @@ class InvoiceModel extends Equatable {
     this.mobileNumber,
     this.productTotal,
     this.taxableValue,
+    this.igstTotal,
     this.tempDate,
     this.totalInvoiceBalance,
     this.paidAmount,
@@ -65,6 +68,7 @@ class InvoiceModel extends Equatable {
     this.totalInvoicePayment,
     this.gstFlag,
     this.gstBill,
+    this.igstBill,
   });
   @override
   List<Object> get props => [
@@ -90,6 +94,7 @@ class InvoiceModel extends Equatable {
         mobileNumber!,
         productTotal!,
         taxableValue!,
+        igstTotal!,
         tempDate!,
         totalInvoiceBalance!,
         paidAmount!,
@@ -97,6 +102,7 @@ class InvoiceModel extends Equatable {
         totalInvoicePayment!,
         gstFlag!,
         gstBill!,
+        igstBill!,
       ];
   InvoiceModel copyWith({
     String? address,
@@ -121,6 +127,7 @@ class InvoiceModel extends Equatable {
     String? mobileNumber,
     String? productTotal,
     String? taxableValue,
+    String? igstTotal,
     String? tempDate,
     String? totalInvoiceBalance,
     String? paidAmount,
@@ -128,6 +135,7 @@ class InvoiceModel extends Equatable {
     List<InvoicePaymentSubModel>? totalInvoicePayment,
     String? gstFlag,
     String? gstBill,
+    String? igstBill,
   }) {
     InvoiceModel invoiceModel = InvoiceModel(
       address: address ?? this.address,
@@ -155,10 +163,12 @@ class InvoiceModel extends Equatable {
       paidAmount: paidAmount ?? this.paidAmount,
       productTotal: productTotal ?? this.productTotal,
       taxableValue: taxableValue ?? this.taxableValue,
+      igstTotal: igstTotal ?? this.igstTotal,
       updatedAt: updatedAt ?? this.updatedAt,
       totalInvoicePayment: totalInvoicePayment ?? this.totalInvoicePayment,
       gstFlag: gstFlag ?? this.gstFlag,
       gstBill: gstBill ?? this.gstBill,
+      igstBill: igstBill ?? this.igstBill,
     );
     return invoiceModel;
   }
@@ -202,6 +212,7 @@ class InvoiceModel extends Equatable {
       taxableValue: json['taxablevalueTotal'] != null
           ? json['taxablevalueTotal'].toString()
           : "0",
+      igstTotal: json['igstTotal'] != null ? json['igstTotal'].toString() : "0",
       updatedAt: json['updated_at'] ?? "",
       totalInvoicePayment: (json['total_invoice_payment'] as List<dynamic>?)
               ?.map((e) => InvoicePaymentSubModel.fromJson(e))
@@ -209,6 +220,7 @@ class InvoiceModel extends Equatable {
           [],
       gstFlag: json['gst_flag'] ?? "",
       gstBill: json['gst_bill'] ?? "",
+      igstBill: json['igst'] ?? "",
     );
   }
   static const empty = InvoiceModel(
@@ -234,6 +246,7 @@ class InvoiceModel extends Equatable {
     mobileNumber: "",
     productTotal: "",
     taxableValue: "",
+    igstTotal: "",
     tempDate: "",
     totalInvoiceBalance: "",
     paidAmount: "",
@@ -241,9 +254,10 @@ class InvoiceModel extends Equatable {
     totalInvoicePayment: [],
     gstFlag: "",
     gstBill: "",
+    igstBill: "",
   );
 
   @override
   String toString() =>
-      '{address:$address,paidAmount:$paidAmount,companyId:$companyId,totalInvoicePayment:$totalInvoicePayment,afterPayTotalAmount:$afterPayTotalAmount,createdAtDate:$createdAtDate,afterDiscountAmount:$afterDiscountAmount,discountAmount:$discountAmount,  createdAtTime:$createdAtTime,customerId:$customerId,deletedAt:$deletedAt,email:$email,invoiceTotal:$invoiceTotal,invoiceNumber:$invoiceNumber,fullName:$fullName,invoiceLabours:$invoiceLabours,invoiceProducts:$invoiceProducts,labourTotal:$labourTotal,lastinvoiceId:$lastinvoiceId,manufacturers:$manufacturers,mobileNumber:$mobileNumber,temp_date:$tempDate,productTotal:$productTotal,taxableValue:$taxableValue,totalInvoiceBalance:$totalInvoiceBalance,updatedAt:$updatedAt,gstBill:$gstBill,gstFlag:$gstFlag}';
+      '{address:$address,paidAmount:$paidAmount,companyId:$companyId,totalInvoicePayment:$totalInvoicePayment,afterPayTotalAmount:$afterPayTotalAmount,createdAtDate:$createdAtDate,afterDiscountAmount:$afterDiscountAmount,discountAmount:$discountAmount,  createdAtTime:$createdAtTime,customerId:$customerId,deletedAt:$deletedAt,email:$email,invoiceTotal:$invoiceTotal,invoiceNumber:$invoiceNumber,fullName:$fullName,invoiceLabours:$invoiceLabours,invoiceProducts:$invoiceProducts,labourTotal:$labourTotal,lastinvoiceId:$lastinvoiceId,manufacturers:$manufacturers,mobileNumber:$mobileNumber,temp_date:$tempDate,productTotal:$productTotal,taxableValue:$taxableValue,igstTotal:igstTotal,totalInvoiceBalance:$totalInvoiceBalance,updatedAt:$updatedAt,gstBill:$gstBill,gstFlag:$gstFlag,igstBill:$igstBill}';
 }

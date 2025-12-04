@@ -217,7 +217,7 @@ class _CreateEstimateFormState extends State<CreateEstimateForm> {
                         child: ElevatedButton(
                           style: ButtonStyle(
                             foregroundColor:
-                                WidgetStateProperty.all<Color>(blackColor),
+                                WidgetStateProperty.all<Color>(whiteColor),
                             backgroundColor:
                                 WidgetStateProperty.all<Color>(primaryColor),
                             shape:
@@ -399,7 +399,7 @@ class _CreateEstimateFormState extends State<CreateEstimateForm> {
                                                   style: ButtonStyle(
                                                     backgroundColor:
                                                         WidgetStateProperty.all<
-                                                            Color>(indigo),
+                                                            Color>(primaryColor),
                                                     shape: WidgetStateProperty.all<
                                                         RoundedRectangleBorder>(
                                                       RoundedRectangleBorder(

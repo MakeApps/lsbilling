@@ -12,27 +12,28 @@ import 'package:local_shout_billing/modules/job_sheet/bloc/job_sheet_details_blo
 
 // import your bloc, models, colors, formatters, etc.
 
-class AddSparePartDialog extends StatefulWidget {
+class InvoiceAddSparePartDialog extends StatefulWidget {
+  final Function(Map<String, dynamic>) onSparePartAdded;
   final String? gstBill;
-  final Function(Map<String, dynamic>) onAdd;
+  final String? igstBill;
 
-  const AddSparePartDialog({
-    Key? key,
-    this.gstBill,
-    required this.onAdd,
-  }) : super(key: key);
+  const InvoiceAddSparePartDialog(
+      {super.key,
+      required this.onSparePartAdded,
+      required this.gstBill,
+      required this.igstBill});
 
   @override
-  State<AddSparePartDialog> createState() => _AddSparePartDialogState();
+  State<InvoiceAddSparePartDialog> createState() => _AddSparePartDialogState();
 }
 
-class _AddSparePartDialogState extends State<AddSparePartDialog> {
+class _AddSparePartDialogState extends State<InvoiceAddSparePartDialog> {
   late TextEditingController productNameController;
   late TextEditingController sparePartNameController;
   late TextEditingController rateProductController;
   late TextEditingController quantityProductController;
   late TextEditingController hsnCodeController;
-
+  String? rateError;
   String unitProductController = "PCS";
   String gstController = "None";
   bool addNewMode = true;
@@ -57,62 +58,66 @@ class _AddSparePartDialogState extends State<AddSparePartDialog> {
   }
 
   void addSparePart() {
-    final newProductName = productNameController.text;
-    final newSparePartName = sparePartNameController.text;
-    final newQuantity = quantityProductController.text;
-    final newRate = rateProductController.text;
-    final newUnit = unitProductController;
-    final newGst = gstController;
-    final newHSNCode = hsnCodeController.text;
+    setState(() {
+      final newProductName = productNameController.text;
+      final newSparePartName = sparePartNameController.text;
+      final newQuantity = quantityProductController.text;
+      final newRate = rateProductController.text;
+      final newUnit = unitProductController;
+      final newGst = gstController;
+      final newHSNCode = hsnCodeController.text;
 
-    if ((newProductName.isNotEmpty && newUnit.isNotEmpty) ||
-        (newSparePartName.isNotEmpty && newUnit.isNotEmpty)) {
-      String productID = '';
-      if (!addNewMode && productId != null && productId!.isNotEmpty) {
-        try {
-          productID = int.parse(productId.toString()).toString();
-        } catch (e) {
-          debugPrint('Error parsing productId: $e');
+      if ((newProductName.isNotEmpty && newUnit.isNotEmpty) ||
+          (newSparePartName.isNotEmpty && newUnit.isNotEmpty)) {
+        String productID = '';
+        if (!addNewMode && productId != null && productId!.isNotEmpty) {
+          try {
+            productID = int.parse(productId.toString()).toString();
+          } catch (e) {
+            debugPrint('Error parsing productId: $e');
+          }
         }
+
+        double quantity = 1.0;
+        double rate = 0.0;
+        try {
+          quantity = double.parse(newQuantity);
+        } catch (_) {}
+        try {
+          rate = double.parse(newRate);
+        } catch (_) {}
+
+        bool showQuantityValue = isQuantityHidden;
+        int flagValue = isQuantityHidden ? 0 : 1;
+
+        if (!isQuantityHidden && quantity == 1) {
+          showQuantityValue = false;
+          flagValue = 1;
+        } else {
+          quantity = 1;
+          showQuantityValue = true;
+          flagValue = 0;
+        }
+
+        Map<String, dynamic> newSparePart = {
+          'product_id': productID.toString(),
+          'product_name': addNewMode
+              ? newSparePartName.toString()
+              : newProductName.toString(),
+          'product_qty': quantity.toString(),
+          'product_unit': newUnit,
+          'product_price': rate.toString(),
+          'product_gst': newGst,
+          'hsn_code': newHSNCode.toString(),
+          'showQuantity': showQuantityValue,
+          'flag': flagValue,
+          'is_delete': true,
+        };
+        widget.onSparePartAdded(newSparePart);
       }
+    });
 
-      double quantity = 1.0;
-      double rate = 0.0;
-      try {
-        quantity = double.parse(newQuantity);
-      } catch (_) {}
-      try {
-        rate = double.parse(newRate);
-      } catch (_) {}
-
-      bool showQuantityValue = isQuantityHidden;
-      int flagValue = isQuantityHidden ? 0 : 1;
-
-      if (!isQuantityHidden && quantity == 1) {
-        showQuantityValue = false;
-        flagValue = 1;
-      } else if (isQuantityHidden) {
-        quantity = 1;
-        showQuantityValue = true;
-        flagValue = 0;
-      }
-
-      Map<String, dynamic> newSparePart = {
-        'product_id': productID.toString(),
-        'product_name': addNewMode
-            ? newSparePartName.toString()
-            : newProductName.toString(),
-        'product_qty': quantity.toString(),
-        'product_unit': newUnit,
-        'product_price': rate.toString(),
-        'product_gst': newGst,
-        'hsn_code': newHSNCode.toString(),
-        'showQuantity': showQuantityValue,
-        'flag': flagValue,
-        'is_delete': true,
-      };
-      widget.onAdd(newSparePart);
-    }
+    isQuantityHidden = false;
   }
 
   @override
@@ -164,6 +169,7 @@ class _AddSparePartDialogState extends State<AddSparePartDialog> {
                       rateProductController.text = '00';
                     } else {
                       sparePartNameController.clear();
+                      hsnCodeController.clear();
                       quantityProductController.text = '1';
                       unitProductController = "PCS";
                       gstController = "None";
@@ -182,6 +188,7 @@ class _AddSparePartDialogState extends State<AddSparePartDialog> {
                 }).toList(),
               ),
             ),
+            const SizedBox(height: 5),
             if (addNewMode) ...[
               BlocBuilder<JobSheetDetailsBloc, JobSheetDetailsState>(
                 builder: (context, state) {
@@ -525,6 +532,7 @@ class _AddSparePartDialogState extends State<AddSparePartDialog> {
                     ],
                   ),
                 ),
+                const SizedBox(width: 10),
                 Expanded(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -605,6 +613,7 @@ class _AddSparePartDialogState extends State<AddSparePartDialog> {
                   ),
                 ],
               ),
+            const SizedBox(height: 7),
             const Align(
               alignment: Alignment.topLeft,
               child: Text(
@@ -612,7 +621,6 @@ class _AddSparePartDialogState extends State<AddSparePartDialog> {
                 style: TextStyle(fontSize: 14, color: blackColor),
               ),
             ),
-            const SizedBox(height: 5),
             Padding(
               padding: const EdgeInsets.only(top: 5, right: 18),
               child: TextFormField(
@@ -633,6 +641,7 @@ class _AddSparePartDialogState extends State<AddSparePartDialog> {
                   hintText: '00',
                   filled: true,
                   fillColor: lightGreyColor,
+                  errorText: rateError,
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(5),
                     borderSide: const BorderSide(
@@ -641,9 +650,19 @@ class _AddSparePartDialogState extends State<AddSparePartDialog> {
                     ),
                   ),
                 ),
+                onChanged: (value) {
+                  final parsed = double.tryParse(value);
+                  setState(() {
+                    if (parsed != null && parsed < 0) {
+                      rateError = "Negative values are not allowed";
+                    } else {
+                      rateError = null;
+                    }
+                  });
+                },
               ),
             ),
-            const SizedBox(height: 5),
+            const SizedBox(height: 7),
             if (widget.gstBill == "1") ...[
               const Align(
                 alignment: Alignment.topLeft,
@@ -652,7 +671,6 @@ class _AddSparePartDialogState extends State<AddSparePartDialog> {
                   style: TextStyle(fontSize: 14, color: blackColor),
                 ),
               ),
-              const SizedBox(height: 5),
               Padding(
                 padding: const EdgeInsets.only(top: 5, right: 18),
                 child: DropdownButtonFormField(
@@ -695,7 +713,7 @@ class _AddSparePartDialogState extends State<AddSparePartDialog> {
                   },
                 ),
               ),
-              const SizedBox(height: 5),
+              const SizedBox(height: 7),
               const Align(
                 alignment: Alignment.topLeft,
                 child: Text(
@@ -703,7 +721,6 @@ class _AddSparePartDialogState extends State<AddSparePartDialog> {
                   style: TextStyle(fontSize: 14, color: blackColor),
                 ),
               ),
-              const SizedBox(height: 5),
               Padding(
                 padding: const EdgeInsets.only(top: 5, right: 18),
                 child: TextFormField(
@@ -746,12 +763,14 @@ class _AddSparePartDialogState extends State<AddSparePartDialog> {
                     backgroundColor: primaryColor,
                   ),
                   onPressed: () {
-                    addSparePart();
-                    Navigator.of(context).pop();
+                    if (rateError == null) {
+                      addSparePart();
+                      Navigator.of(context).pop();
+                    }
                   },
                   child: const Text(
                     'Add',
-                    style: TextStyle(fontSize: 15, color: blackColor),
+                    style: TextStyle(fontSize: 15, color: whiteColor),
                   ),
                 ),
               ),

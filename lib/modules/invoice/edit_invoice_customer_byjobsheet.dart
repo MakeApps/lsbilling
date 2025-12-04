@@ -333,7 +333,7 @@ class _EditInvoiceCustomerByJobSheetState
                           'Update',
                           style: TextStyle(
                               fontSize: 14,
-                              color: blackColor,
+                              color: whiteColor,
                               fontWeight: FontWeight.w500),
                         ),
                       ),

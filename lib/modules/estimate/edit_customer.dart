@@ -323,7 +323,7 @@ class _EditCustomerBoxState extends State<EditCustomerBox> {
                           'Update',
                           style: TextStyle(
                               fontSize: 16,
-                              color: blackColor,
+                              color: whiteColor,
                               fontWeight: FontWeight.w600),
                         ),
                       ),

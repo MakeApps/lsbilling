@@ -356,8 +356,10 @@ class _AddSparePartsDialogState extends State<AddSparePartsDialog> {
               onPressed: () {
                 addSparePart();
               },
-              child: const Text('Add',
-                  style: TextStyle(fontSize: 15, color: blackColor)),
+              child: const Text(
+                'Add',
+                style: TextStyle(fontSize: 15, color: whiteColor),
+              ),
             )
           ],
         ),

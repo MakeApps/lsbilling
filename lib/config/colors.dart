@@ -1,11 +1,14 @@
 import 'dart:ui';
 
 const Color bluecolorprimary = Color.fromARGB(255, 3, 117, 204);
-const Color primaryColor = Color.fromRGBO(255, 213, 59, 1.0);
+const Color primaryColor = Color.fromARGB(255, 159, 95, 254);
+
+//  Color.fromRGBO(255, 213, 59, 1.0);
 const Color blackColor = Color.fromARGB(255, 39, 39, 46);
 const Color hintTextColor = Color.fromARGB(255, 161, 161, 161);
 //const Color backgroundColor = Color.fromRGBO(247, 247, 247, 1.0);
-const Color backgroundColor = Color.fromRGBO(255, 245, 206, 1.0);
+const Color backgroundColor =  Color.fromARGB(255, 255, 255, 255);
+// Color.fromRGBO(255, 245, 206, 1.0);
 const Color lightColor = Color(0xFFFFFFFF);
 const Color whiteColor = Color.fromARGB(255, 255, 255, 255);
 const Color blackColorLight = Color.fromRGBO(167, 166, 164, 1.0);

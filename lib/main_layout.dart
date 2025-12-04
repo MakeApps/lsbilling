@@ -104,7 +104,7 @@ class _MainLayoutState extends State<MainLayout>
                   visible: MediaQuery.of(context).viewInsets.bottom == 0.0,
                   child: FloatingActionButton(
                     backgroundColor: primaryColor,
-                    foregroundColor: blackColor,
+                    foregroundColor: whiteColor,
                     onPressed: () {
                       switch (widget.ctx) {
                         case 1:
@@ -309,7 +309,7 @@ class HumbergerIconButton extends StatelessWidget {
                   );
             },
             child: CircleAvatar(
-              backgroundColor: primaryColor,
+              backgroundColor: whiteColor,
               radius: 16,
               child: ClipOval(
                 child: SizedBox.fromSize(

@@ -249,13 +249,17 @@ class _InvoiceListingPageState extends State<InvoiceListingPage> {
                                   suffixIcon: Container(
                                     height: 30,
                                     width: 30,
+                                    decoration: BoxDecoration(
+                                      color: primaryColor, // LIGHT SHADE
+                                      borderRadius: BorderRadius.circular(12),
+                                    ),
                                     padding: const EdgeInsets.only(
                                         top: 15, bottom: 15),
                                     child: Image.asset(
                                       "assets/icons/search.png",
                                       height: 30,
                                       width: 30,
-                                      color: primaryColor,
+                                      color: whiteColor,
                                     ),
                                   ),
                                   hintText: 'Search by customer name....',
@@ -685,30 +689,13 @@ class _TabPill extends StatelessWidget {
         ),
         child: Row(
           children: [
-            // Container(
-            //   height: 25,
-            //   width: 25,
-            //   alignment: Alignment.center,
-            //   decoration: BoxDecoration(
-            //     color: selected ? whiteColor : blackColor,
-            //     shape: BoxShape.circle,
-            //   ),
-            //   child: Text(
-            //     count.toString(),
-            //     style: TextStyle(
-            //       fontSize: 13,
-            //       fontWeight: FontWeight.bold,
-            //       color: selected ? blackColor : whiteColor,
-            //     ),
-            //   ),
-            // ),
             const SizedBox(width: 8),
             Text(
               label,
               style: TextStyle(
                 fontWeight: FontWeight.w700,
                 fontSize: 13,
-                color: selected ? blackColorDark : Colors.black87,
+                color: selected ? whiteColor : Colors.black87,
               ),
             ),
             const SizedBox(width: 10),

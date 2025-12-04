@@ -189,7 +189,7 @@ class _PurchesInvoiceDetailScreenState
                       child: ElevatedButton(
                         style: ButtonStyle(
                           foregroundColor:
-                              WidgetStateProperty.all<Color>(blackColor),
+                              WidgetStateProperty.all<Color>(whiteColor),
                           backgroundColor:
                               WidgetStateProperty.all<Color>(primaryColor),
                           shape:
@@ -434,7 +434,7 @@ class _PurchesInvoiceDetailScreenState
                                                     primaryColor),
                                             foregroundColor:
                                                 WidgetStateProperty.all<Color>(
-                                                    blackColor),
+                                                    whiteColor),
                                           ),
                                           onPressed: () async {
                                             await showDialog(

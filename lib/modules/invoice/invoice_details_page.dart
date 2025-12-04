@@ -1,13 +1,16 @@
 import 'dart:async';
 import 'dart:convert';
+import 'dart:developer';
 import 'package:flutter_form_bloc/flutter_form_bloc.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:local_shout_billing/components/center_loader.dart';
 import 'package:local_shout_billing/config/streamsControllers.dart';
 import 'package:local_shout_billing/models/customer_model.dart';
 import 'package:local_shout_billing/models/invoice_payment_submodel.dart';
-import 'package:local_shout_billing/models/product_model.dart';
-import 'package:local_shout_billing/models/spare_part_model.dart';
+import 'package:local_shout_billing/modules/invoice/component/add_spare_part.dart';
+import 'package:local_shout_billing/modules/invoice/component/edit_existing_gst_sparepart_list.dart';
+import 'package:local_shout_billing/modules/invoice/component/edit_existing_list_part.dart';
+import 'package:local_shout_billing/modules/invoice/component/edit_sparepart_newlist_gst.dart';
 import 'package:local_shout_billing/modules/job_sheet/bloc/job_sheet_details_bloc/job_sheet_details_bloc.dart';
 import 'package:local_shout_billing/modules/job_sheet/pages/job_sheet.dart';
 import 'package:local_shout_billing/config.dart' as app_instance;
@@ -55,6 +58,7 @@ class _InvoiceDetailsPageState extends State<InvoiceDetailsPage> {
   double finalAmountAfterDiscount = 0.0;
   String? gstFlag;
   String? gstBill;
+  String? igstBill;
   DateTime _selectedDate = DateTime.now();
   String? invoiceTotalValue;
   double sgst = 0.0;
@@ -101,6 +105,7 @@ class _InvoiceDetailsPageState extends State<InvoiceDetailsPage> {
     invoiceTotalValue = state.invoiceModel!.invoiceTotal.toString();
     gstFlag = state.invoiceModel!.gstFlag.toString();
     gstBill = state.invoiceModel!.gstBill.toString();
+    igstBill = state.invoiceModel!.igstBill.toString();
     discountController.text = state.invoiceModel!.discountAmount.toString();
     payments = state.invoiceModel!.totalInvoicePayment?.reversed.toList();
     totalRecived = double.parse(state.invoiceModel!.paidAmount.toString());
@@ -241,7 +246,7 @@ class _InvoiceDetailsPageState extends State<InvoiceDetailsPage> {
                       child: ElevatedButton(
                         style: ButtonStyle(
                           foregroundColor:
-                              WidgetStateProperty.all<Color>(blackColor),
+                              WidgetStateProperty.all<Color>(whiteColor),
                           backgroundColor:
                               WidgetStateProperty.all<Color>(primaryColor),
                           shape:
@@ -286,11 +291,19 @@ class _InvoiceDetailsPageState extends State<InvoiceDetailsPage> {
                                   : calculateSparePartSubtotal(),
                               "gst_flag": gstFlag.toString(),
                               "gst_bill": gstBill.toString(),
+                              "igst": igstBill.toString(),
+                              "igstTotal": igstBill == "1"
+                                  ? calculateFinalIgstTotal()
+                                  : 0,
                               "taxablevalueTotal": gstBill == "1"
                                   ? calculateSparePartSubtotal()
                                   : 0,
-                              "cgstTotal": gstBill == "1" ? calculateCgst() : 0,
-                              "scgtTotal": gstBill == "1" ? calculateCgst() : 0,
+                              "cgstTotal": (gstBill == "1" && igstBill == "0")
+                                  ? calculateCgst()
+                                  : 0,
+                              "scgtTotal": (gstBill == "1" && igstBill == "0")
+                                  ? calculateCgst()
+                                  : 0,
                               "invoice_id": state.invoiceModel!.invoiceId,
                               "invoice_number":
                                   state.invoiceModel!.invoiceNumber.toString(),
@@ -329,6 +342,7 @@ class _InvoiceDetailsPageState extends State<InvoiceDetailsPage> {
                               "updated_at":
                                   state.invoiceModel!.updatedAt.toString(),
                             };
+                            log("-----$formData");
                             context.read<JobSheetDetailsBloc>().add(
                                   GenerateInvoiceEvent(
                                       id: state.invoiceModel!.invoiceId
@@ -347,7 +361,7 @@ class _InvoiceDetailsPageState extends State<InvoiceDetailsPage> {
                               context: context,
                               builder: (context) => AlertDialog(
                                 content: const Text(
-                                  "Please add at least one spare part and labour",
+                                  "Please add at least one spare part",
                                   style: TextStyle(
                                       color: blackColorDark,
                                       fontSize: 14,
@@ -373,7 +387,7 @@ class _InvoiceDetailsPageState extends State<InvoiceDetailsPage> {
                                         style: TextStyle(
                                           fontSize: 14,
                                           fontWeight: FontWeight.bold,
-                                          color: blackColorDark,
+                                          color: whiteColor,
                                         ),
                                       ),
                                     ),
@@ -397,7 +411,7 @@ class _InvoiceDetailsPageState extends State<InvoiceDetailsPage> {
                       ElevatedButton(
                         style: ButtonStyle(
                           foregroundColor:
-                              WidgetStateProperty.all<Color>(blackColor),
+                              WidgetStateProperty.all<Color>(whiteColor),
                           backgroundColor:
                               WidgetStateProperty.all<Color>(primaryColor),
                           shape:
@@ -442,11 +456,19 @@ class _InvoiceDetailsPageState extends State<InvoiceDetailsPage> {
                                   : calculateSparePartSubtotal(),
                               "gst_flag": gstFlag.toString(),
                               "gst_bill": gstBill.toString(),
+                              "igst": igstBill.toString(),
+                              "igstTotal": igstBill == "1"
+                                  ? calculateFinalIgstTotal()
+                                  : 0,
                               "taxablevalueTotal": gstBill == "1"
                                   ? calculateSparePartSubtotal()
                                   : 0,
-                              "cgstTotal": gstBill == "1" ? calculateCgst() : 0,
-                              "scgtTotal": gstBill == "1" ? calculateCgst() : 0,
+                              "cgstTotal": (gstBill == "1" && igstBill == "0")
+                                  ? calculateCgst()
+                                  : 0,
+                              "scgtTotal": (gstBill == "1" && igstBill == "0")
+                                  ? calculateCgst()
+                                  : 0,
                               "invoice_id": state.invoiceModel!.invoiceId,
                               "invoice_number":
                                   state.invoiceModel!.invoiceNumber.toString(),
@@ -498,7 +520,7 @@ class _InvoiceDetailsPageState extends State<InvoiceDetailsPage> {
                               context: context,
                               builder: (context) => AlertDialog(
                                 content: const Text(
-                                  "Please add at least one spare part and labour",
+                                  "Please add at least one spare part",
                                   style: TextStyle(
                                       color: blackColorDark,
                                       fontSize: 14,
@@ -524,7 +546,7 @@ class _InvoiceDetailsPageState extends State<InvoiceDetailsPage> {
                                         style: TextStyle(
                                           fontSize: 14,
                                           fontWeight: FontWeight.bold,
-                                          color: blackColorDark,
+                                          color: whiteColor,
                                         ),
                                       ),
                                     ),
@@ -916,7 +938,7 @@ class _InvoiceDetailsPageState extends State<InvoiceDetailsPage> {
                                             },
                                             icon: const Icon(
                                               addIcon,
-                                              color: blackColor,
+                                              color: whiteColor,
                                               size: 18,
                                             ),
                                             label: const Text(
@@ -937,7 +959,7 @@ class _InvoiceDetailsPageState extends State<InvoiceDetailsPage> {
                                               ),
                                               foregroundColor:
                                                   WidgetStatePropertyAll(
-                                                      blackColor),
+                                                      whiteColor),
                                               backgroundColor:
                                                   WidgetStatePropertyAll(
                                                       primaryColor),
@@ -1905,9 +1927,9 @@ class _InvoiceDetailsPageState extends State<InvoiceDetailsPage> {
                                       ),
                                       Text(
                                         gstBill == "1"
-                                            ? calculateSparePartSubtotal()
-                                                .toStringAsFixed(2)
-                                            : calculateSubtotalGst().toString(),
+                                            ? calculateSubtotalGst().toString()
+                                            : calculateSparePartSubtotal()
+                                                .toStringAsFixed(2),
                                         style: const TextStyle(
                                           color: blackColorDark,
                                           fontSize: 13,
@@ -2110,7 +2132,7 @@ class _InvoiceDetailsPageState extends State<InvoiceDetailsPage> {
                                               style: ButtonStyle(
                                                 foregroundColor:
                                                     WidgetStateProperty.all<
-                                                        Color>(blackColor),
+                                                        Color>(whiteColor),
                                                 backgroundColor:
                                                     WidgetStateProperty.all<
                                                         Color>(primaryColor),
@@ -2417,703 +2439,18 @@ class _InvoiceDetailsPageState extends State<InvoiceDetailsPage> {
     unitProductControlller = "PCS";
     gstController = "None";
     addNewMode = true;
-    String? rateError;
 
     await showDialog(
-      barrierDismissible: true,
       context: context,
-      builder: (context) {
-        return StatefulBuilder(
-          builder: (context, setState) {
-            return Dialog(
-              backgroundColor: whiteColor,
-              shape: const RoundedRectangleBorder(),
-              insetPadding: const EdgeInsets.all(20),
-              child: SingleChildScrollView(
-                padding: const EdgeInsets.only(
-                    left: 20, right: 20, top: 10, bottom: 10),
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        const Text(
-                          'Add Spare Part',
-                          style: TextStyle(
-                              fontSize: 15,
-                              fontWeight: FontWeight.bold,
-                              color: blackColor),
-                        ),
-                        IconButton(
-                          onPressed: () {
-                            Navigator.pop(context);
-                            isQuantityHidden = false;
-                          },
-                          icon: const Icon(
-                            clearIcon,
-                            size: 23,
-                            color: blackColorDark,
-                          ),
-                        ),
-                      ],
-                    ),
-                    Align(
-                      alignment: Alignment.topLeft,
-                      child: DropdownButton<String>(
-                        style: const TextStyle(fontSize: 14, color: blackColor),
-                        dropdownColor: whiteColor,
-                        value: addNewMode ? 'Spare Part Name' : 'Stock',
-                        onChanged: (String? newValue) {
-                          setState(() {
-                            addNewMode = newValue == 'Spare Part Name';
-                            if (addNewMode) {
-                              productNameController.clear();
-                              rateProductController.text = '00';
-                            } else {
-                              sparePartNameController.clear();
-                              hsnCodeProductController.clear();
-                              quantityProductController.text = '1';
-                              unitProductControlller = "PCS";
-                              gstController = "None";
-                            }
-                          });
-                        },
-                        items: <String>['Spare Part Name', 'Stock']
-                            .map<DropdownMenuItem<String>>((String value) {
-                          return DropdownMenuItem<String>(
-                            value: value,
-                            child: Text(
-                              value,
-                              style: const TextStyle(fontSize: 13),
-                            ),
-                          );
-                        }).toList(),
-                      ),
-                    ),
-                    const SizedBox(height: 5),
-                    if (addNewMode) ...[
-                      BlocBuilder<JobSheetDetailsBloc, JobSheetDetailsState>(
-                        builder: (context, state) {
-                          return Autocomplete<SparePartModel>(
-                            optionsBuilder:
-                                (TextEditingValue textEditingValue) {
-                              if (textEditingValue.text.isEmpty) {
-                                return [];
-                              }
-                              return state.sparePartList!.where(
-                                (element) => element.productName!
-                                    .trim()
-                                    .toLowerCase()
-                                    .contains(
-                                      textEditingValue.text
-                                          .trim()
-                                          .toLowerCase(),
-                                    ),
-                              );
-                            },
-                            displayStringForOption: (sparePart) =>
-                                sparePart.productName!,
-                            fieldViewBuilder: (
-                              BuildContext context,
-                              TextEditingController fieldTextEditingController,
-                              FocusNode fieldFocusNode,
-                              VoidCallback onFieldSubmitted,
-                            ) {
-                              if (sparePartNameController.text.isEmpty) {
-                                sparePartNameController =
-                                    fieldTextEditingController;
-                              }
-                              return Padding(
-                                padding: const EdgeInsets.only(right: 17),
-                                child: TextField(
-                                  controller: sparePartNameController,
-                                  focusNode: fieldFocusNode,
-                                  style: const TextStyle(
-                                      color: blackColor, fontSize: 14),
-                                  decoration: InputDecoration(
-                                    hintText: "Enter Spare Part Name",
-                                    hintStyle: const TextStyle(
-                                      color: hintTextColor,
-                                      fontFamily: 'Mulish',
-                                      fontSize: 13,
-                                    ),
-                                    contentPadding: const EdgeInsets.only(
-                                        left: 15, right: 20.0),
-                                    filled: true,
-                                    fillColor: lightGreyColor,
-                                    border: OutlineInputBorder(
-                                      borderRadius: BorderRadius.circular(5),
-                                      borderSide: const BorderSide(
-                                        width: 0,
-                                        style: BorderStyle.none,
-                                      ),
-                                    ),
-                                  ),
-                                  onChanged: (text) {
-                                    if (_debounce?.isActive ?? false)
-                                      _debounce!.cancel();
-
-                                    _debounce = Timer(
-                                        const Duration(milliseconds: 300), () {
-                                      if (text.length >= 3) {
-                                        context.read<JobSheetDetailsBloc>().add(
-                                              SearchSparePart(
-                                                  searchKeyword: text),
-                                            );
-                                      }
-                                    });
-
-                                    sparePartNameController =
-                                        fieldTextEditingController;
-                                  },
-                                ),
-                              );
-                            },
-                            onSelected: (suggestion) {
-                              sparePartNameController.text =
-                                  suggestion.productName!;
-                              productId = suggestion.productId.toString();
-                              setState(
-                                () {
-                                  unitProductControlller =
-                                      suggestion.productUnit.toString();
-                                  gstController =
-                                      suggestion.productGst.toString();
-                                  hsnCodeProductController.text =
-                                      suggestion.hashCode.toString();
-                                },
-                              );
-                              double parseDouble = double.parse(
-                                suggestion.productPrice.toString(),
-                              );
-                              int convertToInt = parseDouble.toInt();
-                              setState(
-                                () {
-                                  rateProductController.text =
-                                      convertToInt.toString();
-                                },
-                              );
-                              sparePartNameController.selection =
-                                  TextSelection.fromPosition(
-                                TextPosition(
-                                    offset:
-                                        sparePartNameController.text.length),
-                              );
-
-                              FocusScope.of(context).requestFocus(
-                                FocusNode(),
-                              );
-                            },
-                            optionsViewBuilder: (context, onSelected, options) {
-                              return Align(
-                                alignment: Alignment.topLeft,
-                                child: Material(
-                                  elevation: 4.0,
-                                  child: Container(
-                                    color: whiteColor,
-                                    constraints: BoxConstraints(
-                                      maxWidth: 290,
-                                      maxHeight: options.isEmpty
-                                          ? 0
-                                          : (options.length * 50).toDouble(),
-                                    ),
-                                    child: ListView.builder(
-                                      padding: EdgeInsets.zero,
-                                      shrinkWrap: true,
-                                      itemCount: options.length,
-                                      itemBuilder:
-                                          (BuildContext context, int index) {
-                                        final SparePartModel option =
-                                            options.elementAt(index);
-                                        return ListTile(
-                                          title: Text(option.productName!),
-                                          onTap: () {
-                                            onSelected(option);
-                                          },
-                                        );
-                                      },
-                                    ),
-                                  ),
-                                ),
-                              );
-                            },
-                          );
-                        },
-                      )
-                    ] else
-                      BlocBuilder<JobSheetDetailsBloc, JobSheetDetailsState>(
-                        builder: (context, state) {
-                          return Autocomplete<ProductModel>(
-                            optionsBuilder:
-                                (TextEditingValue textEditingValue) {
-                              if (textEditingValue.text.isEmpty) {
-                                return [];
-                              }
-                              return state.productList!.where(
-                                (element) => element.sparePartName!
-                                    .trim()
-                                    .toLowerCase()
-                                    .contains(
-                                      textEditingValue.text
-                                          .trim()
-                                          .toLowerCase(),
-                                    ),
-                              );
-                            },
-                            displayStringForOption: (product) =>
-                                product.sparePartName!,
-                            fieldViewBuilder: (
-                              BuildContext context,
-                              TextEditingController fieldTextEditingController,
-                              FocusNode fieldFocusNode,
-                              VoidCallback onFieldSubmitted,
-                            ) {
-                              if (productNameController.text.isEmpty) {
-                                productNameController =
-                                    fieldTextEditingController;
-                              }
-                              return Padding(
-                                padding: const EdgeInsets.only(right: 17),
-                                child: TextField(
-                                  controller: productNameController,
-                                  style: const TextStyle(
-                                      color: blackColor, fontSize: 14),
-                                  focusNode: fieldFocusNode,
-                                  decoration: InputDecoration(
-                                    hintText: "Search Spare Part Name",
-                                    hintStyle: const TextStyle(
-                                      color: hintTextColor,
-                                      fontFamily: 'Mulish',
-                                      fontSize: 13,
-                                    ),
-                                    contentPadding: const EdgeInsets.only(
-                                        left: 15, right: 20.0),
-                                    filled: true,
-                                    fillColor: lightGreyColor,
-                                    border: OutlineInputBorder(
-                                      borderRadius: BorderRadius.circular(5),
-                                      borderSide: const BorderSide(
-                                        width: 0,
-                                        style: BorderStyle.none,
-                                      ),
-                                    ),
-                                  ),
-                                  onChanged: (text) {
-                                    if (_debounce?.isActive ?? false)
-                                      _debounce!.cancel();
-
-                                    _debounce = Timer(
-                                        const Duration(milliseconds: 300), () {
-                                      if (text.length >= 3) {
-                                        context.read<JobSheetDetailsBloc>().add(
-                                              SearchProduct(
-                                                  searchKeyword: text),
-                                            );
-                                      }
-                                    });
-
-                                    setState(() {
-                                      productNameController =
-                                          fieldTextEditingController;
-                                    });
-                                  },
-                                ),
-                              );
-                            },
-                            onSelected: (suggestion) {
-                              productNameController.text =
-                                  suggestion.sparePartName!;
-                              gstController =
-                                  suggestion.sparePartGst.toString();
-                              hsnCodeProductController.text =
-                                  suggestion.hashCode.toString();
-                              productId = suggestion.id.toString();
-                              setState(() {
-                                unitProductControlller =
-                                    suggestion.unitType.toString();
-                              });
-                              double parseDouble = double.parse(
-                                suggestion.salesPrice.toString(),
-                              );
-                              int convertToInt = parseDouble.toInt();
-                              setState(
-                                () {
-                                  rateProductController.text =
-                                      convertToInt.toString();
-                                },
-                              );
-                              productNameController.selection =
-                                  TextSelection.fromPosition(
-                                TextPosition(
-                                    offset: productNameController.text.length),
-                              );
-
-                              FocusScope.of(context).requestFocus(
-                                FocusNode(),
-                              );
-                            },
-                            optionsViewBuilder: (context, onSelected, options) {
-                              return Align(
-                                alignment: Alignment.topLeft,
-                                child: Material(
-                                  elevation: 4.0,
-                                  child: Container(
-                                    color: whiteColor,
-                                    constraints: BoxConstraints(
-                                      maxWidth: 290,
-                                      maxHeight: options.isEmpty
-                                          ? 0
-                                          : (options.length * 50).toDouble(),
-                                    ),
-                                    child: ListView.builder(
-                                      padding: EdgeInsets.zero,
-                                      shrinkWrap: true,
-                                      itemCount: options.length,
-                                      itemBuilder:
-                                          (BuildContext context, int index) {
-                                        final ProductModel option =
-                                            options.elementAt(index);
-                                        return ListTile(
-                                          title: Text(option.sparePartName!),
-                                          onTap: () {
-                                            onSelected(option);
-                                          },
-                                        );
-                                      },
-                                    ),
-                                  ),
-                                ),
-                              );
-                            },
-                          );
-                        },
-                      ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Expanded(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              const Padding(
-                                padding: EdgeInsets.only(top: 10),
-                                child: Align(
-                                  alignment: Alignment.topLeft,
-                                  child: Text(
-                                    'Quantity:',
-                                    style: TextStyle(fontSize: 14),
-                                  ),
-                                ),
-                              ),
-                              (isQuantityHidden == false)
-                                  ? Padding(
-                                      padding: const EdgeInsets.only(top: 5),
-                                      child: TextFormField(
-                                        controller: quantityProductController,
-                                        keyboardType: TextInputType.number,
-                                        style: const TextStyle(
-                                            color: blackColor, fontSize: 14),
-                                        inputFormatters: [
-                                          NoLeadingSpaceFormatter()
-                                        ],
-                                        textAlign: TextAlign.start,
-                                        decoration: InputDecoration(
-                                          hintStyle: const TextStyle(
-                                            color: hintTextColor,
-                                            fontFamily: 'Mulish',
-                                            fontSize: 14,
-                                          ),
-                                          contentPadding: const EdgeInsets.only(
-                                              left: 15, right: 20),
-                                          hintText: '',
-                                          filled: true,
-                                          fillColor: lightGreyColor,
-                                          border: OutlineInputBorder(
-                                            borderRadius:
-                                                BorderRadius.circular(5),
-                                            borderSide: const BorderSide(
-                                              width: 0,
-                                              style: BorderStyle.none,
-                                            ),
-                                          ),
-                                        ),
-                                      ),
-                                    )
-                                  : Row(
-                                      children: [
-                                        Checkbox(
-                                          value: isQuantityHidden,
-                                          onChanged: (value) {
-                                            setState(() {
-                                              isQuantityHidden = value!;
-                                            });
-                                          },
-                                        ),
-                                        const Text(
-                                          'Hide Quantity',
-                                          style: TextStyle(fontSize: 14),
-                                        ),
-                                      ],
-                                    ),
-                            ],
-                          ),
-                        ),
-                        const SizedBox(width: 10),
-                        Expanded(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              const Padding(
-                                padding: EdgeInsets.only(top: 10),
-                                child: Align(
-                                  alignment: Alignment.topLeft,
-                                  child: Text(
-                                    'Unit:',
-                                    style: TextStyle(
-                                        fontSize: 14, color: blackColor),
-                                  ),
-                                ),
-                              ),
-                              Padding(
-                                padding:
-                                    const EdgeInsets.only(top: 5, right: 18),
-                                child: DropdownButtonFormField(
-                                  style: const TextStyle(fontSize: 14),
-                                  menuMaxHeight: 450,
-                                  isExpanded: true,
-                                  value: unitProductControlller,
-                                  dropdownColor: whiteColor,
-                                  decoration: InputDecoration(
-                                    filled: true,
-                                    fillColor: lightGreyColor,
-                                    border: OutlineInputBorder(
-                                      borderRadius: BorderRadius.circular(5),
-                                      borderSide: const BorderSide(
-                                        width: 0,
-                                        style: BorderStyle.none,
-                                      ),
-                                    ),
-                                  ),
-                                  hint: const Text(
-                                    'Unit',
-                                    style: TextStyle(fontSize: 14),
-                                  ),
-                                  items: unitList
-                                      .map<DropdownMenuItem<String>>((value) {
-                                    return DropdownMenuItem<String>(
-                                      value: value,
-                                      child: Text(
-                                        value,
-                                        style: const TextStyle(
-                                          color: blackColor,
-                                          fontFamily: 'Mulish',
-                                          fontWeight: FontWeight.w400,
-                                          fontSize: 14,
-                                          wordSpacing: 3,
-                                        ),
-                                      ),
-                                    );
-                                  }).toList(),
-                                  onChanged: (value) {
-                                    unitProductControlller = value!.toString();
-                                  },
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ],
-                    ),
-                    if (isQuantityHidden == false)
-                      Row(
-                        children: [
-                          Checkbox(
-                            value: isQuantityHidden,
-                            onChanged: (value) {
-                              setState(() {
-                                isQuantityHidden = value!;
-                              });
-                            },
-                          ),
-                          const Text(
-                            'Hide Quantity',
-                            style: TextStyle(fontSize: 14),
-                          ),
-                        ],
-                      ),
-                    const SizedBox(height: 5),
-                    const Align(
-                      alignment: Alignment.topLeft,
-                      child: Text(
-                        'Rate:',
-                        style: TextStyle(fontSize: 14, color: blackColor),
-                      ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.only(top: 5, right: 18),
-                      child: TextFormField(
-                        style: const TextStyle(fontSize: 14),
-                        controller: rateProductController,
-                        keyboardType: TextInputType.number,
-                        inputFormatters: [
-                          NoLeadingSpaceFormatter(),
-                          LengthLimitingTextInputFormatter(7)
-                        ],
-                        decoration: InputDecoration(
-                          hintStyle: const TextStyle(
-                            color: hintTextColor,
-                            fontFamily: 'Mulish',
-                            fontSize: 14,
-                          ),
-                          contentPadding:
-                              const EdgeInsets.only(left: 15, right: 20),
-                          hintText: '00',
-                          filled: true,
-                          fillColor: lightGreyColor,
-                          errorText: rateError,
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(5),
-                            borderSide: const BorderSide(
-                              width: 0,
-                              style: BorderStyle.none,
-                            ),
-                          ),
-                        ),
-                        onChanged: (value) {
-                          final parsed = double.tryParse(value);
-                          setState(() {
-                            if (parsed != null && parsed < 0) {
-                              rateError = "Negative values are not allowed";
-                            } else {
-                              rateError = null;
-                            }
-                          });
-                        },
-                      ),
-                    ),
-                    const SizedBox(height: 5),
-                    if (gstBill == "1") ...[
-                      const Align(
-                        alignment: Alignment.topLeft,
-                        child: Text(
-                          'GST:',
-                          style: TextStyle(fontSize: 14, color: blackColor),
-                        ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.only(top: 5, right: 18),
-                        child: DropdownButtonFormField(
-                          style: const TextStyle(fontSize: 14),
-                          menuMaxHeight: 450,
-                          isExpanded: true,
-                          value: gstController,
-                          dropdownColor: whiteColor,
-                          decoration: InputDecoration(
-                            filled: true,
-                            fillColor: lightGreyColor,
-                            border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(5),
-                              borderSide: const BorderSide(
-                                width: 0,
-                                style: BorderStyle.none,
-                              ),
-                            ),
-                          ),
-                          hint: const Text('None'),
-                          items: gstList.isEmpty
-                              ? null
-                              : gstList.map<DropdownMenuItem<String>>((value) {
-                                  return DropdownMenuItem<String>(
-                                    value: value,
-                                    child: Text(
-                                      value,
-                                      style: const TextStyle(
-                                        color: blackColor,
-                                        fontFamily: 'Mulish',
-                                        fontWeight: FontWeight.w400,
-                                        fontSize: 14,
-                                        wordSpacing: 3,
-                                      ),
-                                    ),
-                                  );
-                                }).toList(),
-                          onChanged: (value) {
-                            gstController = value!.toString();
-                          },
-                        ),
-                      ),
-                      const SizedBox(height: 5),
-                      const Align(
-                        alignment: Alignment.topLeft,
-                        child: Text(
-                          'HSN Code:',
-                          style: TextStyle(fontSize: 14, color: blackColor),
-                        ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.only(top: 5, right: 18),
-                        child: TextFormField(
-                          style: const TextStyle(fontSize: 14),
-                          controller: hsnCodeProductController,
-                          keyboardType: TextInputType.text,
-                          inputFormatters: [
-                            NoLeadingSpaceFormatter(),
-                          ],
-                          decoration: InputDecoration(
-                            hintStyle: const TextStyle(
-                              color: hintTextColor,
-                              fontFamily: 'Mulish',
-                              fontSize: 14,
-                            ),
-                            contentPadding:
-                                const EdgeInsets.only(left: 15, right: 20),
-                            hintText: 'Enter HSN Code',
-                            filled: true,
-                            fillColor: lightGreyColor,
-                            border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(5),
-                              borderSide: const BorderSide(
-                                width: 0,
-                                style: BorderStyle.none,
-                              ),
-                            ),
-                          ),
-                        ),
-                      ),
-                    ],
-                    const SizedBox(height: 15),
-                    Padding(
-                      padding: const EdgeInsets.only(right: 10),
-                      child: SizedBox(
-                        height: 50,
-                        width: MediaQuery.of(context).size.width * 0.8,
-                        child: ElevatedButton(
-                          style: ElevatedButton.styleFrom(
-                            shape: const RoundedRectangleBorder(),
-                            backgroundColor: primaryColor,
-                          ),
-                          onPressed: () {
-                            if (rateError == null) {
-                              addSparePart();
-                              Navigator.of(context).pop();
-                            }
-                          },
-                          child: const Text(
-                            'Add',
-                            style: TextStyle(fontSize: 15, color: blackColor),
-                          ),
-                        ),
-                      ),
-                    )
-                  ],
-                ),
-              ),
-            );
-          },
-        );
-      },
+      builder: (context) => InvoiceAddSparePartDialog(
+        onSparePartAdded: (Map<String, dynamic> newSparePart) {
+          setState(() {
+            sparePartsListNew.add(newSparePart);
+          });
+        },
+        gstBill: gstBill,
+        igstBill: igstBill,
+      ),
     );
   }
 
@@ -3138,418 +2475,42 @@ class _InvoiceDetailsPageState extends State<InvoiceDetailsPage> {
     hsnCodeProductController = TextEditingController(text: hsnCode);
     bool isHideButtonSelected = showQuantity;
     await showDialog(
-        barrierDismissible: true,
-        context: context,
-        builder: (context) {
-          return StatefulBuilder(
-            builder: (context, setState) {
-              return Dialog(
-                backgroundColor: whiteColor,
-                shape: const RoundedRectangleBorder(),
-                insetPadding: const EdgeInsets.all(20),
-                child: SingleChildScrollView(
-                  padding: const EdgeInsets.all(20),
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          const Text(
-                            'Edit Spare Part',
-                            style: TextStyle(
-                                fontSize: 15,
-                                fontWeight: FontWeight.bold,
-                                color: blackColor),
-                          ),
-                          IconButton(
-                            onPressed: () {
-                              Navigator.pop(context);
-                            },
-                            icon: const Icon(
-                              clearIcon,
-                              size: 23,
-                              color: blackColorDark,
-                            ),
-                          )
-                        ],
-                      ),
-                      const SizedBox(height: 10),
-                      const Align(
-                          alignment: Alignment.topLeft,
-                          child: Text(
-                            'Spare Part Name:',
-                            style: TextStyle(fontSize: 14, color: blackColor),
-                          )),
-                      const SizedBox(height: 5),
-                      Padding(
-                        padding: const EdgeInsets.only(top: 5),
-                        child: TextFormField(
-                          controller: productNameController,
-                          textAlign: TextAlign.start,
-                          cursorColor: blackColor,
-                          decoration: InputDecoration(
-                            hintStyle: const TextStyle(
-                              color: greyColor,
-                              fontFamily: 'Mulish',
-                              fontSize: 13,
-                            ),
-                            contentPadding:
-                                const EdgeInsets.only(left: 15, right: 20),
-                            hintText: 'Enter Spare Part Name',
-                            filled: true,
-                            fillColor: lightGreyColor,
-                            border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(5),
-                              borderSide: const BorderSide(
-                                width: 0,
-                                style: BorderStyle.none,
-                              ),
-                            ),
-                          ),
-                        ),
-                      ),
-                      const SizedBox(height: 10),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Expanded(
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                const Padding(
-                                  padding: EdgeInsets.only(top: 10),
-                                  child: Align(
-                                    alignment: Alignment.topLeft,
-                                    child: Text(
-                                      'Quantity:',
-                                      style: TextStyle(
-                                          color: blackColor, fontSize: 14),
-                                    ),
-                                  ),
-                                ),
-                                (isHideButtonSelected == false)
-                                    ? Padding(
-                                        padding: const EdgeInsets.only(top: 5),
-                                        child: TextFormField(
-                                          controller: quantityProductController,
-                                          keyboardType: TextInputType.number,
-                                          style: const TextStyle(
-                                              color: blackColor, fontSize: 14),
-                                          inputFormatters: [
-                                            NoLeadingSpaceFormatter()
-                                          ],
-                                          textAlign: TextAlign.start,
-                                          cursorColor: blackColor,
-                                          decoration: InputDecoration(
-                                            hintStyle: const TextStyle(
-                                              color: greyColor,
-                                              fontFamily: 'Mulish',
-                                              fontSize: 13,
-                                            ),
-                                            contentPadding:
-                                                const EdgeInsets.only(
-                                                    left: 15, right: 20),
-                                            hintText: '',
-                                            filled: true,
-                                            fillColor: lightGreyColor,
-                                            border: OutlineInputBorder(
-                                              borderRadius:
-                                                  BorderRadius.circular(5),
-                                              borderSide: const BorderSide(
-                                                width: 0,
-                                                style: BorderStyle.none,
-                                              ),
-                                            ),
-                                          ),
-                                        ),
-                                      )
-                                    : Row(
-                                        children: [
-                                          Checkbox(
-                                            value: isHideButtonSelected,
-                                            onChanged: (bool? value) {
-                                              setState(() {
-                                                isHideButtonSelected = value!;
-                                                if (isHideButtonSelected) {
-                                                  quantityProductController
-                                                          .text =
-                                                      "1"; // Set quantity to 1 when hiding
-                                                }
-                                              });
-                                            },
-                                          ),
-                                          const Text(
-                                            "Hide",
-                                            style: TextStyle(
-                                                fontSize: 14,
-                                                color: blackColor),
-                                          ),
-                                        ],
-                                      ),
-                              ],
-                            ),
-                          ),
-                          const SizedBox(width: 10),
-                          Expanded(
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                const Padding(
-                                  padding: EdgeInsets.only(top: 10),
-                                  child: Align(
-                                    alignment: Alignment.topLeft,
-                                    child: Text(
-                                      'Unit:',
-                                      style: TextStyle(
-                                          color: blackColor, fontSize: 14),
-                                    ),
-                                  ),
-                                ),
-                                Padding(
-                                  padding:
-                                      const EdgeInsets.only(top: 5, right: 18),
-                                  child: DropdownButtonFormField(
-                                    menuMaxHeight: 450,
-                                    isExpanded: true,
-                                    value: unitProductControlller,
-                                    style: const TextStyle(
-                                        color: blackColor, fontSize: 14),
-                                    dropdownColor: whiteColor,
-                                    decoration: InputDecoration(
-                                      filled: true,
-                                      fillColor: lightGreyColor,
-                                      border: OutlineInputBorder(
-                                        borderRadius: BorderRadius.circular(5),
-                                        borderSide: const BorderSide(
-                                          width: 0,
-                                          style: BorderStyle.none,
-                                        ),
-                                      ),
-                                    ),
-                                    hint: const Text(
-                                      'Unit',
-                                      style: TextStyle(
-                                          color: hintTextColor, fontSize: 13),
-                                    ),
-                                    items: unitList
-                                        .map<DropdownMenuItem<String>>((value) {
-                                      return DropdownMenuItem<String>(
-                                        value: value,
-                                        child: Text(
-                                          value,
-                                          style: const TextStyle(
-                                            color: blackColor,
-                                            fontFamily: 'Mulish',
-                                            fontWeight: FontWeight.w400,
-                                            fontSize: 14,
-                                            wordSpacing: 3,
-                                          ),
-                                        ),
-                                      );
-                                    }).toList(),
-                                    onChanged: (value) {
-                                      setState(() {
-                                        unitProductControlller =
-                                            value!.toString();
-                                      });
-                                    },
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ],
-                      ),
-                      if (isHideButtonSelected == false)
-                        Row(
-                          children: [
-                            Checkbox(
-                              value: isHideButtonSelected,
-                              onChanged: (bool? value) {
-                                setState(() {
-                                  isHideButtonSelected = value!;
-                                  if (isHideButtonSelected) {
-                                    quantityProductController.text =
-                                        "1"; // Set quantity to 1 when hiding
-                                  }
-                                });
-                              },
-                            ),
-                            const Text(
-                              "Hide",
-                              style: TextStyle(fontSize: 14, color: blackColor),
-                            ),
-                          ],
-                        ),
-                      const SizedBox(height: 10),
-                      const Align(
-                        alignment: Alignment.topLeft,
-                        child: Text(
-                          'Rate:',
-                          style: TextStyle(fontSize: 14, color: blackColor),
-                        ),
-                      ),
-                      const SizedBox(height: 5),
-                      Padding(
-                        padding: const EdgeInsets.only(top: 5, right: 18),
-                        child: TextFormField(
-                          controller: rateProductController,
-                          keyboardType: TextInputType.number,
-                          style:
-                              const TextStyle(color: blackColor, fontSize: 14),
-                          inputFormatters: [
-                            NoLeadingSpaceFormatter(),
-                            LengthLimitingTextInputFormatter(7)
-                          ],
-                          decoration: InputDecoration(
-                            hintStyle: const TextStyle(
-                              color: greyColor,
-                              fontFamily: 'Mulish',
-                              fontSize: 13,
-                            ),
-                            contentPadding:
-                                const EdgeInsets.only(left: 15, right: 20),
-                            hintText: '',
-                            filled: true,
-                            fillColor: lightGreyColor,
-                            border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(5),
-                              borderSide: const BorderSide(
-                                width: 0,
-                                style: BorderStyle.none,
-                              ),
-                            ),
-                          ),
-                        ),
-                      ),
-                      const SizedBox(height: 10),
-                      const Align(
-                        alignment: Alignment.topLeft,
-                        child: Text(
-                          'GST:',
-                          style: TextStyle(fontSize: 14, color: blackColor),
-                        ),
-                      ),
-                      const SizedBox(height: 5),
-                      Padding(
-                        padding: const EdgeInsets.only(top: 5, right: 18),
-                        child: DropdownButtonFormField(
-                          menuMaxHeight: 450,
-                          isExpanded: true,
-                          style:
-                              const TextStyle(color: blackColor, fontSize: 14),
-                          value: gstController,
-                          dropdownColor: whiteColor,
-                          decoration: InputDecoration(
-                            filled: true,
-                            fillColor: lightGreyColor,
-                            border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(5),
-                              borderSide: const BorderSide(
-                                width: 0,
-                                style: BorderStyle.none,
-                              ),
-                            ),
-                          ),
-                          hint: const Text(
-                            'None',
-                            style:
-                                TextStyle(color: hintTextColor, fontSize: 13),
-                          ),
-                          items: gstList.map<DropdownMenuItem<String>>((value) {
-                            return DropdownMenuItem<String>(
-                              value: value,
-                              child: Text(
-                                value,
-                                style: const TextStyle(
-                                  color: blackColor,
-                                  fontFamily: 'Mulish',
-                                  fontWeight: FontWeight.w400,
-                                  fontSize: 14,
-                                  wordSpacing: 3,
-                                ),
-                              ),
-                            );
-                          }).toList(),
-                          onChanged: (value) {
-                            setState(() {
-                              gstController = value!.toString();
-                            });
-                          },
-                        ),
-                      ),
-                      const SizedBox(height: 5),
-                      const Align(
-                        alignment: Alignment.topLeft,
-                        child: Text(
-                          'HSN Code:',
-                          style: TextStyle(fontSize: 14, color: blackColor),
-                        ),
-                      ),
-                      const SizedBox(height: 5),
-                      Padding(
-                        padding: const EdgeInsets.only(top: 5, right: 18),
-                        child: TextFormField(
-                          controller: hsnCodeProductController,
-                          keyboardType: TextInputType.text,
-                          style:
-                              const TextStyle(color: blackColor, fontSize: 14),
-                          inputFormatters: [
-                            NoLeadingSpaceFormatter(),
-                          ],
-                          decoration: InputDecoration(
-                            hintStyle: const TextStyle(
-                              color: greyColor,
-                              fontFamily: 'Mulish',
-                              fontSize: 13,
-                            ),
-                            contentPadding:
-                                const EdgeInsets.only(left: 15, right: 20),
-                            hintText: 'Enter HSN Code',
-                            filled: true,
-                            fillColor: lightGreyColor,
-                            border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(5),
-                              borderSide: const BorderSide(
-                                width: 0,
-                                style: BorderStyle.none,
-                              ),
-                            ),
-                          ),
-                        ),
-                      ),
-                      const SizedBox(height: 20),
-                      Padding(
-                        padding: const EdgeInsets.only(right: 10),
-                        child: SizedBox(
-                          height: 50,
-                          width: MediaQuery.of(context).size.width * 0.8,
-                          child: ElevatedButton(
-                            style: ElevatedButton.styleFrom(
-                              shape: const RoundedRectangleBorder(),
-                              backgroundColor: primaryColor,
-                            ),
-                            onPressed: () {
-                              addEditSparePartWithGst(index, productId!,
-                                  isHideButtonSelected, flag);
-                              Navigator.pop(context);
-                            },
-                            child: const Text(
-                              'Update',
-                              style: TextStyle(fontSize: 15, color: blackColor),
-                            ),
-                          ),
-                        ),
-                      )
-                    ],
-                  ),
-                ),
-              );
-            },
-          );
-        });
+      context: context,
+      builder: (_) => EditInvoiceExistingGstSparePart(
+        index: index,
+        productName: productname,
+        rate: rate,
+        qty: qty,
+        unit: unit,
+        sparePartProductId: productId,
+        productGst: productGst,
+        hsnCode: hsnCode,
+        showQuantity: isHideButtonSelected,
+        flag: flag,
+        unitList: unitList,
+        gstList: gstList,
+        igstList: igstList,
+        gstBill: gstBill,
+        igstBill: igstBill,
+        onUpdate:
+            (i, name, price, qty, unit, gst, hsn, productId, showQty, flag) {
+          setState(() {
+            sparePartsList[i] = {
+              "product_name": name,
+              "product_price": double.parse(price),
+              "product_qty": double.parse(qty),
+              "product_unit": unit,
+              "product_gst": gst,
+              "hsn_code": hsn,
+              "product_id": productId,
+              "showQuantity": showQty,
+              "flag": showQty ? 0 : 1,
+              "is_delete": true
+            };
+          });
+        },
+      ),
+    );
   }
 
   Future<void> showEditAddSparePart(
@@ -3570,323 +2531,34 @@ class _InvoiceDetailsPageState extends State<InvoiceDetailsPage> {
     // Show checkbox state as per server response
     bool isHideButtonSelected = showQuantity;
     await showDialog(
-        barrierDismissible: true,
-        context: context,
-        builder: (context) {
-          return StatefulBuilder(
-            builder: (context, setState) {
-              return Dialog(
-                backgroundColor: whiteColor,
-                shape: const RoundedRectangleBorder(),
-                insetPadding: const EdgeInsets.all(20),
-                child: SingleChildScrollView(
-                  padding: const EdgeInsets.all(20),
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          const Text(
-                            'Edit Spare Part',
-                            style: TextStyle(
-                                fontSize: 15,
-                                fontWeight: FontWeight.bold,
-                                color: blackColor),
-                          ),
-                          IconButton(
-                            onPressed: () {
-                              Navigator.pop(context);
-                            },
-                            icon: const Icon(
-                              clearIcon,
-                              size: 23,
-                              color: blackColorDark,
-                            ),
-                          )
-                        ],
-                      ),
-                      const SizedBox(height: 10),
-                      const Align(
-                        alignment: Alignment.topLeft,
-                        child: Text(
-                          'Spare Part Name:',
-                          style: TextStyle(fontSize: 14, color: blackColor),
-                        ),
-                      ),
-                      const SizedBox(height: 5),
-                      Padding(
-                        padding: const EdgeInsets.only(top: 5),
-                        child: TextFormField(
-                          controller: productNameController,
-                          style:
-                              const TextStyle(color: blackColor, fontSize: 14),
-                          textAlign: TextAlign.start,
-                          cursorColor: blackColor,
-                          decoration: InputDecoration(
-                            hintStyle: const TextStyle(
-                              color: greyColor,
-                              fontFamily: 'Mulish',
-                              fontSize: 13,
-                            ),
-                            contentPadding:
-                                const EdgeInsets.only(left: 15, right: 20),
-                            hintText: 'Enter Spare Part Name',
-                            filled: true,
-                            fillColor: lightGreyColor,
-                            border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(5),
-                              borderSide: const BorderSide(
-                                width: 0,
-                                style: BorderStyle.none,
-                              ),
-                            ),
-                          ),
-                        ),
-                      ),
-                      const SizedBox(height: 10),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Expanded(
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                const Padding(
-                                  padding: EdgeInsets.only(top: 10),
-                                  child: Align(
-                                    alignment: Alignment.topLeft,
-                                    child: Text(
-                                      'Quantity:',
-                                      style: const TextStyle(
-                                          color: blackColor, fontSize: 14),
-                                    ),
-                                  ),
-                                ),
-                                (isHideButtonSelected == false)
-                                    ? Padding(
-                                        padding: const EdgeInsets.only(top: 5),
-                                        child: TextFormField(
-                                          style: const TextStyle(
-                                              color: blackColor, fontSize: 14),
-                                          controller: quantityProductController,
-                                          keyboardType: TextInputType.number,
-                                          inputFormatters: [
-                                            NoLeadingSpaceFormatter()
-                                          ],
-                                          textAlign: TextAlign
-                                              .start, // Disable if hide is selected
-                                          cursorColor: blackColor,
-                                          decoration: InputDecoration(
-                                            hintStyle: const TextStyle(
-                                              color: greyColor,
-                                              fontFamily: 'Mulish',
-                                              fontSize: 13,
-                                            ),
-                                            contentPadding:
-                                                const EdgeInsets.only(
-                                                    left: 15, right: 20),
-                                            hintText: '',
-                                            filled: true,
-                                            fillColor: lightGreyColor,
-                                            border: OutlineInputBorder(
-                                              borderRadius:
-                                                  BorderRadius.circular(5),
-                                              borderSide: const BorderSide(
-                                                width: 0,
-                                                style: BorderStyle.none,
-                                              ),
-                                            ),
-                                          ),
-                                        ),
-                                      )
-                                    : Row(
-                                        children: [
-                                          Checkbox(
-                                            value: isHideButtonSelected,
-                                            onChanged: (bool? value) {
-                                              setState(() {
-                                                isHideButtonSelected = value!;
-                                                if (isHideButtonSelected) {
-                                                  quantityProductController
-                                                          .text =
-                                                      "1"; // Set quantity to 1 when hiding
-                                                }
-                                              });
-                                            },
-                                          ),
-                                          const Text(
-                                            "Hide",
-                                            style: TextStyle(
-                                                fontSize: 14,
-                                                color: blackColor),
-                                          ),
-                                        ],
-                                      ),
-                              ],
-                            ),
-                          ),
-                          const SizedBox(width: 10),
-                          Expanded(
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                const Padding(
-                                  padding: EdgeInsets.only(top: 10),
-                                  child: Align(
-                                    alignment: Alignment.topLeft,
-                                    child: Text(
-                                      'Unit:',
-                                      style: const TextStyle(
-                                          color: blackColor, fontSize: 14),
-                                    ),
-                                  ),
-                                ),
-                                Padding(
-                                  padding:
-                                      const EdgeInsets.only(top: 5, right: 18),
-                                  child: DropdownButtonFormField(
-                                    menuMaxHeight: 450,
-                                    isExpanded: true,
-                                    style: const TextStyle(
-                                        color: blackColor, fontSize: 14),
-                                    value: unitProductControlller,
-                                    dropdownColor: whiteColor,
-                                    decoration: InputDecoration(
-                                      filled: true,
-                                      fillColor: lightGreyColor,
-                                      border: OutlineInputBorder(
-                                        borderRadius: BorderRadius.circular(5),
-                                        borderSide: const BorderSide(
-                                          width: 0,
-                                          style: BorderStyle.none,
-                                        ),
-                                      ),
-                                    ),
-                                    hint: const Text('Unit'),
-                                    items: unitList
-                                        .map<DropdownMenuItem<String>>((value) {
-                                      return DropdownMenuItem<String>(
-                                        value: value,
-                                        child: Text(
-                                          value,
-                                          style: const TextStyle(
-                                            color: blackColor,
-                                            fontFamily: 'Mulish',
-                                            fontWeight: FontWeight.w400,
-                                            fontSize: 14,
-                                            wordSpacing: 3,
-                                          ),
-                                        ),
-                                      );
-                                    }).toList(),
-                                    onChanged: (value) {
-                                      setState(() {
-                                        unitProductControlller =
-                                            value!.toString();
-                                      });
-                                    },
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ],
-                      ),
-                      // **Hide Checkbox**
-                      if (isHideButtonSelected == false)
-                        Row(
-                          children: [
-                            Checkbox(
-                              value: isHideButtonSelected,
-                              onChanged: (bool? value) {
-                                setState(() {
-                                  isHideButtonSelected = value!;
-                                  if (isHideButtonSelected) {
-                                    quantityProductController.text =
-                                        "1"; // Set quantity to 1 when hiding
-                                  }
-                                });
-                              },
-                            ),
-                            const Text(
-                              "Hide",
-                              style: TextStyle(fontSize: 14, color: blackColor),
-                            ),
-                          ],
-                        ),
-                      const SizedBox(height: 10),
-                      const Align(
-                        alignment: Alignment.topLeft,
-                        child: Text(
-                          'Rate:',
-                          style: TextStyle(fontSize: 14, color: blackColor),
-                        ),
-                      ),
-                      const SizedBox(height: 5),
-                      Padding(
-                        padding: const EdgeInsets.only(top: 5, right: 18),
-                        child: TextFormField(
-                          controller: rateProductController,
-                          keyboardType: TextInputType.number,
-                          style:
-                              const TextStyle(color: blackColor, fontSize: 14),
-                          inputFormatters: [
-                            NoLeadingSpaceFormatter(),
-                            LengthLimitingTextInputFormatter(7)
-                          ],
-                          decoration: InputDecoration(
-                            hintStyle: const TextStyle(
-                              color: greyColor,
-                              fontFamily: 'Mulish',
-                              fontSize: 13,
-                            ),
-                            contentPadding:
-                                const EdgeInsets.only(left: 15, right: 20),
-                            hintText: '',
-                            filled: true,
-                            fillColor: lightGreyColor,
-                            border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(5),
-                              borderSide: const BorderSide(
-                                width: 0,
-                                style: BorderStyle.none,
-                              ),
-                            ),
-                          ),
-                        ),
-                      ),
-                      const SizedBox(height: 20),
-                      Padding(
-                        padding: const EdgeInsets.only(right: 10),
-                        child: SizedBox(
-                          height: 50,
-                          width: MediaQuery.of(context).size.width * 0.8,
-                          child: ElevatedButton(
-                            style: ElevatedButton.styleFrom(
-                              shape: const RoundedRectangleBorder(),
-                              backgroundColor: primaryColor,
-                            ),
-                            onPressed: () {
-                              addEditSparePart(index, productId!,
-                                  isHideButtonSelected, flag);
-                              Navigator.pop(context);
-                            },
-                            child: const Text(
-                              'Update',
-                              style: TextStyle(fontSize: 15, color: blackColor),
-                            ),
-                          ),
-                        ),
-                      )
-                    ],
-                  ),
-                ),
-              );
-            },
-          );
-        });
+      context: context,
+      builder: (_) => EditInvoiceExistingSparePart(
+        index: index,
+        productName: productname,
+        rate: rate,
+        qty: qty,
+        unit: unit,
+        sparePartProductId: productId,
+        showQuantity: isHideButtonSelected,
+        flag: flag,
+        onUpdate: (i, name, price, qty, unit, productId, showQty, flag) {
+          setState(() {
+            sparePartsList[i] = {
+              "product_name": name,
+              "product_price": double.parse(price),
+              "product_qty": double.parse(qty),
+              "product_unit": unit,
+              "product_gst": "None",
+              "hsn_code": "",
+              "product_id": productId,
+              "showQuantity": showQty,
+              "flag": showQty ? 0 : 1,
+              "is_delete": true
+            };
+          });
+        },
+      ),
+    );
   }
 
   Future<void> showEditAddSparePartNewListWithGst(
@@ -3911,398 +2583,41 @@ class _InvoiceDetailsPageState extends State<InvoiceDetailsPage> {
     // Show checkbox state as per server response
     bool isHideButtonSelected = showQuantity;
     await showDialog(
-      barrierDismissible: true,
       context: context,
-      builder: (context) {
-        return StatefulBuilder(
-          builder: (context, setState) {
-            return Dialog(
-              backgroundColor: whiteColor,
-              shape: const RoundedRectangleBorder(),
-              insetPadding: const EdgeInsets.all(20),
-              child: SingleChildScrollView(
-                padding: const EdgeInsets.all(20),
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        const Text(
-                          'Edit Spare part',
-                          style: TextStyle(
-                              fontSize: 15,
-                              fontWeight: FontWeight.bold,
-                              color: blackColor),
-                        ),
-                        IconButton(
-                          onPressed: () {
-                            Navigator.pop(context);
-                          },
-                          icon: const Icon(Icons.clear),
-                        ),
-                      ],
-                    ),
-                    const SizedBox(height: 10),
-                    const Align(
-                      alignment: Alignment.topLeft,
-                      child: Text(
-                        'Spare Part Name:',
-                        style: TextStyle(fontSize: 14, color: blackColor),
-                      ),
-                    ),
-                    const SizedBox(height: 5),
-                    Padding(
-                      padding: const EdgeInsets.only(top: 5),
-                      child: TextFormField(
-                        controller: productNameController,
-                        style: const TextStyle(color: blackColor, fontSize: 14),
-                        textAlign: TextAlign.start,
-                        decoration: InputDecoration(
-                          hintStyle: const TextStyle(
-                            color: hintTextColor,
-                            fontFamily: 'Mulish',
-                            fontSize: 13,
-                          ),
-                          contentPadding:
-                              const EdgeInsets.only(left: 15, right: 20),
-                          hintText: 'Enter Spare Part Name',
-                          filled: true,
-                          fillColor: lightGreyColor,
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(5),
-                            borderSide: const BorderSide(
-                              width: 0,
-                              style: BorderStyle.none,
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),
-                    const SizedBox(height: 10),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Expanded(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              const Padding(
-                                padding: EdgeInsets.only(top: 10),
-                                child: Align(
-                                  alignment: Alignment.topLeft,
-                                  child: Text(
-                                    'Quantity:',
-                                    style: TextStyle(
-                                        color: blackColor, fontSize: 14),
-                                  ),
-                                ),
-                              ),
-                              (isHideButtonSelected == false)
-                                  ? Padding(
-                                      padding: const EdgeInsets.only(top: 5),
-                                      child: TextFormField(
-                                        controller: quantityProductController,
-                                        style: const TextStyle(
-                                            color: blackColor, fontSize: 14),
-                                        keyboardType: TextInputType.number,
-                                        inputFormatters: [
-                                          NoLeadingSpaceFormatter()
-                                        ],
-                                        textAlign: TextAlign.start,
-                                        decoration: InputDecoration(
-                                          hintStyle: const TextStyle(
-                                            color: hintTextColor,
-                                            fontFamily: 'Mulish',
-                                            fontSize: 13,
-                                          ),
-                                          contentPadding: const EdgeInsets.only(
-                                              left: 15, right: 20),
-                                          hintText: '',
-                                          filled: true,
-                                          fillColor: lightGreyColor,
-                                          border: OutlineInputBorder(
-                                            borderRadius:
-                                                BorderRadius.circular(5),
-                                            borderSide: const BorderSide(
-                                              width: 0,
-                                              style: BorderStyle.none,
-                                            ),
-                                          ),
-                                        ),
-                                      ),
-                                    )
-                                  : Row(
-                                      children: [
-                                        Checkbox(
-                                          value: isHideButtonSelected,
-                                          onChanged: (bool? value) {
-                                            setState(() {
-                                              isHideButtonSelected = value!;
-                                              if (isHideButtonSelected) {
-                                                quantityProductController.text =
-                                                    "1"; // Set quantity to 1 when hiding
-                                              }
-                                            });
-                                          },
-                                        ),
-                                        const Text(
-                                          "Hide",
-                                          style: TextStyle(
-                                              fontSize: 14, color: blackColor),
-                                        ),
-                                      ],
-                                    ),
-                            ],
-                          ),
-                        ),
-                        const SizedBox(width: 10),
-                        Expanded(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              const Padding(
-                                padding: EdgeInsets.only(top: 10),
-                                child: Align(
-                                  alignment: Alignment.topLeft,
-                                  child: Text(
-                                    'Unit:',
-                                    style: const TextStyle(
-                                        color: blackColor, fontSize: 14),
-                                  ),
-                                ),
-                              ),
-                              Padding(
-                                padding:
-                                    const EdgeInsets.only(top: 5, right: 18),
-                                child: DropdownButtonFormField(
-                                  menuMaxHeight: 450,
-                                  style: const TextStyle(
-                                      color: blackColor, fontSize: 14),
-                                  isExpanded: true,
-                                  value: unitProductControlller,
-                                  dropdownColor: whiteColor,
-                                  decoration: InputDecoration(
-                                    filled: true,
-                                    fillColor: lightGreyColor,
-                                    border: OutlineInputBorder(
-                                      borderRadius: BorderRadius.circular(5),
-                                      borderSide: const BorderSide(
-                                        width: 0,
-                                        style: BorderStyle.none,
-                                      ),
-                                    ),
-                                  ),
-                                  hint: const Text('Unit'),
-                                  items: unitList
-                                      .map<DropdownMenuItem<String>>((value) {
-                                    return DropdownMenuItem<String>(
-                                      value: value,
-                                      child: Text(
-                                        value,
-                                        style: const TextStyle(
-                                          color: blackColor,
-                                          fontFamily: 'Mulish',
-                                          fontWeight: FontWeight.w400,
-                                          fontSize: 14,
-                                          wordSpacing: 3,
-                                        ),
-                                      ),
-                                    );
-                                  }).toList(),
-                                  onChanged: (value) {
-                                    unitProductControlller = value!.toString();
-                                  },
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ],
-                    ),
-                    // **Hide Checkbox**
-                    if (isHideButtonSelected == false)
-                      Row(
-                        children: [
-                          Checkbox(
-                            value: isHideButtonSelected,
-                            onChanged: (bool? value) {
-                              setState(() {
-                                isHideButtonSelected = value!;
-                                if (isHideButtonSelected) {
-                                  quantityProductController.text =
-                                      "1"; // Set quantity to 1 when hiding
-                                }
-                              });
-                            },
-                          ),
-                          const Text(
-                            "Hide",
-                            style: TextStyle(fontSize: 14, color: blackColor),
-                          ),
-                        ],
-                      ),
-                    const SizedBox(height: 10),
-                    const Align(
-                      alignment: Alignment.topLeft,
-                      child: Text(
-                        'Rate:',
-                        style: TextStyle(color: blackColor, fontSize: 14),
-                      ),
-                    ),
-                    const SizedBox(height: 5),
-                    Padding(
-                      padding: const EdgeInsets.only(top: 5, right: 18),
-                      child: TextFormField(
-                        controller: rateProductController,
-                        style: const TextStyle(color: blackColor, fontSize: 14),
-                        keyboardType: TextInputType.number,
-                        inputFormatters: [
-                          NoLeadingSpaceFormatter(),
-                          LengthLimitingTextInputFormatter(7)
-                        ],
-                        decoration: InputDecoration(
-                          hintStyle: const TextStyle(
-                            color: hintTextColor,
-                            fontFamily: 'Mulish',
-                            fontSize: 13,
-                          ),
-                          contentPadding:
-                              const EdgeInsets.only(left: 15, right: 20),
-                          hintText: '',
-                          filled: true,
-                          fillColor: lightGreyColor,
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(5),
-                            borderSide: const BorderSide(
-                              width: 0,
-                              style: BorderStyle.none,
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),
-                    const SizedBox(height: 10),
-                    const Align(
-                      alignment: Alignment.topLeft,
-                      child: Text(
-                        'GST:',
-                        style: TextStyle(color: blackColor, fontSize: 14),
-                      ),
-                    ),
-                    const SizedBox(height: 5),
-                    Padding(
-                      padding: const EdgeInsets.only(top: 5, right: 18),
-                      child: DropdownButtonFormField(
-                        menuMaxHeight: 450,
-                        style: const TextStyle(color: blackColor, fontSize: 14),
-                        isExpanded: true,
-                        value: gstController,
-                        dropdownColor: whiteColor,
-                        decoration: InputDecoration(
-                          filled: true,
-                          fillColor: lightGreyColor,
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(5),
-                            borderSide: const BorderSide(
-                              width: 0,
-                              style: BorderStyle.none,
-                            ),
-                          ),
-                        ),
-                        hint: const Text('None'),
-                        items: gstList.map<DropdownMenuItem<String>>((value) {
-                          return DropdownMenuItem<String>(
-                            value: value,
-                            child: Text(
-                              value,
-                              style: const TextStyle(
-                                color: blackColor,
-                                fontFamily: 'Mulish',
-                                fontWeight: FontWeight.w400,
-                                fontSize: 14,
-                                wordSpacing: 3,
-                              ),
-                            ),
-                          );
-                        }).toList(),
-                        onChanged: (value) {
-                          setState(() {
-                            gstController = value!.toString();
-                          });
-                        },
-                      ),
-                    ),
-                    const SizedBox(height: 10),
-                    const Align(
-                      alignment: Alignment.topLeft,
-                      child: Text(
-                        'HSN Code:',
-                        style: TextStyle(fontSize: 14, color: blackColor),
-                      ),
-                    ),
-                    const SizedBox(height: 5),
-                    Padding(
-                      padding: const EdgeInsets.only(top: 5, right: 18),
-                      child: TextFormField(
-                        style: const TextStyle(fontSize: 13),
-                        controller: hsnCodeProductController,
-                        keyboardType: TextInputType.text,
-                        inputFormatters: [
-                          NoLeadingSpaceFormatter(),
-                        ],
-                        decoration: InputDecoration(
-                          hintStyle: const TextStyle(
-                            color: hintTextColor,
-                            fontFamily: 'Mulish',
-                            fontSize: 14,
-                          ),
-                          contentPadding:
-                              const EdgeInsets.only(left: 15, right: 20),
-                          hintText: 'Enter HSN Code',
-                          filled: true,
-                          fillColor: lightGreyColor,
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(5),
-                            borderSide: const BorderSide(
-                              width: 0,
-                              style: BorderStyle.none,
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),
-                    const SizedBox(height: 20),
-                    Padding(
-                      padding: const EdgeInsets.only(right: 10),
-                      child: SizedBox(
-                        height: 50,
-                        width: MediaQuery.of(context).size.width * 0.8,
-                        child: ElevatedButton(
-                          style: ElevatedButton.styleFrom(
-                            shape: const RoundedRectangleBorder(),
-                            backgroundColor: primaryColor,
-                          ),
-                          onPressed: () {
-                            addEditSparePartNewListWithGst(
-                                index, productId!, isHideButtonSelected, flag);
-                            Navigator.pop(context);
-                          },
-                          child: const Text(
-                            'Update',
-                            style: TextStyle(fontSize: 15, color: blackColor),
-                          ),
-                        ),
-                      ),
-                    )
-                  ],
-                ),
-              ),
-            );
-          },
-        );
-      },
+      builder: (_) => EditInvoiceNewGstSparePart(
+        index: index,
+        productName: productname,
+        rate: rate,
+        qty: qty,
+        unit: unit,
+        sparePartProductId: sparePartProductId,
+        productGst: productGst,
+        hsnCode: hsnCode,
+        showQuantity: isHideButtonSelected,
+        flag: flag,
+        unitList: unitList,
+        gstList: gstList,
+        igstList: igstList,
+        gstBill: gstBill,
+        igstBill: igstBill,
+        onUpdate:
+            (i, name, price, qty, unit, gst, hsn, productId, showQty, flag) {
+          setState(() {
+            sparePartsListNew[i] = {
+              "product_name": name,
+              "product_price": double.parse(price),
+              "product_qty": double.parse(qty),
+              "product_unit": unit,
+              "product_gst": gst,
+              "hsn_code": hsn,
+              "product_id": productId,
+              "showQuantity": showQty,
+              "flag": showQty ? 0 : 1,
+              "is_delete": true
+            };
+          });
+        },
+      ),
     );
   }
 
@@ -4616,7 +2931,7 @@ class _InvoiceDetailsPageState extends State<InvoiceDetailsPage> {
                           },
                           child: const Text(
                             'Update',
-                            style: TextStyle(fontSize: 15, color: blackColor),
+                            style: TextStyle(fontSize: 15, color: whiteColor),
                           ),
                         ),
                       ),
@@ -4629,44 +2944,6 @@ class _InvoiceDetailsPageState extends State<InvoiceDetailsPage> {
         );
       },
     );
-  }
-
-  void addEditSparePartNewListWithGst(
-      int index, String productId, bool showQuantity, int flag) {
-    setState(() {
-      final newProductNameController = productNameController.text;
-      final newQuantityController = quantityProductController.text;
-      final newRateController = rateProductController.text;
-      final newUnitListController = unitProductControlller;
-      final newGstController = gstController;
-      final newHsnCodeController = hsnCodeProductController.text;
-
-      if (newProductNameController.isNotEmpty &&
-          newUnitListController.isNotEmpty &&
-          newGstController.isNotEmpty) {
-        sparePartsListNew[index]['product_name'] = newProductNameController;
-        sparePartsListNew[index]['product_price'] =
-            double.parse(newRateController.toString());
-        sparePartsListNew[index]['product_id'] = productId.toString().isNotEmpty
-            ? int.parse(productId.toString())
-            : "";
-
-        sparePartsListNew[index]['product_qty'] =
-            double.parse(newQuantityController.toString());
-
-        sparePartsListNew[index]['product_unit'] = newUnitListController;
-        sparePartsListNew[index]['product_gst'] = newGstController;
-        sparePartsListNew[index]['hsn_code'] = newHsnCodeController;
-
-        if (!showQuantity && newQuantityController == "1") {
-          sparePartsListNew[index]['showQuantity'] = false;
-          sparePartsListNew[index]['flag'] = 1;
-        } else {
-          sparePartsListNew[index]['showQuantity'] = showQuantity;
-          sparePartsListNew[index]['flag'] = showQuantity == false ? 1 : 0;
-        }
-      }
-    });
   }
 
   void addEditSparePartNewList(
@@ -4879,66 +3156,6 @@ class _InvoiceDetailsPageState extends State<InvoiceDetailsPage> {
     return productPrice * productQty;
   }
 
-  void addEditSparePart(
-      int index, String productId, bool showQuantity, int flag) {
-    setState(() {
-      final newProductName = productNameController.text;
-      final newQuantity = quantityProductController.text;
-      final newRate = rateProductController.text;
-      final newUnit = unitProductControlller;
-      if (newProductName.isNotEmpty && newUnit.isNotEmpty) {
-        sparePartsList[index]['product_name'] = newProductName;
-        sparePartsList[index]['product_price'] = double.parse(newRate);
-        sparePartsList[index]['product_qty'] = double.parse(newQuantity);
-        sparePartsList[index]['product_unit'] = newUnit;
-        sparePartsList[index]['product_id'] =
-            productId.toString().isNotEmpty ? int.parse(productId) : "";
-
-        if (!showQuantity && newQuantity == "1") {
-          sparePartsList[index]['showQuantity'] = false;
-          sparePartsList[index]['flag'] = 1;
-        } else {
-          sparePartsList[index]['showQuantity'] = showQuantity;
-          sparePartsList[index]['flag'] = showQuantity == false ? 1 : 0;
-        }
-      }
-    });
-  }
-
-  void addEditSparePartWithGst(
-      int index, String productId, bool showQuantity, int flag) {
-    setState(() {
-      final newProductName = productNameController.text;
-      final newQuantity = quantityProductController.text;
-      final newRate = rateProductController.text;
-      final newUnit = unitProductControlller;
-      final newGst = gstController;
-      final newHsnCodeController = hsnCodeProductController.text;
-
-      if (newProductName.isNotEmpty &&
-          newUnit.isNotEmpty &&
-          newGst.isNotEmpty) {
-        sparePartsList[index]['product_name'] = newProductName;
-        sparePartsList[index]['product_price'] = double.parse(newRate);
-
-        sparePartsList[index]['product_qty'] = double.parse(newQuantity);
-
-        sparePartsList[index]['product_unit'] = newUnit;
-        sparePartsList[index]['product_id'] =
-            productId.toString().isNotEmpty ? int.parse(productId) : "";
-        sparePartsList[index]['product_gst'] = newGst;
-        sparePartsList[index]['hsn_code'] = newHsnCodeController;
-        if (!showQuantity && newQuantity == "1") {
-          sparePartsList[index]['showQuantity'] = false;
-          sparePartsList[index]['flag'] = 1;
-        } else {
-          sparePartsList[index]['showQuantity'] = showQuantity;
-          sparePartsList[index]['flag'] = showQuantity == false ? 1 : 0;
-        }
-      }
-    });
-  }
-
   // Function to calculate SparePartListTotal
   double calculateSparePartListTotal() {
     double subtotal = 0.0;
@@ -4971,7 +3188,7 @@ class _InvoiceDetailsPageState extends State<InvoiceDetailsPage> {
       subtotal =
           calculateSparePartListTotal() + calculateSparePartListNewTotal();
     }
-    subInvoiceTotal = gstBill == "1" ? subtotal : calculateSubtotalGst();
+    subInvoiceTotal = gstBill == "1" ? calculateSubtotalGst() : subtotal;
     discountAmountPrice = double.tryParse(discountController.text) ?? 0.0;
     finalAmountAfterDiscount = subInvoiceTotal - discountAmountPrice;
     return double.parse(subtotal.toStringAsFixed(2));
@@ -4983,7 +3200,7 @@ class _InvoiceDetailsPageState extends State<InvoiceDetailsPage> {
     if (calculateSubTotalWithGst() != 0 || calculateSubTotalWithGstNew() != 0) {
       subtotal = calculateSubTotalWithGst() + calculateSubTotalWithGstNew();
     }
-    subInvoiceTotal = gstBill == "1" ? calculateSparePartSubtotal() : subtotal;
+    subInvoiceTotal = gstBill == "1" ? subtotal : calculateSparePartSubtotal();
     discountAmountPrice = double.tryParse(discountController.text) ?? 0.0;
     finalAmountAfterDiscount = subInvoiceTotal - discountAmountPrice;
     return double.parse(subtotal.toStringAsFixed(2));
@@ -5058,5 +3275,40 @@ class _InvoiceDetailsPageState extends State<InvoiceDetailsPage> {
 
   double calculateOutstandingAmount(totalAmount, totalRecivedAmount) {
     return totalAmount - totalRecivedAmount;
+  }
+
+  double calculateIgstForList(List<Map<String, dynamic>> list) {
+    double totalIgst = 0.0;
+
+    for (var item in list) {
+      double price = double.tryParse(item['product_price'].toString()) ?? 0.0;
+      double qty = double.tryParse(item['product_qty'].toString()) ?? 0.0;
+      String gstString = item['product_gst'];
+
+      double baseValue = price * qty;
+      double gstPercentage = getGstPercentage(gstString);
+
+      double igstAmount = baseValue * (gstPercentage / 100);
+
+      totalIgst += igstAmount;
+
+      item['igst_amount'] = igstAmount; // store per product IGST
+    }
+
+    return double.parse(totalIgst.toStringAsFixed(2));
+  }
+
+  double calculateFinalIgstTotal() {
+    double list1Igst = calculateIgstForList(
+      sparePartsList.whereType<Map<String, dynamic>>().toList(),
+    );
+
+    double list2Igst = calculateIgstForList(
+      sparePartsListNew.whereType<Map<String, dynamic>>().toList(),
+    );
+
+    double finalIgst = list1Igst + list2Igst;
+
+    return double.parse(finalIgst.toStringAsFixed(2));
   }
 }

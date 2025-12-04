@@ -333,7 +333,7 @@ class _EditCustomerByEstimateState extends State<EditCustomerByEstimate> {
                               'Update',
                               style: TextStyle(
                                   fontSize: 16,
-                                  color: blackColor,
+                                  color: whiteColor,
                                   fontWeight: FontWeight.w600),
                             ))),
                     const SizedBox(

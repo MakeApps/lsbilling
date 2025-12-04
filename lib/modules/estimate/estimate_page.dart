@@ -270,7 +270,7 @@ class _EstimatePageState extends State<EstimatePage> {
                             const EdgeInsets.symmetric(horizontal: 15),
                           ),
                           foregroundColor:
-                              WidgetStateProperty.all<Color>(blackColor),
+                              WidgetStateProperty.all<Color>(whiteColor),
                           backgroundColor:
                               WidgetStateProperty.all<Color>(primaryColor),
                           shape:
@@ -304,8 +304,8 @@ class _EstimatePageState extends State<EstimatePage> {
                                   .estimateModel!.estimateNumber
                                   .toString(),
                               "gst_flag": gstFlag.toString(),
-                              "igst": igstBill.toString(),
                               "gst_bill": gstBill.toString(),
+                              "igst": igstBill.toString(),
                               "igstTotal": igstBill == "1"
                                   ? calculateFinalIgstTotal()
                                   : 0,
@@ -383,7 +383,7 @@ class _EstimatePageState extends State<EstimatePage> {
                                         style: TextStyle(
                                           fontSize: 14,
                                           fontWeight: FontWeight.bold,
-                                          color: blackColorDark,
+                                          color: whiteColor,
                                         ),
                                       ),
                                     ),
@@ -408,7 +408,7 @@ class _EstimatePageState extends State<EstimatePage> {
                       ElevatedButton(
                         style: ButtonStyle(
                           foregroundColor:
-                              WidgetStateProperty.all<Color>(blackColor),
+                              WidgetStateProperty.all<Color>(whiteColor),
                           backgroundColor:
                               WidgetStateProperty.all<Color>(primaryColor),
                           shape:
@@ -521,7 +521,7 @@ class _EstimatePageState extends State<EstimatePage> {
                                         style: TextStyle(
                                           fontSize: 14,
                                           fontWeight: FontWeight.bold,
-                                          color: blackColorDark,
+                                          color: whiteColor,
                                         ),
                                       ),
                                     ),
@@ -544,7 +544,7 @@ class _EstimatePageState extends State<EstimatePage> {
                       ElevatedButton(
                         style: ButtonStyle(
                           foregroundColor:
-                              WidgetStateProperty.all<Color>(blackColor),
+                              WidgetStateProperty.all<Color>(whiteColor),
                           backgroundColor:
                               WidgetStateProperty.all<Color>(primaryColor),
                           shape:
@@ -656,7 +656,7 @@ class _EstimatePageState extends State<EstimatePage> {
                                         style: TextStyle(
                                           fontSize: 14,
                                           fontWeight: FontWeight.bold,
-                                          color: blackColorDark,
+                                          color: whiteColor,
                                         ),
                                       ),
                                     ),
@@ -1084,7 +1084,7 @@ class _EstimatePageState extends State<EstimatePage> {
                                               showAddSpareParts(context);
                                             },
                                             icon: const Icon(addIcon,
-                                                color: blackColor, size: 18),
+                                                color: whiteColor, size: 18),
                                             label: const Text(
                                               'Add',
                                               style: TextStyle(
@@ -1102,7 +1102,7 @@ class _EstimatePageState extends State<EstimatePage> {
                                               ),
                                               foregroundColor:
                                                   WidgetStatePropertyAll(
-                                                      blackColor),
+                                                      whiteColor),
                                               backgroundColor:
                                                   WidgetStatePropertyAll(
                                                       primaryColor),
@@ -2432,7 +2432,7 @@ class _EstimatePageState extends State<EstimatePage> {
                           },
                           child: const Text(
                             'Update',
-                            style: TextStyle(fontSize: 14, color: blackColor),
+                            style: TextStyle(fontSize: 14, color: whiteColor),
                           ),
                         ),
                       ),
@@ -2869,7 +2869,7 @@ class _EstimatePageState extends State<EstimatePage> {
                           },
                           child: const Text(
                             'Update',
-                            style: TextStyle(fontSize: 16, color: blackColor),
+                            style: TextStyle(fontSize: 16, color: whiteColor),
                           ),
                         ),
                       ),
@@ -3183,7 +3183,7 @@ class _EstimatePageState extends State<EstimatePage> {
                           },
                           child: const Text(
                             'Update',
-                            style: TextStyle(fontSize: 16, color: blackColor),
+                            style: TextStyle(fontSize: 16, color: whiteColor),
                           ),
                         ),
                       ),
@@ -3594,7 +3594,7 @@ class _EstimatePageState extends State<EstimatePage> {
                           },
                           child: const Text(
                             'Update',
-                            style: TextStyle(fontSize: 16, color: blackColor),
+                            style: TextStyle(fontSize: 16, color: whiteColor),
                           ),
                         ),
                       ),

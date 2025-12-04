@@ -530,7 +530,7 @@ class _AddPaymentFormState extends State<AddPaymentForm> {
                         child: const Text(
                           'Close',
                           style: TextStyle(
-                              color: blackColor,
+                              color: whiteColor,
                               fontSize: 14,
                               fontWeight: FontWeight.w500),
                         ), // 'Close'
@@ -539,6 +539,7 @@ class _AddPaymentFormState extends State<AddPaymentForm> {
                       ElevatedButton(
                         style: ElevatedButton.styleFrom(
                           backgroundColor: primaryColor,
+                          foregroundColor: whiteColor,
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(5),
                           ),
@@ -676,12 +677,13 @@ class _AddPaymentFormState extends State<AddPaymentForm> {
                                         child: const Text(
                                           'Cancel',
                                           style: TextStyle(
-                                              color: blackColor, fontSize: 13),
+                                              color: whiteColor, fontSize: 13),
                                         ),
                                       ),
                                       ElevatedButton(
                                         style: ElevatedButton.styleFrom(
                                           backgroundColor: primaryColor,
+                                          foregroundColor: whiteColor,
                                           shape: RoundedRectangleBorder(
                                             borderRadius:
                                                 BorderRadius.circular(5),

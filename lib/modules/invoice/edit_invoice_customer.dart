@@ -321,7 +321,7 @@ class _InvoiceEditCustomerState extends State<InvoiceEditCustomer> {
                           'Update',
                           style: TextStyle(
                               fontSize: 14,
-                              color: blackColor,
+                              color: whiteColor,
                               fontWeight: FontWeight.normal),
                         ),
                       ),

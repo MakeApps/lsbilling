@@ -26,6 +26,12 @@ class _CreateInvoiceFormState extends State<CreateInvoiceForm> {
   TextEditingController gstNumberController = TextEditingController();
   final discardCreateinvoice = const DiscardCreateinvoiceDailog();
   String? selectedModel;
+
+  @override
+  void initState() {
+    super.initState();
+  }
+
   @override
   void dispose() {
     fullNameController.dispose();
@@ -35,11 +41,6 @@ class _CreateInvoiceFormState extends State<CreateInvoiceForm> {
     gstNumberController.dispose();
     mobileFocusNode.dispose();
     super.dispose();
-  }
-
-  @override
-  void initState() {
-    super.initState();
   }
 
   @override
@@ -173,7 +174,7 @@ class _CreateInvoiceFormState extends State<CreateInvoiceForm> {
                           child: ElevatedButton(
                             style: ButtonStyle(
                               foregroundColor:
-                                  WidgetStateProperty.all<Color>(blackColor),
+                                  WidgetStateProperty.all<Color>(whiteColor),
                               backgroundColor:
                                   WidgetStateProperty.all<Color>(primaryColor),
                               shape: WidgetStateProperty.all<
@@ -194,71 +195,176 @@ class _CreateInvoiceFormState extends State<CreateInvoiceForm> {
                               if (fullNameController.text.isNotEmpty &&
                                   phoneNumberController.text.isNotEmpty) {
                                 // GST confirmation dialog
-                                final bool? gstConfirmed =
-                                    await showDialog<bool>(
+                                final gstConfirmed = await showDialog(
                                   context: context,
                                   barrierDismissible: false,
-                                  builder: (context) => AlertDialog(
-                                    shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(10),
-                                    ),
-                                    title: Stack(
-                                      children: [
-                                        Column(
-                                          mainAxisSize: MainAxisSize.min,
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
-                                          children: [
-                                            const SizedBox(height: 4),
-                                            const Text(
-                                              "Do you want to activate GST?",
-                                              textAlign: TextAlign.start,
-                                              style: TextStyle(
-                                                fontSize: 15,
-                                                fontWeight: FontWeight.w600,
-                                                color: blackColor,
+                                  builder: (context) {
+                                    String billingType =
+                                        "gst"; // DEFAULT: GST Invoice
+                                    String gstOption =
+                                        "CGST/SGST"; // DEFAULT: CGST/SGST
+
+                                    return StatefulBuilder(
+                                      builder: (context, setState) {
+                                        return AlertDialog(
+                                          backgroundColor: whiteColor,
+                                          shape: RoundedRectangleBorder(
+                                            borderRadius:
+                                                BorderRadius.circular(8),
+                                          ),
+                                          title: Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.spaceBetween,
+                                            children: [
+                                              const Text(
+                                                "Billing Type",
+                                                style: TextStyle(
+                                                    fontSize: 15,
+                                                    color: blackColor,
+                                                    fontWeight:
+                                                        FontWeight.w600),
                                               ),
-                                            ),
-                                            const SizedBox(height: 10),
-                                            const Text(
-                                              "Select \"Yes\" to enable GST billing feature",
-                                              textAlign: TextAlign.start,
-                                              style: TextStyle(
-                                                fontSize: 13,
-                                                color: blackColor,
+                                              InkWell(
+                                                onTap: () =>
+                                                    Navigator.pop(context),
+                                                child: const Icon(Icons.close,
+                                                    size: 20,
+                                                    color: blackColor),
+                                              )
+                                            ],
+                                          ),
+                                          content: Column(
+                                            mainAxisSize: MainAxisSize.min,
+                                            children: [
+                                              /// Regular Invoice
+                                              RadioListTile(
+                                                title: const Text(
+                                                  "Regular Invoice",
+                                                  style: TextStyle(
+                                                      fontSize: 13,
+                                                      color: blackColor,
+                                                      fontWeight:
+                                                          FontWeight.w500),
+                                                ),
+                                                value: "regular",
+                                                groupValue: billingType,
+                                                onChanged: (value) => setState(
+                                                    () => billingType =
+                                                        value.toString()),
                                               ),
-                                            ),
-                                            const SizedBox(height: 24),
-                                            Row(
-                                              children: [
-                                                Expanded(
-                                                  child: TextButton(
-                                                    style: OutlinedButton
-                                                        .styleFrom(
-                                                      side: const BorderSide(
-                                                          color: Colors.grey),
-                                                      shape:
-                                                          RoundedRectangleBorder(
-                                                        borderRadius:
-                                                            BorderRadius
-                                                                .circular(8),
-                                                      ),
-                                                    ),
-                                                    onPressed: () =>
-                                                        Navigator.of(context)
-                                                            .pop(false),
-                                                    child: const Text(
-                                                      'No',
-                                                      style: TextStyle(
-                                                          fontSize: 14,
-                                                          color: blackColor),
+
+                                              /// GST Invoice
+                                              RadioListTile(
+                                                title: const Text(
+                                                  "GST Invoice",
+                                                  style: TextStyle(
+                                                      fontSize: 13,
+                                                      color: blackColor,
+                                                      fontWeight:
+                                                          FontWeight.w500),
+                                                ),
+                                                value: "gst",
+                                                groupValue: billingType,
+                                                onChanged: (value) => setState(
+                                                    () => billingType =
+                                                        value.toString()),
+                                              ),
+
+                                              const SizedBox(height: 10),
+
+                                              /// Dropdown only when GST Invoice selected
+                                              if (billingType == "gst") ...[
+                                                const Align(
+                                                  alignment:
+                                                      Alignment.centerLeft,
+                                                  child: Text(
+                                                    "Select:",
+                                                    style: TextStyle(
+                                                        fontSize: 14,
+                                                        color: blackColor,
+                                                        fontWeight:
+                                                            FontWeight.w600),
+                                                  ),
+                                                ),
+                                                const SizedBox(height: 5),
+                                                Container(
+                                                  width: double.infinity,
+                                                  padding: const EdgeInsets
+                                                      .symmetric(
+                                                      horizontal: 12),
+                                                  decoration: BoxDecoration(
+                                                    border: Border.all(
+                                                        color: Colors.grey),
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            6),
+                                                  ),
+                                                  child:
+                                                      DropdownButtonHideUnderline(
+                                                    child: DropdownButton(
+                                                      value: gstOption,
+                                                      items: const [
+                                                        DropdownMenuItem(
+                                                          value: "CGST/SGST",
+                                                          child: Text(
+                                                            "CGST/SGST",
+                                                            style: TextStyle(
+                                                                fontSize: 12,
+                                                                color:
+                                                                    blackColor,
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .w500),
+                                                          ),
+                                                        ),
+                                                        DropdownMenuItem(
+                                                          value: "IGST",
+                                                          child: Text(
+                                                            "IGST",
+                                                            style: TextStyle(
+                                                                fontSize: 12,
+                                                                color:
+                                                                    blackColor,
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .w500),
+                                                          ),
+                                                        ),
+                                                      ],
+                                                      onChanged: (val) =>
+                                                          setState(() =>
+                                                              gstOption = val
+                                                                  .toString()),
                                                     ),
                                                   ),
                                                 ),
-                                                const SizedBox(width: 12),
-                                                Expanded(
-                                                  child: ElevatedButton(
+                                              ],
+
+                                              const SizedBox(height: 20),
+
+                                              Row(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment.end,
+                                                children: [
+                                                  TextButton(
+                                                    child: const Text(
+                                                      "Cancel",
+                                                      style: TextStyle(
+                                                          fontSize: 13,
+                                                          color:
+                                                              bluecolorprimary,
+                                                          fontWeight:
+                                                              FontWeight.w500),
+                                                    ),
+                                                    onPressed: () =>
+                                                        Navigator.pop(context),
+                                                  ),
+                                                  ElevatedButton(
                                                     style: ButtonStyle(
+                                                      backgroundColor:
+                                                          WidgetStateProperty
+                                                              .all<Color>(
+                                                                  primaryColor),
                                                       shape: WidgetStateProperty
                                                           .all<
                                                               RoundedRectangleBorder>(
@@ -268,46 +374,46 @@ class _CreateInvoiceFormState extends State<CreateInvoiceForm> {
                                                                   .circular(5),
                                                         ),
                                                       ),
-                                                      foregroundColor:
-                                                          const WidgetStatePropertyAll(
-                                                              whiteColor),
-                                                      backgroundColor:
-                                                          const WidgetStatePropertyAll(
-                                                              successDarkColor),
                                                     ),
-                                                    onPressed: () =>
-                                                        Navigator.of(context)
-                                                            .pop(true),
-                                                    child: const Text('Yes'),
+                                                    child: const Text(
+                                                      "Continue",
+                                                      style: TextStyle(
+                                                          fontSize: 13,
+                                                          color: whiteColor,
+                                                          fontWeight:
+                                                              FontWeight.w500),
+                                                    ),
+                                                    onPressed: () {
+                                                      Navigator.pop(context, {
+                                                        "billingType":
+                                                            billingType,
+                                                        "igst":
+                                                            gstOption == "IGST"
+                                                                ? "1"
+                                                                : "0"
+                                                      });
+                                                    },
                                                   ),
-                                                ),
-                                              ],
-                                            )
-                                          ],
-                                        ),
-                                        Positioned(
-                                          top: 0,
-                                          right: 0,
-                                          child: InkWell(
-                                            onTap: () =>
-                                                Navigator.of(context).pop(),
-                                            borderRadius:
-                                                BorderRadius.circular(20),
-                                            child: const Padding(
-                                              padding: EdgeInsets.all(4.0),
-                                              child: Icon(
-                                                Icons.close,
-                                                size: 20,
-                                                color: greyColor,
-                                              ),
-                                            ),
+                                                ],
+                                              )
+                                            ],
                                           ),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
+                                        );
+                                      },
+                                    );
+                                  },
                                 );
                                 if (gstConfirmed != null) {
+                                  String billingType =
+                                      gstConfirmed["billingType"];
+                                  String igst = gstConfirmed["igst"];
+
+                                  String gstBill =
+                                      "0"; // default regular invoice
+
+                                  if (billingType == "gst") {
+                                    gstBill = "1"; // GST Invoice
+                                  }
                                   Map<String, dynamic> formData = {
                                     "full_name":
                                         fullNameController.text.toString(),
@@ -317,7 +423,9 @@ class _CreateInvoiceFormState extends State<CreateInvoiceForm> {
                                         phoneNumberController.text.toString(),
                                     "gst_number":
                                         gstNumberController.text.toString(),
-                                    "gst_bill": gstConfirmed ? "1" : "0",
+                                    "gst_bill": gstBill,
+                                    "igst":
+                                        billingType == "regular" ? "0" : igst,
                                   };
                                   context.read<JobSheetBloc>().add(
                                         CreateAddInvoice(formData: formData),
