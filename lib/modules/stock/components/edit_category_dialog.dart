@@ -26,7 +26,6 @@ class _EditCategoryDialogState extends State<EditCategoryDialog> {
       "id": widget.id,
       "spare_category_name": name,
     };
-    print("-----$formData");
     context.read<CategoryNameUpdateBloc>().add(
           UpdateCategoryName(
             formData: formData,
