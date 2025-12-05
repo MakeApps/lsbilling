@@ -31,6 +31,7 @@ class _PurchesInvoiceDetailScreenState
   bool isQuantityHidden = false;
   String? gstFlag;
   String? gstBill;
+  String? igstBill;
   int updateIndex = 0;
   TextEditingController invoiceDateController = TextEditingController();
   DateTime _selectedDate = DateTime.now();
@@ -50,6 +51,7 @@ class _PurchesInvoiceDetailScreenState
     setState(() {
       gstFlag = state.purchesDetailsModel!.gstFlag.toString();
       gstBill = state.purchesDetailsModel!.gstBill.toString();
+      igstBill = state.purchesDetailsModel!.igstBill.toString();
       invoiceDateController.text =
           state.purchesDetailsModel!.tempDate.toString();
       if (state.purchesDetailsModel?.invoiceProducts != null) {
@@ -248,6 +250,7 @@ class _PurchesInvoiceDetailScreenState
                                       state.purchesDetailsModel?.fullName ?? "",
                                   "gst_bill": gstBill,
                                   "gst_flag": gstFlag,
+                                  "igst": igstBill,
                                   "invoiceTotal": double.parse(
                                       invoiceTotal.toStringAsFixed(2)),
                                   "invoice_id":
@@ -273,15 +276,24 @@ class _PurchesInvoiceDetailScreenState
                                       state.purchesDetailsModel?.vendorId ?? "",
                                   "discountAmount": 0,
                                   "labourTotal": 0,
-                                  "taxablevalueTotal":
-                                      calculateSparePartSubtotal(),
-                                  "cgstTotal": calculateSgstTotal(),
-                                  "scgtTotal": calculateSgstTotal(),
+                                  "taxablevalueTotal": gstBill == "1"
+                                      ? calculateSparePartSubtotal()
+                                      : 0,
+                                  "igstTotal": gstBill == "1"
+                                      ? calculateFinalIgstTotal()
+                                      : 0,
+                                  "cgstTotal":
+                                      (gstBill == "1" && igstBill == "0")
+                                          ? calculateSgstTotal()
+                                          : 0,
+                                  "scgtTotal":
+                                      (gstBill == "1" && igstBill == "0")
+                                          ? calculateSgstTotal()
+                                          : 0,
                                   "afterDiscountAmount": double.parse(
                                       invoiceTotal.toStringAsFixed(2)),
                                   "invoice_labours": "",
                                 };
-
                                 context.read<PurchesInvoiceDetailsBloc>().add(
                                       GeneratePurchaseInvoiceEvent(
                                         formData: formData,
@@ -416,7 +428,7 @@ class _PurchesInvoiceDetailScreenState
                                         MainAxisAlignment.spaceBetween,
                                     children: [
                                       const Text(
-                                        'Spare Part',
+                                        'Spare Parts',
                                         style: TextStyle(
                                             fontSize: 15,
                                             fontWeight: FontWeight.w600,
@@ -451,8 +463,11 @@ class _PurchesInvoiceDetailScreenState
                                                   });
                                                 },
                                                 gstBill: state
-                                                    .purchesDetailsModel
-                                                    ?.gstBill,
+                                                    .purchesDetailsModel!
+                                                    .gstBill,
+                                                igstBill: state
+                                                    .purchesDetailsModel!
+                                                    .igstBill,
                                               ),
                                             );
                                           },
@@ -469,7 +484,7 @@ class _PurchesInvoiceDetailScreenState
                                         for (var stocks in sparePartsList)
                                           Column(
                                             children: [
-                                              _buildSparePartCardList(
+                                              _buildExistingSparePartCardList(
                                                 stocks,
                                                 gstBill,
                                               ),
@@ -484,7 +499,7 @@ class _PurchesInvoiceDetailScreenState
                                         for (var stocks in sparePartsListNew)
                                           Column(
                                             children: [
-                                              _buildSparePartNewListCard(
+                                              _buildNewSparePartListCard(
                                                   stocks, gstBill, state),
                                             ],
                                           )
@@ -612,256 +627,8 @@ class _PurchesInvoiceDetailScreenState
     );
   }
 
-  //new list of spare part
-  Widget _buildSparePartNewListCard(spareParts, String? gstBill, state) {
-    double rate = double.tryParse(spareParts['product_price'].toString()) ?? 0;
-    String gstText = spareParts['product_gst'].toString();
-    String hsnCode = spareParts['hsn_code'].toString();
-
-    return Padding(
-      padding: const EdgeInsets.only(top: 4),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Expanded(
-                child: Text(
-                  spareParts['product_name'].toString(),
-                  style: const TextStyle(
-                    fontSize: 14,
-                    color: blackColor,
-                    fontWeight: FontWeight.w500,
-                  ),
-                  maxLines: 2,
-                  overflow: TextOverflow.ellipsis,
-                ),
-              ),
-              const SizedBox(width: 8),
-              PopupMenuButton(
-                color: whiteColor,
-                itemBuilder: (context) => <PopupMenuEntry>[
-                  const PopupMenuItem(
-                    value: 'edit',
-                    child: Text('Edit'),
-                  ),
-                  const PopupMenuItem(
-                    value: 'delete',
-                    child: Text('Delete'),
-                  ),
-                ],
-                onSelected: (value) {
-                  if (value == 'edit') {
-                    setState(() {
-                      gstBill == "1"
-                          ? showEditNewGstSparePartDialog(
-                              context: context,
-                              sparePart: spareParts,
-                              gstBill: gstBill,
-                              index: sparePartsListNew.indexOf(spareParts),
-                              onSparePartUpdated: (updatedPart, index) {
-                                setState(() {
-                                  sparePartsListNew[index] = updatedPart;
-                                });
-                              },
-                            )
-                          : showEditNewSparePartDialog(
-                              context: context,
-                              sparePart: spareParts,
-                              index: sparePartsListNew.indexOf(spareParts),
-                              onSparePartUpdated: (updatedPart, index) {
-                                setState(() {
-                                  sparePartsListNew[index] = updatedPart;
-                                });
-                              },
-                            );
-                    });
-                  } else if (value == 'delete') {
-                    int index = sparePartsListNew.indexOf(spareParts);
-                    setState(() {
-                      sparePartsListNew.removeAt(index);
-                      if (index == updateIndex) {
-                        updateIndex = -1;
-                      }
-                    });
-                  }
-                },
-                child: const Icon(Icons.more_vert,
-                    color: blackColorDark, size: 22),
-              ),
-            ],
-          ),
-          const SizedBox(height: 6),
-
-          /// GST ON → 4 rows layout
-          if (gstBill == "1") ...[
-            // Qty + Rate
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Row(
-                  children: [
-                    const Text(
-                      "Qty: ",
-                      style: TextStyle(fontSize: 12, color: hintTextColor),
-                    ),
-                    Text(
-                      "${formatQty(spareParts['product_qty'], spareParts['flag'])} ${spareParts['product_unit']}",
-                      style: const TextStyle(fontSize: 13, color: blackColor),
-                    ),
-                  ],
-                ),
-                Row(
-                  children: [
-                    const Text(
-                      "Rate: ",
-                      style: TextStyle(fontSize: 12, color: hintTextColor),
-                    ),
-                    const Icon(Icons.currency_rupee_sharp,
-                        size: 12, color: blackColor),
-                    Text(
-                      rate.toStringAsFixed(2),
-                      style: const TextStyle(fontSize: 13, color: blackColor),
-                    ),
-                  ],
-                ),
-              ],
-            ),
-            const SizedBox(height: 4),
-
-            // GST + Taxable
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Row(
-                  children: [
-                    const Text(
-                      "GST: ",
-                      style: TextStyle(fontSize: 12, color: hintTextColor),
-                    ),
-                    Text(
-                      gstText,
-                      style: const TextStyle(fontSize: 13, color: blackColor),
-                    ),
-                  ],
-                ),
-                Row(
-                  children: [
-                    const Text(
-                      "Taxable: ",
-                      style: TextStyle(fontSize: 12, color: hintTextColor),
-                    ),
-                    const Icon(Icons.currency_rupee_sharp,
-                        size: 12, color: blackColor),
-                    Text(
-                      calculateSubProductTotal(spareParts).toStringAsFixed(2),
-                      style: const TextStyle(
-                          fontSize: 13,
-                          fontWeight: FontWeight.w500,
-                          color: blackColorDark),
-                    ),
-                  ],
-                ),
-              ],
-            ),
-            const SizedBox(height: 4),
-
-            // HSN + Total
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Row(
-                  children: [
-                    const Text(
-                      "HSN: ",
-                      style: TextStyle(fontSize: 12, color: hintTextColor),
-                    ),
-                    Text(
-                      hsnCode,
-                      style: const TextStyle(fontSize: 13, color: blackColor),
-                    ),
-                  ],
-                ),
-                Row(
-                  children: [
-                    const Text(
-                      "Total: ",
-                      style: TextStyle(fontSize: 12, color: hintTextColor),
-                    ),
-                    const Icon(Icons.currency_rupee_sharp,
-                        size: 12, color: blackColor),
-                    Text(
-                      calculateGstTotalSparePart(spareParts).toStringAsFixed(2),
-                      style: const TextStyle(
-                          fontSize: 13,
-                          fontWeight: FontWeight.w500,
-                          color: blackColorDark),
-                    ),
-                  ],
-                ),
-              ],
-            ),
-          ],
-
-          /// GST OFF → single row layout
-          if (gstBill != "1")
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Row(
-                  children: [
-                    const Text(
-                      "Qty: ",
-                      style: TextStyle(fontSize: 12, color: hintTextColor),
-                    ),
-                    Text(
-                      "${formatQty(spareParts['product_qty'], spareParts['flag'])} ${spareParts['product_unit']}",
-                      style: const TextStyle(fontSize: 13, color: blackColor),
-                    ),
-                  ],
-                ),
-                Row(
-                  children: [
-                    const Text(
-                      "Rate: ",
-                      style: TextStyle(fontSize: 12, color: hintTextColor),
-                    ),
-                    const Icon(Icons.currency_rupee_sharp,
-                        size: 12, color: blackColor),
-                    Text(
-                      rate.toStringAsFixed(2),
-                      style: const TextStyle(fontSize: 13, color: blackColor),
-                    ),
-                  ],
-                ),
-                Row(
-                  children: [
-                    const Text(
-                      "Total: ",
-                      style: TextStyle(fontSize: 12, color: hintTextColor),
-                    ),
-                    Text(
-                      calculateSubProductTotal(spareParts).toStringAsFixed(2),
-                      style: const TextStyle(
-                          fontSize: 13,
-                          fontWeight: FontWeight.w500,
-                          color: blackColorDark),
-                    ),
-                  ],
-                ),
-              ],
-            ),
-          const Padding(
-            padding: EdgeInsets.only(top: 10),
-            child: Divider(color: hintTextColor),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildSparePartCardList(spareParts, String? gstBill) {
+  //Existing List UI code
+  Widget _buildExistingSparePartCardList(spareParts, String? gstBill) {
     double rate = double.tryParse(spareParts['product_price'].toString()) ?? 0;
     String gstText = spareParts['product_gst'].toString();
     String hsnCode = spareParts['hsn_code'].toString();
@@ -905,10 +672,11 @@ class _PurchesInvoiceDetailScreenState
                       if (value == 'edit') {
                         setState(() {
                           gstBill == "1"
-                              ? showEditGstSparePartDialog(
+                              ? editExistingGstSparePartDialog(
                                   context: context,
                                   sparePart: spareParts,
                                   gstBill: gstBill,
+                                  igstBill: igstBill,
                                   index: sparePartsList.indexOf(spareParts),
                                   onSparePartUpdated: (updatedPart, index) {
                                     setState(() {
@@ -916,7 +684,7 @@ class _PurchesInvoiceDetailScreenState
                                     });
                                   },
                                 )
-                              : showEditSparePartDialog(
+                              : editExistingSparePartDialog(
                                   context: context,
                                   sparePart: spareParts,
                                   index: sparePartsList.indexOf(spareParts),
@@ -1114,6 +882,256 @@ class _PurchesInvoiceDetailScreenState
     );
   }
 
+  //new list of spare part
+  Widget _buildNewSparePartListCard(spareParts, String? gstBill, state) {
+    double rate = double.tryParse(spareParts['product_price'].toString()) ?? 0;
+    String gstText = spareParts['product_gst'].toString();
+    String hsnCode = spareParts['hsn_code'].toString();
+
+    return Padding(
+      padding: const EdgeInsets.only(top: 4),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Expanded(
+                child: Text(
+                  spareParts['product_name'].toString(),
+                  style: const TextStyle(
+                    fontSize: 14,
+                    color: blackColor,
+                    fontWeight: FontWeight.w500,
+                  ),
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
+                ),
+              ),
+              const SizedBox(width: 8),
+              PopupMenuButton(
+                color: whiteColor,
+                itemBuilder: (context) => <PopupMenuEntry>[
+                  const PopupMenuItem(
+                    value: 'edit',
+                    child: Text('Edit'),
+                  ),
+                  const PopupMenuItem(
+                    value: 'delete',
+                    child: Text('Delete'),
+                  ),
+                ],
+                onSelected: (value) {
+                  if (value == 'edit') {
+                    setState(() {
+                      gstBill == "1"
+                          ? editNewGstSparePartDialog(
+                              context: context,
+                              sparePart: spareParts,
+                              gstBill: gstBill,
+                              igstBill: igstBill,
+                              index: sparePartsListNew.indexOf(spareParts),
+                              onSparePartUpdated: (updatedPart, index) {
+                                setState(() {
+                                  sparePartsListNew[index] = updatedPart;
+                                });
+                              },
+                            )
+                          : editNewSparePartDialog(
+                              context: context,
+                              sparePart: spareParts,
+                              index: sparePartsListNew.indexOf(spareParts),
+                              onSparePartUpdated: (updatedPart, index) {
+                                setState(() {
+                                  sparePartsListNew[index] = updatedPart;
+                                });
+                              },
+                            );
+                    });
+                  } else if (value == 'delete') {
+                    int index = sparePartsListNew.indexOf(spareParts);
+                    setState(() {
+                      sparePartsListNew.removeAt(index);
+                      if (index == updateIndex) {
+                        updateIndex = -1;
+                      }
+                    });
+                  }
+                },
+                child: const Icon(Icons.more_vert,
+                    color: blackColorDark, size: 22),
+              ),
+            ],
+          ),
+          const SizedBox(height: 6),
+
+          /// GST ON → 4 rows layout
+          if (gstBill == "1") ...[
+            // Qty + Rate
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Row(
+                  children: [
+                    const Text(
+                      "Qty: ",
+                      style: TextStyle(fontSize: 12, color: hintTextColor),
+                    ),
+                    Text(
+                      "${formatQty(spareParts['product_qty'], spareParts['flag'])} ${spareParts['product_unit']}",
+                      style: const TextStyle(fontSize: 13, color: blackColor),
+                    ),
+                  ],
+                ),
+                Row(
+                  children: [
+                    const Text(
+                      "Rate: ",
+                      style: TextStyle(fontSize: 12, color: hintTextColor),
+                    ),
+                    const Icon(Icons.currency_rupee_sharp,
+                        size: 12, color: blackColor),
+                    Text(
+                      rate.toStringAsFixed(2),
+                      style: const TextStyle(fontSize: 13, color: blackColor),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+            const SizedBox(height: 4),
+
+            // GST + Taxable
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Row(
+                  children: [
+                    const Text(
+                      "GST: ",
+                      style: TextStyle(fontSize: 12, color: hintTextColor),
+                    ),
+                    Text(
+                      gstText,
+                      style: const TextStyle(fontSize: 13, color: blackColor),
+                    ),
+                  ],
+                ),
+                Row(
+                  children: [
+                    const Text(
+                      "Taxable: ",
+                      style: TextStyle(fontSize: 12, color: hintTextColor),
+                    ),
+                    const Icon(Icons.currency_rupee_sharp,
+                        size: 12, color: blackColor),
+                    Text(
+                      calculateSubProductTotal(spareParts).toStringAsFixed(2),
+                      style: const TextStyle(
+                          fontSize: 13,
+                          fontWeight: FontWeight.w500,
+                          color: blackColorDark),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+            const SizedBox(height: 4),
+
+            // HSN + Total
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Row(
+                  children: [
+                    const Text(
+                      "HSN: ",
+                      style: TextStyle(fontSize: 12, color: hintTextColor),
+                    ),
+                    Text(
+                      hsnCode,
+                      style: const TextStyle(fontSize: 13, color: blackColor),
+                    ),
+                  ],
+                ),
+                Row(
+                  children: [
+                    const Text(
+                      "Total: ",
+                      style: TextStyle(fontSize: 12, color: hintTextColor),
+                    ),
+                    const Icon(Icons.currency_rupee_sharp,
+                        size: 12, color: blackColor),
+                    Text(
+                      calculateGstTotalSparePart(spareParts).toStringAsFixed(2),
+                      style: const TextStyle(
+                          fontSize: 13,
+                          fontWeight: FontWeight.w500,
+                          color: blackColorDark),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ],
+
+          /// GST OFF → single row layout
+          if (gstBill != "1")
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Row(
+                  children: [
+                    const Text(
+                      "Qty: ",
+                      style: TextStyle(fontSize: 12, color: hintTextColor),
+                    ),
+                    Text(
+                      "${formatQty(spareParts['product_qty'], spareParts['flag'])} ${spareParts['product_unit']}",
+                      style: const TextStyle(fontSize: 13, color: blackColor),
+                    ),
+                  ],
+                ),
+                Row(
+                  children: [
+                    const Text(
+                      "Rate: ",
+                      style: TextStyle(fontSize: 12, color: hintTextColor),
+                    ),
+                    const Icon(Icons.currency_rupee_sharp,
+                        size: 12, color: blackColor),
+                    Text(
+                      rate.toStringAsFixed(2),
+                      style: const TextStyle(fontSize: 13, color: blackColor),
+                    ),
+                  ],
+                ),
+                Row(
+                  children: [
+                    const Text(
+                      "Total: ",
+                      style: TextStyle(fontSize: 12, color: hintTextColor),
+                    ),
+                    Text(
+                      calculateSubProductTotal(spareParts).toStringAsFixed(2),
+                      style: const TextStyle(
+                          fontSize: 13,
+                          fontWeight: FontWeight.w500,
+                          color: blackColorDark),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          const Padding(
+            padding: EdgeInsets.only(top: 10),
+            child: Divider(color: hintTextColor),
+          ),
+        ],
+      ),
+    );
+  }
+
   String formatQty(dynamic qty, dynamic flag) {
     if (flag == 0) return "-";
 
@@ -1181,19 +1199,22 @@ class _PurchesInvoiceDetailScreenState
     return totalPercentage;
   }
 
-  Future<void> showEditGstSparePartDialog({
+//edit existing GST spare part dialog
+  Future<void> editExistingGstSparePartDialog({
     required BuildContext context,
     required Map<String, dynamic> sparePart,
     required String? gstBill,
+    required String? igstBill,
     required Function(Map<String, dynamic>, int index) onSparePartUpdated,
     required int index,
   }) async {
     final updatedSparePart = await showDialog<Map<String, dynamic>>(
       context: context,
       barrierDismissible: false,
-      builder: (_) => EditGstProductDialog(
+      builder: (_) => EditSparePartWithGst(
         sparePart: sparePart,
         gstBill: gstBill,
+        igstBill: igstBill,
       ),
     );
 
@@ -1202,7 +1223,8 @@ class _PurchesInvoiceDetailScreenState
     }
   }
 
-  showEditSparePartDialog({
+//edit existing NON-GST spare part dialog
+  editExistingSparePartDialog({
     required BuildContext context,
     required Map<String, dynamic> sparePart,
     required Function(Map<String, dynamic>, int index) onSparePartUpdated,
@@ -1211,7 +1233,7 @@ class _PurchesInvoiceDetailScreenState
     final updatedSparePart = await showDialog<Map<String, dynamic>>(
       context: context,
       barrierDismissible: false,
-      builder: (_) => EditProductDialog(
+      builder: (_) => EditSparePartList(
         sparePart: sparePart,
       ),
     );
@@ -1221,19 +1243,22 @@ class _PurchesInvoiceDetailScreenState
     }
   }
 
-  Future<void> showEditNewGstSparePartDialog({
+//edit new GST spare part dialog
+  Future<void> editNewGstSparePartDialog({
     required BuildContext context,
     required Map<String, dynamic> sparePart,
     required String? gstBill,
+    required String? igstBill,
     required Function(Map<String, dynamic>, int index) onSparePartUpdated,
     required int index,
   }) async {
     final updatedSparePart = await showDialog<Map<String, dynamic>>(
       context: context,
       barrierDismissible: false,
-      builder: (_) => EditGstProductDialog(
+      builder: (_) => EditSparePartWithGst(
         sparePart: sparePart,
         gstBill: gstBill,
+        igstBill: igstBill,
       ),
     );
 
@@ -1242,7 +1267,8 @@ class _PurchesInvoiceDetailScreenState
     }
   }
 
-  showEditNewSparePartDialog({
+//edit new NON-GST spare part dialog
+  editNewSparePartDialog({
     required BuildContext context,
     required Map<String, dynamic> sparePart,
     required Function(Map<String, dynamic>, int index) onSparePartUpdated,
@@ -1251,7 +1277,7 @@ class _PurchesInvoiceDetailScreenState
     final updatedSparePart = await showDialog<Map<String, dynamic>>(
       context: context,
       barrierDismissible: false,
-      builder: (_) => EditProductDialog(
+      builder: (_) => EditSparePartList(
         sparePart: sparePart,
       ),
     );
@@ -1370,5 +1396,40 @@ class _PurchesInvoiceDetailScreenState
     }
 
     return double.parse(sgstTotal.toStringAsFixed(2));
+  }
+
+  double calculateIgstForList(List<Map<String, dynamic>> list) {
+    double totalIgst = 0.0;
+
+    for (var item in list) {
+      double price = double.tryParse(item['product_price'].toString()) ?? 0.0;
+      double qty = double.tryParse(item['product_qty'].toString()) ?? 0.0;
+      String gstString = item['product_gst'];
+
+      double baseValue = price * qty;
+      double gstPercentage = getGstPercentage(gstString);
+
+      double igstAmount = baseValue * (gstPercentage / 100);
+
+      totalIgst += igstAmount;
+
+      item['igst_amount'] = igstAmount; // store per product IGST
+    }
+
+    return double.parse(totalIgst.toStringAsFixed(2));
+  }
+
+  double calculateFinalIgstTotal() {
+    double list1Igst = calculateIgstForList(
+      sparePartsList.whereType<Map<String, dynamic>>().toList(),
+    );
+
+    double list2Igst = calculateIgstForList(
+      sparePartsListNew.whereType<Map<String, dynamic>>().toList(),
+    );
+
+    double finalIgst = list1Igst + list2Igst;
+
+    return double.parse(finalIgst.toStringAsFixed(2));
   }
 }

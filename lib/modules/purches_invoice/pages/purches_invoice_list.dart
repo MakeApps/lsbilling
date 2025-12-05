@@ -252,13 +252,18 @@ class _PurchesInvoiceListingPageState extends State<PurchesInvoiceListingPage> {
                                       suffixIcon: Container(
                                         height: 30,
                                         width: 30,
+                                        decoration: BoxDecoration(
+                                          color: primaryColor, // LIGHT SHADE
+                                          borderRadius:
+                                              BorderRadius.circular(12),
+                                        ),
                                         padding: const EdgeInsets.only(
                                             top: 15, bottom: 15),
                                         child: Image.asset(
                                           "assets/icons/search.png",
                                           height: 30,
                                           width: 30,
-                                          color: primaryColor,
+                                          color: whiteColor,
                                         ),
                                       ),
                                       hintText: 'Search by vendor name ',
@@ -430,7 +435,7 @@ class _PurchesInvoiceListingPageState extends State<PurchesInvoiceListingPage> {
                 shape: const CircleBorder(),
                 heroTag: 'createStockFab',
                 backgroundColor: primaryColor,
-                foregroundColor: blackColor,
+                foregroundColor: whiteColor,
                 onPressed: () {
                   Navigator.push(
                     context,
@@ -673,7 +678,7 @@ class _TabPill extends StatelessWidget {
               style: TextStyle(
                 fontWeight: FontWeight.w700,
                 fontSize: 14,
-                color: selected ? blackColorDark : Colors.black87,
+                color: selected ? whiteColor : blackColorDark,
               ),
             ),
           ],

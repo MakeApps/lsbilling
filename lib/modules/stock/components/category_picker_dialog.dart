@@ -66,7 +66,7 @@ class _CategoryPickerDialogState extends State<CategoryPickerDialog> {
                                           primaryColor),
                                   foregroundColor:
                                       WidgetStateProperty.all<Color>(
-                                          blackColor),
+                                          whiteColor),
                                   shape: WidgetStateProperty.all<
                                       RoundedRectangleBorder>(
                                     RoundedRectangleBorder(

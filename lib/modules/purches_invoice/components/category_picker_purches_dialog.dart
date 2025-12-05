@@ -65,7 +65,7 @@ class _CategoryPickerDialogState extends State<PurchesStockCategoryPicker> {
                               backgroundColor:
                                   WidgetStateProperty.all<Color>(primaryColor),
                               foregroundColor:
-                                  WidgetStateProperty.all<Color>(blackColor),
+                                  WidgetStateProperty.all<Color>(whiteColor),
                               shape: WidgetStateProperty.all<
                                   RoundedRectangleBorder>(
                                 RoundedRectangleBorder(

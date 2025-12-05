@@ -4,19 +4,19 @@ import 'package:local_shout_billing/components/no_leading_space_formatter.dart';
 import 'package:local_shout_billing/config/colors.dart';
 import 'package:local_shout_billing/config/data.dart';
 
-class EditProductDialog extends StatefulWidget {
+class EditSparePartList extends StatefulWidget {
   final Map<String, dynamic> sparePart;
 
-  const EditProductDialog({
+  const EditSparePartList({
     super.key,
     required this.sparePart,
   });
 
   @override
-  State<EditProductDialog> createState() => _EditProductDialogState();
+  State<EditSparePartList> createState() => _EditSparePartListState();
 }
 
-class _EditProductDialogState extends State<EditProductDialog> {
+class _EditSparePartListState extends State<EditSparePartList> {
   late TextEditingController nameController;
   late TextEditingController rateController;
   late TextEditingController qtyController;

@@ -172,7 +172,7 @@ class _PurchesCreateSparePartPromptState
                                 child: const Text(
                                   "Cancel",
                                   style: TextStyle(
-                                    color: blackColor,
+                                    color: blackColorDark,
                                     fontSize: 15,
                                     fontWeight: FontWeight.bold,
                                   ),
@@ -191,7 +191,7 @@ class _PurchesCreateSparePartPromptState
                                 child: const Text(
                                   "Create",
                                   style: TextStyle(
-                                    color: blackColor,
+                                    color: whiteColor,
                                     fontSize: 15,
                                     fontWeight: FontWeight.bold,
                                   ),

@@ -13,10 +13,12 @@ import 'package:local_shout_billing/modules/job_sheet/bloc/job_sheet_details_blo
 class PurchesAddSparePartDialog extends StatefulWidget {
   final Function(Map<String, dynamic>) onSparePartAdded;
   final String? gstBill;
+  final String? igstBill;
   const PurchesAddSparePartDialog({
     super.key,
     required this.onSparePartAdded,
     required this.gstBill,
+    required this.igstBill,
   });
 
   @override
@@ -43,6 +45,7 @@ class _PurchesAddSparePartDialogState extends State<PurchesAddSparePartDialog> {
   bool _productConfirmed = false;
   String? _confirmedProductId;
   List<ProductModel> _products = [];
+
   @override
   void initState() {
     super.initState();
@@ -57,7 +60,6 @@ class _PurchesAddSparePartDialogState extends State<PurchesAddSparePartDialog> {
 
   @override
   void dispose() {
-    _sparePartController.dispose();
     _rateController.dispose();
     _qtyController.dispose();
     hsnController.dispose();
@@ -263,23 +265,26 @@ class _PurchesAddSparePartDialogState extends State<PurchesAddSparePartDialog> {
                   'None',
                   style: TextStyle(color: hintTextColor, fontSize: 13),
                 ),
-                items: gstList.isEmpty
-                    ? null
-                    : gstList.map<DropdownMenuItem<String>>((value) {
-                        return DropdownMenuItem<String>(
-                          value: value,
-                          child: Text(
-                            value,
-                            style: const TextStyle(
-                              color: blackColor,
-                              fontFamily: 'Mulish',
-                              fontWeight: FontWeight.w400,
-                              fontSize: 14,
-                              wordSpacing: 3,
-                            ),
-                          ),
-                        );
-                      }).toList(),
+                items: (widget.gstBill == "1" && widget.igstBill == "1"
+                        ? igstList
+                        : widget.gstBill == "1" && widget.igstBill == "0"
+                            ? gstList
+                            : [])
+                    .map<DropdownMenuItem<String>>((value) {
+                  return DropdownMenuItem<String>(
+                    value: value,
+                    child: Text(
+                      value,
+                      style: const TextStyle(
+                        color: blackColor,
+                        fontFamily: 'Mulish',
+                        fontWeight: FontWeight.w400,
+                        fontSize: 14,
+                        wordSpacing: 3,
+                      ),
+                    ),
+                  );
+                }).toList(),
                 onChanged: (value) {
                   _gst = value!.toString();
                 },
@@ -343,15 +348,28 @@ class _PurchesAddSparePartDialogState extends State<PurchesAddSparePartDialog> {
               (e) => (e.sparePartName ?? '').toLowerCase().contains(query),
             );
 
-            if (filtered.isNotEmpty) {
-              _showAddButton = false;
-              return filtered;
-            } else {
+            if (filtered.isEmpty) {
               _showAddButton = true;
-              return [
-                const ProductModel(sparePartName: "__NO_RESULT__"),
-              ];
+              return [const ProductModel(sparePartName: "__NO_RESULT__")];
             }
+
+            _showAddButton = false;
+
+            return filtered.map((product) {
+              // CONDITION: Only modify when both bills are 1
+              if (widget.gstBill == "1" && widget.igstBill == "1") {
+                final gst = product.sparePartGst ?? "";
+
+                // GST @6% → IGST @6%
+                if (gst.toLowerCase().startsWith("gst @")) {
+                  return product.copyWith(
+                    sparePartGst: gst.replaceFirst("GST", "IGST"),
+                  );
+                }
+              }
+
+              return product;
+            });
           },
           displayStringForOption: (sp) => sp.sparePartName == "__NO_RESULT__"
               ? ""
@@ -394,7 +412,7 @@ class _PurchesAddSparePartDialogState extends State<PurchesAddSparePartDialog> {
           },
           onSelected: (s) {
             if (s.sparePartName == "__NO_RESULT__") {
-              return; // "No result found" वर काही action नको
+              return; //
             }
 
             _sparePartController.text = s.sparePartName ?? '';
@@ -578,7 +596,7 @@ class _PurchesAddSparePartDialogState extends State<PurchesAddSparePartDialog> {
         _sparePartController.text = result["spare_part_name"] ?? typed;
         _rateController.text = result["sales_price"] ?? '';
         hsnController.text = result["hsn_code"] ?? '';
-        _gst = result["tax"];
+        _gst = result["tax"] ?? 'None';
         _productConfirmed = true;
         _showAddButton = false;
         _errorText = null;
