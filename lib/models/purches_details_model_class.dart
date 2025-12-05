@@ -13,6 +13,7 @@ class PurchaseInvoiceDetailsModel extends Equatable {
   final String? fullName;
   final String? gstBill;
   final String? gstFlag;
+  final String? igstBill;
   final String? invoiceTotal;
   final int? invoiceId;
   final int? invoiceNumber;
@@ -35,6 +36,7 @@ class PurchaseInvoiceDetailsModel extends Equatable {
     this.fullName,
     this.gstBill,
     this.gstFlag,
+    this.igstBill,
     this.invoiceTotal,
     this.invoiceId,
     this.invoiceNumber,
@@ -58,6 +60,7 @@ class PurchaseInvoiceDetailsModel extends Equatable {
         fullName!,
         gstBill!,
         gstFlag!,
+        igstBill!,
         invoiceTotal!,
         invoiceId!,
         invoiceNumber!,
@@ -83,11 +86,12 @@ class PurchaseInvoiceDetailsModel extends Equatable {
       fullName: json['full_name']?.toString() ?? '',
       gstBill: json['gst_bill']?.toString() ?? '0',
       gstFlag: json['gst_flag']?.toString() ?? '0',
+      igstBill: json['igst']?.toString() ?? '0',
       invoiceTotal: json['invoiceTotal']?.toString() ?? '0.00',
       invoiceId: int.tryParse(json['invoice_id']?.toString() ?? '0') ?? 0,
       invoiceNumber:
           int.tryParse(json['invoice_number']?.toString() ?? '0') ?? 0,
-    invoiceProducts: json['invoice_products'] != ""
+      invoiceProducts: json['invoice_products'] != ""
           ? jsonDecode(json['invoice_products'])
           : [],
       lastInvoiceId:
@@ -112,6 +116,7 @@ class PurchaseInvoiceDetailsModel extends Equatable {
     String? fullName,
     String? gstBill,
     String? gstFlag,
+    String? igstBill,
     String? invoiceTotal,
     int? invoiceId,
     int? invoiceNumber,
@@ -135,6 +140,7 @@ class PurchaseInvoiceDetailsModel extends Equatable {
       fullName: fullName ?? this.fullName,
       gstBill: gstBill ?? this.gstBill,
       gstFlag: gstFlag ?? this.gstFlag,
+      igstBill: igstBill ?? this.igstBill,
       invoiceTotal: invoiceTotal ?? this.invoiceTotal,
       invoiceId: invoiceId ?? this.invoiceId,
       invoiceNumber: invoiceNumber ?? this.invoiceNumber,
@@ -161,6 +167,7 @@ class PurchaseInvoiceDetailsModel extends Equatable {
     fullName: '',
     gstBill: '0',
     gstFlag: '0',
+    igstBill: '0',
     invoiceTotal: '0.00',
     invoiceId: 0,
     invoiceNumber: 0,
@@ -175,7 +182,7 @@ class PurchaseInvoiceDetailsModel extends Equatable {
 
   @override
   String toString() =>
-      '{invoiceId: $invoiceId, invoiceNumber: $invoiceNumber, fullName: $fullName, mobileNumber: $mobileNumber, invoiceTotal: $invoiceTotal, products: $invoiceProducts}';
+      '{invoiceId: $invoiceId, invoiceNumber: $invoiceNumber,igstBill:$igstBill,gstBill:$gstBill,gstBill:$gstBill, fullName: $fullName, mobileNumber: $mobileNumber, invoiceTotal: $invoiceTotal, products: $invoiceProducts,address:$address, email:$email,companyId:$companyId, createdAtDate:$createdAtDate, createdAtTime:$createdAtTime, deletedAt:$deletedAt, flag:$flag, gstFlag:$gstFlag, lastInvoiceId:$lastInvoiceId, productTotal:$productTotal, tempDate:$tempDate, updatedAt:$updatedAt, vendorId:$vendorId,companyId:$companyId,              }';
 }
 
 /// Sub-model for invoice products

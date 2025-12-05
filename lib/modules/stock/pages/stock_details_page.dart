@@ -342,7 +342,7 @@ class _StockDetailsPageState extends State<StockDetailsPage> {
                                         },
                                         style: ElevatedButton.styleFrom(
                                           backgroundColor: primaryColor,
-                                          foregroundColor: blackColor,
+                                          foregroundColor: whiteColor,
                                           elevation: 0,
                                           padding: const EdgeInsets.symmetric(
                                               horizontal: 14, vertical: 10),
@@ -566,7 +566,7 @@ class _StockDetailsPageState extends State<StockDetailsPage> {
                     ),
                   ),
                   backgroundColor: primaryColor,
-                  foregroundColor: blackColor),
+                  foregroundColor: whiteColor),
               child: const Text(
                 "Delete",
                 style: TextStyle(

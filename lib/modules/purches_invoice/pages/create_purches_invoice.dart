@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -165,103 +167,205 @@ class _CreatePurchesInvoicePageState extends State<CreatePurchesInvoicePage> {
                         if (_validate || _mobileValidate) return;
                         if (_formKey.currentState!.validate()) {
                           // GST confirmation dialog
-                          final bool? gstConfirmed = await showDialog<bool>(
+                          final gstConfirmed = await showDialog(
                             context: context,
                             barrierDismissible: false,
-                            builder: (context) => AlertDialog(
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(10),
-                              ),
-                              title: Stack(
-                                children: [
-                                  Column(
-                                    mainAxisSize: MainAxisSize.min,
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      const SizedBox(height: 4),
-                                      const Text(
-                                        "Do you want to activate GST?",
-                                        style: TextStyle(
-                                          fontSize: 15,
-                                          fontWeight: FontWeight.w600,
-                                          color: blackColor,
+                            builder: (context) {
+                              String billingType =
+                                  "gst"; // DEFAULT: GST Invoice
+                              String gstOption =
+                                  "CGST/SGST"; // DEFAULT: CGST/SGST
+
+                              return StatefulBuilder(
+                                builder: (context, setState) {
+                                  return AlertDialog(
+                                    backgroundColor: whiteColor,
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(8),
+                                    ),
+                                    title: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        const Text(
+                                          "Billing Type",
+                                          style: TextStyle(
+                                              fontSize: 15,
+                                              color: blackColor,
+                                              fontWeight: FontWeight.w600),
                                         ),
-                                      ),
-                                      const SizedBox(height: 10),
-                                      const Text(
-                                        "Select \"Yes\" to enable GST billing feature",
-                                        style: TextStyle(
-                                          fontSize: 13,
-                                          color: blackColor,
+                                        InkWell(
+                                          onTap: () => Navigator.pop(context),
+                                          child: const Icon(Icons.close,
+                                              size: 20, color: blackColor),
+                                        )
+                                      ],
+                                    ),
+                                    content: Column(
+                                      mainAxisSize: MainAxisSize.min,
+                                      children: [
+                                        /// Regular Invoice
+                                        RadioListTile(
+                                          title: const Text(
+                                            "Regular Invoice",
+                                            style: TextStyle(
+                                                fontSize: 13,
+                                                color: blackColor,
+                                                fontWeight: FontWeight.w500),
+                                          ),
+                                          value: "regular",
+                                          groupValue: billingType,
+                                          onChanged: (value) => setState(() =>
+                                              billingType = value.toString()),
                                         ),
-                                      ),
-                                      const SizedBox(height: 24),
-                                      Row(
-                                        children: [
-                                          Expanded(
-                                            child: TextButton(
-                                              style: OutlinedButton.styleFrom(
-                                                side: const BorderSide(
-                                                    color: Colors.grey),
-                                                shape: RoundedRectangleBorder(
-                                                  borderRadius:
-                                                      BorderRadius.circular(8),
-                                                ),
-                                              ),
-                                              onPressed: () =>
-                                                  Navigator.of(context)
-                                                      .pop(false),
-                                              child: const Text(
-                                                'No',
-                                                style: TextStyle(
-                                                    fontSize: 14,
-                                                    color: blackColor),
-                                              ),
+
+                                        /// GST Invoice
+                                        RadioListTile(
+                                          title: const Text(
+                                            "GST Invoice",
+                                            style: TextStyle(
+                                                fontSize: 13,
+                                                color: blackColor,
+                                                fontWeight: FontWeight.w500),
+                                          ),
+                                          value: "gst",
+                                          groupValue: billingType,
+                                          onChanged: (value) => setState(() =>
+                                              billingType = value.toString()),
+                                        ),
+
+                                        const SizedBox(height: 10),
+
+                                        /// Dropdown only when GST Invoice selected
+                                        if (billingType == "gst") ...[
+                                          const Align(
+                                            alignment: Alignment.centerLeft,
+                                            child: Text(
+                                              "Select:",
+                                              style: TextStyle(
+                                                  fontSize: 14,
+                                                  color: blackColor,
+                                                  fontWeight: FontWeight.w600),
                                             ),
                                           ),
-                                          const SizedBox(width: 12),
-                                          Expanded(
-                                            child: ElevatedButton(
-                                              style: ElevatedButton.styleFrom(
-                                                backgroundColor:
-                                                    successDarkColor,
-                                                foregroundColor: whiteColor,
-                                                shape: RoundedRectangleBorder(
-                                                  borderRadius:
-                                                      BorderRadius.circular(5),
-                                                ),
+                                          const SizedBox(height: 5),
+                                          Container(
+                                            width: double.infinity,
+                                            padding: const EdgeInsets.symmetric(
+                                                horizontal: 12),
+                                            decoration: BoxDecoration(
+                                              border: Border.all(
+                                                  color: Colors.grey),
+                                              borderRadius:
+                                                  BorderRadius.circular(6),
+                                            ),
+                                            child: DropdownButtonHideUnderline(
+                                              child: DropdownButton(
+                                                value: gstOption,
+                                                items: const [
+                                                  DropdownMenuItem(
+                                                    value: "CGST/SGST",
+                                                    child: Text(
+                                                      "CGST/SGST",
+                                                      style: TextStyle(
+                                                          fontSize: 12,
+                                                          color: blackColor,
+                                                          fontWeight:
+                                                              FontWeight.w500),
+                                                    ),
+                                                  ),
+                                                  DropdownMenuItem(
+                                                    value: "IGST",
+                                                    child: Text(
+                                                      "IGST",
+                                                      style: TextStyle(
+                                                          fontSize: 12,
+                                                          color: blackColor,
+                                                          fontWeight:
+                                                              FontWeight.w500),
+                                                    ),
+                                                  ),
+                                                ],
+                                                onChanged: (val) => setState(
+                                                    () => gstOption =
+                                                        val.toString()),
                                               ),
-                                              onPressed: () =>
-                                                  Navigator.of(context)
-                                                      .pop(true),
-                                              child: const Text('Yes'),
                                             ),
                                           ),
                                         ],
-                                      )
-                                    ],
-                                  ),
-                                  Positioned(
-                                    top: 0,
-                                    right: 0,
-                                    child: InkWell(
-                                      onTap: () => Navigator.of(context).pop(),
-                                      borderRadius: BorderRadius.circular(20),
-                                      child: const Padding(
-                                        padding: EdgeInsets.all(4.0),
-                                        child: Icon(Icons.close,
-                                            size: 20, color: greyColor),
-                                      ),
+
+                                        const SizedBox(height: 20),
+
+                                        Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.end,
+                                          children: [
+                                            TextButton(
+                                              child: const Text(
+                                                "Cancel",
+                                                style: TextStyle(
+                                                    fontSize: 13,
+                                                    color: bluecolorprimary,
+                                                    fontWeight:
+                                                        FontWeight.w500),
+                                              ),
+                                              onPressed: () =>
+                                                  Navigator.pop(context),
+                                            ),
+                                            ElevatedButton(
+                                              style: ButtonStyle(
+                                                backgroundColor:
+                                                    WidgetStateProperty.all<
+                                                        Color>(primaryColor),
+                                                shape: WidgetStateProperty.all<
+                                                    RoundedRectangleBorder>(
+                                                  RoundedRectangleBorder(
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            5),
+                                                  ),
+                                                ),
+                                              ),
+                                              child: const Text(
+                                                "Continue",
+                                                style: TextStyle(
+                                                    fontSize: 13,
+                                                    color: whiteColor,
+                                                    fontWeight:
+                                                        FontWeight.w500),
+                                              ),
+                                              onPressed: () {
+                                                Navigator.pop(
+                                                  context,
+                                                  {
+                                                    "billingType": billingType,
+                                                    "igst": gstOption == "IGST"
+                                                        ? "1"
+                                                        : "0"
+                                                  },
+                                                );
+                                              },
+                                            ),
+                                          ],
+                                        )
+                                      ],
                                     ),
-                                  ),
-                                ],
-                              ),
-                            ),
+                                  );
+                                },
+                              );
+                            },
                           );
 
                           // Only continue if user selected Yes or No
                           if (gstConfirmed != null) {
+                            String billingType = gstConfirmed["billingType"];
+                            String igst = gstConfirmed["igst"];
+
+                            String gstBill = "0"; // default regular invoice
+
+                            if (billingType == "gst") {
+                              gstBill = "1"; // GST Invoice
+                            }
                             Map<String, dynamic> formData = {
                               "vendor_name": vendorNameController.text.trim(),
                               "address": adressController.text.trim(),
@@ -269,8 +373,10 @@ class _CreatePurchesInvoicePageState extends State<CreatePurchesInvoicePage> {
                               "phone_number": phoneNumberController.text.trim(),
                               "total_balance_vendor": "",
                               "gst_number": gstNumberController.text.trim(),
-                              "gst_bill": gstConfirmed ? "1" : "0",
+                              "gst_bill": gstBill,
+                              "igst": billingType == "regular" ? "0" : igst,
                             };
+                            log("------$formData");
                             // Send to Bloc
                             context.read<PurchesInvoiceBloc>().add(
                                   CreatePurchesInvoice(
@@ -285,13 +391,13 @@ class _CreatePurchesInvoicePageState extends State<CreatePurchesInvoicePage> {
                         children: <Widget>[
                           Text(
                             "Next",
-                            style: TextStyle(color: blackColor, fontSize: 14),
+                            style: TextStyle(color: whiteColor, fontSize: 14),
                           ),
                           SizedBox(width: 3),
                           Icon(
                             Icons.arrow_forward_ios_outlined,
                             size: 14,
-                            color: blackColor,
+                            color: whiteColor,
                           ),
                         ],
                       ),
@@ -376,7 +482,7 @@ class _CreatePurchesInvoicePageState extends State<CreatePurchesInvoicePage> {
                                       ? "The vendor name field is required"
                                       : null,
                                   filled: true,
-                                  fillColor: whiteColor,
+                                  fillColor: lightbgColor,
                                   border: OutlineInputBorder(
                                     borderRadius: BorderRadius.circular(5),
                                     borderSide: BorderSide.none,
@@ -487,7 +593,7 @@ class _CreatePurchesInvoicePageState extends State<CreatePurchesInvoicePage> {
                               ? "The phone number field is required"
                               : null,
                           filled: true,
-                          fillColor: whiteColor,
+                          fillColor: lightbgColor,
                           border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(8),
                             borderSide: const BorderSide(
@@ -534,7 +640,7 @@ class _CreatePurchesInvoicePageState extends State<CreatePurchesInvoicePage> {
                             right: 20.0,
                           ),
                           filled: true,
-                          fillColor: whiteColor,
+                          fillColor: lightbgColor,
                           border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(8),
                             borderSide: const BorderSide(
@@ -575,7 +681,7 @@ class _CreatePurchesInvoicePageState extends State<CreatePurchesInvoicePage> {
                             right: 20.0,
                           ),
                           filled: true,
-                          fillColor: whiteColor,
+                          fillColor: lightbgColor,
                           border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(8),
                             borderSide: const BorderSide(
@@ -616,7 +722,7 @@ class _CreatePurchesInvoicePageState extends State<CreatePurchesInvoicePage> {
                             right: 20.0,
                           ),
                           filled: true,
-                          fillColor: whiteColor,
+                          fillColor: lightbgColor,
                           border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(8),
                             borderSide: const BorderSide(

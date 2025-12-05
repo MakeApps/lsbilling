@@ -1,6 +1,5 @@
 import 'dart:async';
 import 'dart:convert';
-import 'dart:developer' as developer;
 import 'dart:typed_data';
 import 'package:bloc_concurrency/bloc_concurrency.dart';
 import 'package:equatable/equatable.dart';
@@ -290,7 +289,6 @@ class JobSheetDetailsBloc
     };
     final result =
         await app_instance.jobSheetRepository.searchProduct(jsonData);
-    developer.log("result-----$result");
     if (result != null && result.isNotEmpty) {
       return emit(
         state.copyWith(

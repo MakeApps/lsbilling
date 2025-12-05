@@ -4,21 +4,22 @@ import 'package:local_shout_billing/components/no_leading_space_formatter.dart';
 import 'package:local_shout_billing/config/colors.dart';
 import 'package:local_shout_billing/config/data.dart';
 
-class EditGstProductDialog extends StatefulWidget {
+class EditSparePartWithGst extends StatefulWidget {
   final Map<String, dynamic> sparePart;
   final String? gstBill;
-
-  const EditGstProductDialog({
+  final String? igstBill;
+  const EditSparePartWithGst({
     super.key,
     required this.sparePart,
     required this.gstBill,
+    required this.igstBill,
   });
 
   @override
-  State<EditGstProductDialog> createState() => _EditGstProductDialogState();
+  State<EditSparePartWithGst> createState() => _EditSparePartWithGstState();
 }
 
-class _EditGstProductDialogState extends State<EditGstProductDialog> {
+class _EditSparePartWithGstState extends State<EditSparePartWithGst> {
   late TextEditingController nameController;
   late TextEditingController rateController;
   late TextEditingController qtyController;
@@ -196,7 +197,12 @@ class _EditGstProductDialogState extends State<EditGstProductDialog> {
                 ),
               ),
               hint: const Text('None'),
-              items: gstList.map<DropdownMenuItem<String>>((value) {
+              items: (widget.gstBill == "1" && widget.igstBill == "1"
+                      ? igstList
+                      : widget.gstBill == "1" && widget.igstBill == "0"
+                          ? gstList
+                          : [])
+                  .map<DropdownMenuItem<String>>((value) {
                 return DropdownMenuItem<String>(
                   value: value,
                   child: Text(

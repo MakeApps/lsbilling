@@ -173,7 +173,7 @@ class _CreateStockPageState extends State<CreateStockPage> {
                     child: ElevatedButton(
                       style: ButtonStyle(
                         foregroundColor:
-                            WidgetStateProperty.all<Color>(blackColor),
+                            WidgetStateProperty.all<Color>(whiteColor),
                         backgroundColor:
                             WidgetStateProperty.all<Color>(primaryColor),
                         shape: WidgetStateProperty.all<RoundedRectangleBorder>(

@@ -95,17 +95,18 @@ class _DrawerWidgetState extends State<DrawerWidget> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const SizedBox(height: 16),
+                  const SizedBox(height: 8),
                   ClipRRect(
                     borderRadius: BorderRadius.circular(8),
                     child: Image.asset(
-                      "assets/icons/mech-logo-white.png",
-                      height: 45,
+                      "assets/icons/drawer-icon.png",
+                      height: 150,
+                      width: 150,
+                      fit: BoxFit.cover,
                     ),
                   ),
-                  const SizedBox(height: 16),
                   Text(
-                    roleId == "4" ? "Staff" : "Admin",
+                    roleId == "4" ? "Staff login..." : "Admin login...",
                     style: const TextStyle(
                       color: whiteColor,
                       fontSize: 13,
@@ -116,7 +117,6 @@ class _DrawerWidgetState extends State<DrawerWidget> {
               ),
             ),
           ),
-          const SizedBox(height: 8),
           // Drawer Items
           Expanded(
             child: ListView(
