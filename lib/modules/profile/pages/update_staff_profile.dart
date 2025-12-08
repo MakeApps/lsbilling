@@ -519,7 +519,7 @@ class _UpdateProfileState extends State<UpdateStaffProfile> {
                                                     primaryColor),
                                             foregroundColor:
                                                 WidgetStatePropertyAll(
-                                                    blackColor),
+                                                    whiteColor),
                                           ),
                                           onPressed: () {
                                             // Manually validate fields
@@ -589,7 +589,7 @@ class _UpdateProfileState extends State<UpdateStaffProfile> {
                                             "Update",
                                             style: TextStyle(
                                                 fontSize: 16,
-                                                color: blackColor),
+                                                color: whiteColor),
                                           ),
                                         ),
                                       ),

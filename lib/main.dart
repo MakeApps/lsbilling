@@ -34,7 +34,7 @@ void main() async {
   runApp(
     MyApp(
       appRouter: AppRouter(),
-      initialRoute: isLogin ? '/dashboard_page' : '/customer_login_screen',
+      initialRoute: isLogin ? '/dashboard_page' : '/login_screen',
     ),
   );
 }

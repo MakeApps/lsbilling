@@ -140,7 +140,7 @@ class _ProfilePageState extends State<ProfilePage> {
                         ElevatedButton(
                           style: ElevatedButton.styleFrom(
                             backgroundColor: primaryColor,
-                            foregroundColor: blackColor,
+                            foregroundColor: whiteColor,
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(5),
                             ),
