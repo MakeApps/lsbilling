@@ -34,12 +34,12 @@ class DiscardVendorPage extends StatelessWidget {
                       ),
                     ),
                     backgroundColor: WidgetStatePropertyAll(primaryColor),
-                    foregroundColor: WidgetStatePropertyAll(blackColor),
+                    foregroundColor: WidgetStatePropertyAll(whiteColor),
                   ),
                   child: const Text(
                     'Discard',
                     style: TextStyle(
-                        color: blackColor,
+                        color: whiteColor,
                         fontSize: 12,
                         fontWeight: FontWeight.w500),
                   ),

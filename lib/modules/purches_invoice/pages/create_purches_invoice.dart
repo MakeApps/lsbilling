@@ -1,4 +1,4 @@
-import 'dart:developer';
+
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -376,7 +376,6 @@ class _CreatePurchesInvoicePageState extends State<CreatePurchesInvoicePage> {
                               "gst_bill": gstBill,
                               "igst": billingType == "regular" ? "0" : igst,
                             };
-                            log("------$formData");
                             // Send to Bloc
                             context.read<PurchesInvoiceBloc>().add(
                                   CreatePurchesInvoice(

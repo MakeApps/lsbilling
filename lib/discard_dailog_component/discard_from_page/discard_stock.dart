@@ -35,7 +35,7 @@ class DiscardConfirmationStock extends StatelessWidget {
                         child: ElevatedButton(
                           style: ElevatedButton.styleFrom(
                             backgroundColor: primaryColor,
-                            foregroundColor: blackColor,
+                            foregroundColor: whiteColor,
                             shape: const RoundedRectangleBorder(
                               borderRadius: BorderRadius.all(
                                 Radius.circular(3),

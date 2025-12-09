@@ -1,6 +1,5 @@
 import 'dart:async';
 import 'dart:convert';
-import 'dart:developer';
 import 'package:equatable/equatable.dart';
 import 'package:flutter_form_bloc/flutter_form_bloc.dart';
 import 'package:local_shout_billing/models/get_staff_details_model.dart';
@@ -65,7 +64,6 @@ class EditStaffDetailsBloc
 
       dynamic result = await app_instance.jobSheetRepository
           .updateStaffsDetails(jsonData, event.id.toString());
-      log("---------$result");
       if (result['status'] == "Success") {
         emit(
           state.copyWith(editStaffStatus: EditStaffDetailsStatus.updated),

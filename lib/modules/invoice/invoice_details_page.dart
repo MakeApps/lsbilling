@@ -1,6 +1,5 @@
 import 'dart:async';
 import 'dart:convert';
-import 'dart:developer';
 import 'package:flutter_form_bloc/flutter_form_bloc.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:local_shout_billing/components/center_loader.dart';
@@ -342,7 +341,6 @@ class _InvoiceDetailsPageState extends State<InvoiceDetailsPage> {
                               "updated_at":
                                   state.invoiceModel!.updatedAt.toString(),
                             };
-                            log("-----$formData");
                             context.read<JobSheetDetailsBloc>().add(
                                   GenerateInvoiceEvent(
                                       id: state.invoiceModel!.invoiceId
@@ -2149,7 +2147,7 @@ class _InvoiceDetailsPageState extends State<InvoiceDetailsPage> {
                                                 children: [
                                                   Icon(
                                                     addIcon,
-                                                    color: blackColor,
+                                                    color: whiteColor,
                                                     size: 18,
                                                   ),
                                                   Text(
@@ -2158,7 +2156,7 @@ class _InvoiceDetailsPageState extends State<InvoiceDetailsPage> {
                                                         fontSize: 11,
                                                         fontWeight:
                                                             FontWeight.w500,
-                                                        color: blackColorDark),
+                                                        color: whiteColor),
                                                   ),
                                                 ],
                                               ),

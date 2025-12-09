@@ -387,12 +387,12 @@ class _InvoiceListRowState extends State<InvoiceListRow> {
                   ),
                 ),
                 backgroundColor: primaryColor,
-                foregroundColor: blackColor,
+                foregroundColor: whiteColor,
               ),
               child: const Text(
                 "Delete",
                 style: TextStyle(
-                    color: blackColorDark,
+                    color: whiteColor,
                     fontWeight: FontWeight.w500,
                     fontSize: 13),
               ),

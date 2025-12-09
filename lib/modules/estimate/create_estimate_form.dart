@@ -478,7 +478,7 @@ class _CreateEstimateFormState extends State<CreateEstimateForm> {
                               Icon(
                                 Icons.arrow_forward_ios_outlined,
                                 size: 15,
-                                color: blackColor,
+                                color: whiteColor,
                               ),
                             ],
                           ),

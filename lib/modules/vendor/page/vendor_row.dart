@@ -152,11 +152,8 @@ class _VendorListRowState extends State<VendorListRow> {
                               showDeleteDailog(context);
                             }
                           },
-                          child: const Icon(
-                            verticleDot,
-                            color: hintTextColor,
-                            size: 30
-                          ),
+                          child: const Icon(verticleDot,
+                              color: hintTextColor, size: 30),
                         ),
                       ],
                     ),
@@ -345,11 +342,11 @@ class _VendorListRowState extends State<VendorListRow> {
                     ),
                   ),
                   backgroundColor: primaryColor,
-                  foregroundColor: blackColor),
+                  foregroundColor: whiteColor),
               child: const Text(
                 "Delete",
                 style: TextStyle(
-                    color: blackColorDark,
+                    color: whiteColor,
                     fontSize: 13,
                     fontWeight: FontWeight.w500),
               ),

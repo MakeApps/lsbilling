@@ -25,9 +25,10 @@ import 'package:local_shout_billing/router/app_router.dart';
 import 'modules/job_sheet/bloc/profile_update_bloc/profile_update_bloc_bloc.dart';
 import 'modules/stock/bloc/stock_details_bloc/stock_details_bloc.dart';
 
+late IsarServices isarServices;
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  IsarServices();
+  isarServices = IsarServices();
   final auth = Authentication();
   final isLogin = await auth.checkLogin();
   // final roleId = await app_instance.appConfig.secureStorage.read(key: 'roleId');

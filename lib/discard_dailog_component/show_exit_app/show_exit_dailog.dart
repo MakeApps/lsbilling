@@ -45,10 +45,10 @@ class ExitConfirmationDialog extends StatelessWidget {
                 ),
               ),
               backgroundColor: primaryColor,
-              foregroundColor: blackColor),
+              foregroundColor: whiteColor),
           child: const Text(
             "Yes, Exit",
-            style: TextStyle(color: blackColor, fontSize: 12),
+            style: TextStyle(color: whiteColor, fontSize: 12),
           ),
         ),
         OutlinedButton(

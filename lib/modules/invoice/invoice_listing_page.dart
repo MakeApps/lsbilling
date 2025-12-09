@@ -363,70 +363,63 @@ class _InvoiceListingPageState extends State<InvoiceListingPage> {
                           ],
                         ),
                         const SizedBox(height: 12),
-                        SingleChildScrollView(
-                          scrollDirection: Axis.horizontal,
-                          child: ConstrainedBox(
-                            constraints: BoxConstraints(
-                              minWidth: MediaQuery.of(context).size.width,
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Expanded(
+                              child: _TabPill(
+                                label: "All",
+                                selected: state.selectedGstFilter == null,
+                                onTap: () {
+                                  context.read<JobSheetBloc>().add(
+                                        FetchInvoiceList(
+                                          status: JobSheetStatus.loading,
+                                          gstFilter: null,
+                                          searchKeyword: _searchController.text,
+                                          paymentStatus: _mapToApiPaymentStatus(
+                                              _selectedPaymentStatus),
+                                        ),
+                                      );
+                                },
+                              ),
                             ),
-                            child: Wrap(
-                              alignment: WrapAlignment.center,
-                              spacing: 16,
-                              children: [
-                                _TabPill(
-                                  label: "All",
-                                  selected: state.selectedGstFilter == null,
-                                  onTap: () {
-                                    context.read<JobSheetBloc>().add(
-                                          FetchInvoiceList(
-                                            status: JobSheetStatus.loading,
-                                            gstFilter: null,
-                                            searchKeyword:
-                                                _searchController.text,
-                                            paymentStatus:
-                                                _mapToApiPaymentStatus(
-                                                    _selectedPaymentStatus),
-                                          ),
-                                        );
-                                  },
-                                ),
-                                _TabPill(
-                                  label: "GST",
-                                  selected: state.selectedGstFilter == "1",
-                                  onTap: () {
-                                    context.read<JobSheetBloc>().add(
-                                          FetchInvoiceList(
-                                            status: JobSheetStatus.loading,
-                                            gstFilter: "1",
-                                            searchKeyword:
-                                                _searchController.text,
-                                            paymentStatus:
-                                                _mapToApiPaymentStatus(
-                                                    _selectedPaymentStatus),
-                                          ),
-                                        );
-                                  },
-                                ),
-                                _TabPill(
-                                  label: "Non-GST",
-                                  selected: state.selectedGstFilter == "0",
-                                  onTap: () {
-                                    context.read<JobSheetBloc>().add(
-                                          FetchInvoiceList(
-                                            status: JobSheetStatus.loading,
-                                            gstFilter: "0",
-                                            searchKeyword:
-                                                _searchController.text,
-                                            paymentStatus:
-                                                _mapToApiPaymentStatus(
-                                                    _selectedPaymentStatus),
-                                          ),
-                                        );
-                                  },
-                                ),
-                              ],
+                            const SizedBox(width: 10),
+                            Expanded(
+                              child: _TabPill(
+                                label: "GST",
+                                selected: state.selectedGstFilter == "1",
+                                onTap: () {
+                                  context.read<JobSheetBloc>().add(
+                                        FetchInvoiceList(
+                                          status: JobSheetStatus.loading,
+                                          gstFilter: "1",
+                                          searchKeyword: _searchController.text,
+                                          paymentStatus: _mapToApiPaymentStatus(
+                                              _selectedPaymentStatus),
+                                        ),
+                                      );
+                                },
+                              ),
                             ),
-                          ),
+                            const SizedBox(width: 10),
+                            Expanded(
+                              child: _TabPill(
+                                label: "Non-GST",
+                                selected: state.selectedGstFilter == "0",
+                                onTap: () {
+                                  context.read<JobSheetBloc>().add(
+                                        FetchInvoiceList(
+                                          status: JobSheetStatus.loading,
+                                          gstFilter: "0",
+                                          searchKeyword: _searchController.text,
+                                          paymentStatus: _mapToApiPaymentStatus(
+                                              _selectedPaymentStatus),
+                                        ),
+                                      );
+                                },
+                              ),
+                            ),
+                          ],
                         )
                       ],
                     ),

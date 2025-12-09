@@ -251,11 +251,11 @@ class _StaffListRowState extends State<StaffListRow> {
                     ),
                   ),
                   backgroundColor: primaryColor,
-                  foregroundColor: blackColor),
+                  foregroundColor: whiteColor),
               child: const Text(
                 "Delete",
                 style: TextStyle(
-                    color: blackColorDark,
+                    color: whiteColor,
                     fontSize: 13,
                     fontWeight: FontWeight.w500),
               ),
