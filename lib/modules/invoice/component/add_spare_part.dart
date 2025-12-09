@@ -120,6 +120,15 @@ class _AddSparePartDialogState extends State<InvoiceAddSparePartDialog> {
     isQuantityHidden = false;
   }
 
+  List<String> get currentGstList {
+    if (widget.gstBill == "1" && widget.igstBill == "1") {
+      return igstList; // IGST list
+    } else if (widget.gstBill == "1" && widget.igstBill == "0") {
+      return gstList; // SGST/CGST list
+    }
+    return []; // default empty
+  }
+
   @override
   Widget build(BuildContext context) {
     return Dialog(
@@ -691,9 +700,9 @@ class _AddSparePartDialogState extends State<InvoiceAddSparePartDialog> {
                     ),
                   ),
                   hint: const Text('None'),
-                  items: gstList.isEmpty
+                  items: currentGstList.isEmpty
                       ? null
-                      : gstList.map<DropdownMenuItem<String>>((value) {
+                      : currentGstList.map<DropdownMenuItem<String>>((value) {
                           return DropdownMenuItem<String>(
                             value: value,
                             child: Text(

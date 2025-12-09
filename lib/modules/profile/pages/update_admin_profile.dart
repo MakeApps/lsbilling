@@ -263,7 +263,7 @@ class _UpdateProfileState extends State<UpdateProfile> {
                   },
                   child: const Text(
                     "Update",
-                    style: TextStyle(color: blackColor, fontSize: 15),
+                    style: TextStyle(color: whiteColor, fontSize: 15),
                   ),
                 ),
               ),

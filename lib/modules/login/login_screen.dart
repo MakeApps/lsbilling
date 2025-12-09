@@ -93,13 +93,14 @@ class LoginScreenState extends State<LoginScreen> {
                       child: ClipPath(
                         clipper: WaveClipper(),
                         child: Container(
-                          color: const Color.fromARGB(255, 240, 219, 181),
+                          color:lightbgColor,
                           child: Center(
                             child: Column(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
                                 Image.asset(
-                                  'assets/icons/ls-billing.png',
+                                  'assets/icons/drawer-icon.png',
+                                  color: blackColor,
                                   height: 151,
                                   width: 250,
                                 ),
@@ -194,7 +195,7 @@ class LoginButton extends StatelessWidget {
             },
             style: ElevatedButton.styleFrom(
               backgroundColor: primaryColor,
-              foregroundColor: blackColor,
+              foregroundColor: whiteColor,
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(25),
               ),

@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_form_bloc/flutter_form_bloc.dart';
@@ -487,7 +486,7 @@ class _EditStaffScreen extends State<EditStaffScreen> {
                                                     primaryColor),
                                             foregroundColor:
                                                 WidgetStatePropertyAll(
-                                                    blackColor),
+                                                    whiteColor),
                                           ),
                                           onPressed: () {
                                             // Manually validate fields
@@ -548,7 +547,6 @@ class _EditStaffScreen extends State<EditStaffScreen> {
                                                   confirmPassController
                                                       .text.isNotEmpty) {}
                                             });
-                                            log("-----$formData");
 
                                             context
                                                 .read<EditStaffDetailsBloc>()
@@ -564,7 +562,7 @@ class _EditStaffScreen extends State<EditStaffScreen> {
                                             "Update",
                                             style: TextStyle(
                                                 fontSize: 16,
-                                                color: blackColor),
+                                                color: whiteColor),
                                           ),
                                         ),
                                       ),

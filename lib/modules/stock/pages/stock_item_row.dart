@@ -345,7 +345,7 @@ class _StockItemRowState extends State<StockItemRow> {
                     ),
                   ),
                   backgroundColor: primaryColor,
-                  foregroundColor: blackColor),
+                  foregroundColor: whiteColor),
               child: const Text(
                 "Delete",
                 style: TextStyle(

@@ -7,7 +7,7 @@ const Color primaryColor = Color.fromARGB(255, 159, 95, 254);
 const Color blackColor = Color.fromARGB(255, 39, 39, 46);
 const Color hintTextColor = Color.fromARGB(255, 161, 161, 161);
 //const Color backgroundColor = Color.fromRGBO(247, 247, 247, 1.0);
-const Color backgroundColor = Color.fromARGB(255, 255, 255, 255);
+const Color backgroundColor = Color.fromARGB(255, 233, 232, 232);
 // Color.fromRGBO(255, 245, 206, 1.0);
 const Color lightColor = Color(0xFFFFFFFF);
 const Color whiteColor = Color.fromARGB(255, 255, 255, 255);

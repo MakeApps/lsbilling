@@ -268,65 +268,64 @@ class _EstimateListingState extends State<EstimateListing> {
                         ),
                         const SizedBox(height: 12),
                         //  Tab Pills
-
-                        SingleChildScrollView(
-                          scrollDirection: Axis.horizontal,
-                          child: ConstrainedBox(
-                            constraints: BoxConstraints(
-                              minWidth: MediaQuery.of(context).size.width,
-                            ),
-                            child: Wrap(
-                              alignment: WrapAlignment.center,
-                              spacing: 16,
+                        Center(
+                          child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
                               children: [
-                                _TabPill(
-                                  label: "All",
-                                  // count: allCount!,
-                                  selected: state.selectedGstFilter == null,
-                                  onTap: () {
-                                    context.read<JobSheetBloc>().add(
-                                          FetchEstimateList(
-                                            status: JobSheetStatus.loading,
-                                            gstFilter: null,
-                                            searchKeyword:
-                                                searchController.text,
-                                          ),
-                                        );
-                                  },
+                                Expanded(
+                                  child: _TabPill(
+                                    label: "All",
+                                    // count: allCount!,
+                                    selected: state.selectedGstFilter == null,
+                                    onTap: () {
+                                      context.read<JobSheetBloc>().add(
+                                            FetchEstimateList(
+                                              status: JobSheetStatus.loading,
+                                              gstFilter: null,
+                                              searchKeyword:
+                                                  searchController.text,
+                                            ),
+                                          );
+                                    },
+                                  ),
                                 ),
-                                _TabPill(
-                                  label: "GST",
-                                  // count: gstCount!,
-                                  selected: state.selectedGstFilter == "1",
-                                  onTap: () {
-                                    context.read<JobSheetBloc>().add(
-                                          FetchEstimateList(
-                                            status: JobSheetStatus.loading,
-                                            gstFilter: "1", // GST
-                                            searchKeyword:
-                                                searchController.text,
-                                          ),
-                                        );
-                                  },
+                                const SizedBox(width: 10),
+                                Expanded(
+                                  child: _TabPill(
+                                    label: "GST",
+                                    // count: gstCount!,
+                                    selected: state.selectedGstFilter == "1",
+                                    onTap: () {
+                                      context.read<JobSheetBloc>().add(
+                                            FetchEstimateList(
+                                              status: JobSheetStatus.loading,
+                                              gstFilter: "1", // GST
+                                              searchKeyword:
+                                                  searchController.text,
+                                            ),
+                                          );
+                                    },
+                                  ),
                                 ),
-                                _TabPill(
-                                  label: "Non-GST",
-                                  // count: nonGstCount!,
-                                  selected: state.selectedGstFilter == "0",
-                                  onTap: () {
-                                    context.read<JobSheetBloc>().add(
-                                          FetchEstimateList(
-                                            status: JobSheetStatus.loading,
-                                            gstFilter: "0", // Non-GST
-                                            searchKeyword:
-                                                searchController.text,
-                                          ),
-                                        );
-                                  },
-                                ),
-                              ],
-                            ),
-                          ),
+                                const SizedBox(width: 10),
+                                Expanded(
+                                  child: _TabPill(
+                                    label: "Non-GST",
+                                    // count: nonGstCount!,
+                                    selected: state.selectedGstFilter == "0",
+                                    onTap: () {
+                                      context.read<JobSheetBloc>().add(
+                                            FetchEstimateList(
+                                              status: JobSheetStatus.loading,
+                                              gstFilter: "0", // Non-GST
+                                              searchKeyword:
+                                                  searchController.text,
+                                            ),
+                                          );
+                                    },
+                                  ),
+                                )
+                              ]),
                         )
                       ],
                     ),
@@ -405,8 +404,8 @@ class _TabPill extends StatelessWidget {
               label,
               style: TextStyle(
                 fontWeight: FontWeight.w700,
-                fontSize: 13,
-                color: selected ? whiteColor : Colors.black87,
+                fontSize: 14,
+                color: selected ? whiteColor : blackColor,
               ),
             ),
             const SizedBox(width: 10),

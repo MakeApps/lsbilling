@@ -4,13 +4,14 @@ import 'package:local_shout_billing/config/utility.dart';
 import 'package:local_shout_billing/internet/internet.dart';
 import 'package:local_shout_billing/isar/admin_profile_information/profile_information_row.dart'
     as store_admin_profile_data;
-import 'package:local_shout_billing/isar/isar_services.dart';
+// import 'package:local_shout_billing/isar/isar_services.dart';
 import 'package:local_shout_billing/isar/staff_updated_profile/staff_updated_profile_row.dart'
     as store_staff_profile_data;
 import 'package:local_shout_billing/isar/update_jobcard_draft_isar/update_jobcard_isar_row.dart'
     as update_jobcard_isar_row_store;
 import 'package:local_shout_billing/isar/update_profile_data/update_profile_row.dart'
     as store_updated_profile_data;
+import 'package:local_shout_billing/main.dart';
 
 import 'package:local_shout_billing/network/repositories/jobs_sheet_repository.dart';
 // = = = =
@@ -33,7 +34,7 @@ final JobSheetRepository jobSheetRepository = JobSheetRepository();
 FlutterSecureStorage storage = const FlutterSecureStorage();
 
 // Isar related
-var runningAppIsarServices = IsarServices();
+var runningAppIsarServices = isarServices;
 
 final dashboardDataStore =
     store_admin_data.AdminDashboardRow(runningAppIsarServices.db);

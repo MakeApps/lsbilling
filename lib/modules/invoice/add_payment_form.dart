@@ -797,7 +797,7 @@ class _AddPaymentFormState extends State<AddPaymentForm> {
                                         },
                                         child: const Text(
                                           'Submit',
-                                          style: TextStyle(color: blackColor),
+                                          style: TextStyle(color: whiteColor),
                                         ),
                                       )
                                     ],
@@ -811,7 +811,7 @@ class _AddPaymentFormState extends State<AddPaymentForm> {
                         },
                         child: const Text(
                           'Save Payment',
-                          style: TextStyle(color: blackColor),
+                          style: TextStyle(color: whiteColor, fontSize: 14),
                         ),
                       ),
                     ],

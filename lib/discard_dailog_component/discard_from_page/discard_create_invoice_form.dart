@@ -5,7 +5,7 @@ class DiscardCreateinvoiceDailog extends StatelessWidget {
   const DiscardCreateinvoiceDailog({super.key});
 
   Future<bool?> showCreateInvoiceDiscardDailog(BuildContext context) async {
-  return await showDialog<bool>(
+    return await showDialog<bool>(
           context: context,
           barrierDismissible: false,
           builder: (BuildContext context) {
@@ -27,19 +27,19 @@ class DiscardCreateinvoiceDailog extends StatelessWidget {
                 ElevatedButton(
                   style: const ButtonStyle(
                     shape: WidgetStatePropertyAll(
-                       RoundedRectangleBorder(
+                      RoundedRectangleBorder(
                         borderRadius: BorderRadius.all(
                           Radius.circular(5),
                         ),
                       ),
                     ),
                     backgroundColor: WidgetStatePropertyAll(primaryColor),
-                    foregroundColor: WidgetStatePropertyAll(blackColor),
+                    foregroundColor: WidgetStatePropertyAll(whiteColor),
                   ),
                   child: const Text(
                     'Discard',
                     style: TextStyle(
-                        color: blackColor,
+                        color: whiteColor,
                         fontSize: 12,
                         fontWeight: FontWeight.w500),
                   ),
@@ -49,8 +49,9 @@ class DiscardCreateinvoiceDailog extends StatelessWidget {
                 ),
                 ElevatedButton(
                   style: const ButtonStyle(
-                    side:
-                        WidgetStatePropertyAll(BorderSide(color: primaryColor)),
+                    side: WidgetStatePropertyAll(
+                      BorderSide(color: primaryColor),
+                    ),
                     shape: WidgetStatePropertyAll(
                       RoundedRectangleBorder(
                         borderRadius: BorderRadius.all(

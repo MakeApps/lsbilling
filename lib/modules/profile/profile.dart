@@ -7,7 +7,6 @@ import 'package:local_shout_billing/modules/job_sheet/bloc/profile_bloc/profile_
 import 'package:local_shout_billing/modules/job_sheet/bloc/profile_bloc/profilesection_state.dart';
 import 'package:local_shout_billing/modules/job_sheet/pages/job_sheet.dart';
 import 'package:local_shout_billing/config.dart' as app_instance;
-import 'package:local_shout_billing/modules/login/login_screen.dart';
 import '../job_sheet/bloc/profile_bloc/profile_section_bloc.dart';
 import '../job_sheet/bloc/profile_update_bloc/profile_update_bloc_bloc.dart';
 import '../job_sheet/bloc/profile_update_bloc/profile_update_bloc_event.dart';
@@ -140,7 +139,7 @@ class _ProfilePageState extends State<ProfilePage> {
                         ElevatedButton(
                           style: ElevatedButton.styleFrom(
                             backgroundColor: primaryColor,
-                            foregroundColor: blackColor,
+                            foregroundColor: whiteColor,
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(5),
                             ),
@@ -161,38 +160,55 @@ class _ProfilePageState extends State<ProfilePage> {
                   },
                 );
                 if (shouldLogout == true) {
+                  //FIRE EVENT
                   context.read<ProfileSectionBloc>().add(
                         const LogoutUser(),
                       );
-
-                  // Listen for logout success in UI
-                  context.read<ProfileSectionBloc>().stream.listen(
-                    (state) {
-                      if (state.logoutStatus == LogoutStatus.success) {
-                        context.read<JobSheetBloc>().add(
-                              const ClearListingData(),
-                            );
-                        context.read<JobSheetDetailsBloc>().add(
-                              const ClearData(),
-                            );
-
-                        Navigator.pushAndRemoveUntil(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => const LoginScreen(),
-                          ),
-                          (route) => false,
-                        );
-                      }
-                    },
-                  );
                 }
               },
             ),
           ),
         ),
         body: BlocConsumer<ProfileSectionBloc, ProfileSectionState>(
-          listener: (context, state) {},
+          listener: (context, state) {
+            if (state.logoutStatus == LogoutStatus.loading) {
+              showDialog(
+                context: context,
+                barrierDismissible: false,
+                builder: (_) {
+                  return const Center(
+                    child: CircularProgressIndicator(color: primaryColor),
+                  );
+                },
+              );
+            }
+
+            if (state.logoutStatus == LogoutStatus.success) {
+              Navigator.pop(context); // close loader
+
+              context.read<JobSheetBloc>().add(
+                    const ClearListingData(),
+                  );
+              context.read<JobSheetDetailsBloc>().add(
+                    const ClearData(),
+                  );
+
+              Navigator.pushNamedAndRemoveUntil(
+                context,
+                '/login_screen',
+                (route) => false,
+              );
+            }
+
+            if (state.logoutStatus == LogoutStatus.failure) {
+              Navigator.pop(context); // close loader
+              ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(
+                  content: Text("Logout failed! Please try again."),
+                ),
+              );
+            }
+          },
           builder: (context, state) {
             final profile = state.profileModel!.companyLogo.toString();
 
