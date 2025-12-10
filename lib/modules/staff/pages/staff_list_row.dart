@@ -212,6 +212,7 @@ class _StaffListRowState extends State<StaffListRow> {
               Radius.circular(3),
             ),
           ),
+          backgroundColor: whiteColor,
           title: const Text(
             "Are you sure you want to delete staff?",
             style: TextStyle(

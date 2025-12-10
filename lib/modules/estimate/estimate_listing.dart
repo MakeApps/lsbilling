@@ -231,26 +231,20 @@ class _EstimateListingState extends State<EstimateListing> {
                                   filled: true,
                                   fillColor: blackColor,
                                   suffixIcon: Container(
-                                    height: 35,
-                                    width: 35,
-                                    decoration: BoxDecoration(
-                                      color: primaryColor, // LIGHT SHADE
-                                      borderRadius: BorderRadius.circular(12),
-                                    ),
-                                    padding: const EdgeInsets.all(15),
+                                    padding: const EdgeInsets.only(right: 29),
                                     child: Image.asset(
                                       "assets/icons/search.png",
-                                      height: 30,
-                                      width: 30,
-                                      color: whiteColor,
+                                      height: 21,
+                                      width: 21,
+                                      color: primaryColor,
                                     ),
                                   ),
-                                  hintText: 'Search by customer name....',
+                                  hintText: 'Search by customer name..',
                                 ),
                               ),
                             ),
-                            IconButton(
-                              onPressed: () {
+                            InkWell(
+                              onTap: () {
                                 context.read<JobSheetBloc>().add(
                                       const FetchEstimateList(
                                         status: JobSheetStatus.success,
@@ -258,15 +252,24 @@ class _EstimateListingState extends State<EstimateListing> {
                                     );
                                 searchController.clear();
                               },
-                              icon: const Icon(
-                                Icons.refresh,
-                                color: whiteColor,
-                                size: 35,
+                              child: Container(
+                                height: 44,
+                                width: 44,
+                                margin: const EdgeInsets.only(left: 5),
+                                decoration: BoxDecoration(
+                                  color: blackColor,
+                                  borderRadius: BorderRadius.circular(12),
+                                  border: Border.all(
+                                      color: hintTextColor, width: 0),
+                                ),
+                                child: Icon(Icons.refresh_rounded,
+                                    color: whiteColor.withOpacity(0.8),
+                                    size: 22),
                               ),
                             ),
                           ],
                         ),
-                        const SizedBox(height: 12),
+                        const SizedBox(height: 18),
                         //  Tab Pills
                         Center(
                           child: Row(

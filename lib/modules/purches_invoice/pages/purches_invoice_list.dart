@@ -26,6 +26,8 @@ class _PurchesInvoiceListingPageState extends State<PurchesInvoiceListingPage> {
   final ScrollController _scrollController = ScrollController();
   String? _selectedPaymentStatus;
   int selectedTabIndex = 0;
+  String appliedFromDate = "";
+  String appliedToDate = "";
 
   @override
   void initState() {
@@ -60,8 +62,8 @@ class _PurchesInvoiceListingPageState extends State<PurchesInvoiceListingPage> {
             FetchPurchesInvoiceList(
               timestamp: purchesInvoiceState.lastTimestamp,
               status: PurchesInvoiceStatus.fetchSuccessfully,
-              fromDate: '',
-              toDate: '',
+              fromDate: appliedFromDate,
+              toDate: appliedToDate,
               gstBill: purchesInvoiceState.selectedGstFilter,
               searchKeyword: _searchController.text,
             ),
@@ -174,7 +176,7 @@ class _PurchesInvoiceListingPageState extends State<PurchesInvoiceListingPage> {
                       padding: const EdgeInsets.only(bottom: 10),
                       child: Container(
                         padding: const EdgeInsets.only(
-                            left: 18, bottom: 15, top: 10, right: 5),
+                            left: 18, right: 18, top: 12, bottom: 12),
                         decoration: const BoxDecoration(
                           color: blackColor,
                           borderRadius: BorderRadiusDirectional.only(
@@ -184,153 +186,141 @@ class _PurchesInvoiceListingPageState extends State<PurchesInvoiceListingPage> {
                         ),
                         child: Column(
                           children: [
+                            Container(
+                              height: 46,
+                              decoration: BoxDecoration(
+                                color: blackColor,
+                                borderRadius: BorderRadius.circular(6),
+                                border:
+                                    Border.all(color: hintTextColor, width: 0),
+                              ),
+                              child: TextField(
+                                controller: _searchController,
+                                onChanged: (value) {
+                                  if (value.length > 2) {
+                                    context.read<PurchesInvoiceBloc>().add(
+                                          FetchPurchesInvoiceList(
+                                            searchKeyword:
+                                                _searchController.text,
+                                            fromDate: appliedFromDate,
+                                            toDate: appliedToDate,
+                                            paymentStatus:
+                                                _selectedPaymentStatus,
+                                            status:
+                                                PurchesInvoiceStatus.loading,
+                                          ),
+                                        );
+                                  } else if (value.isEmpty) {
+                                    _fetchPurchaseInvoice();
+                                  }
+                                },
+                                style: const TextStyle(color: whiteColor),
+                                decoration: InputDecoration(
+                                  isCollapsed: true, //
+                                  contentPadding: const EdgeInsets.symmetric(
+                                    horizontal: 14,
+                                    vertical: 14,
+                                  ),
+                                  hintText: "Search by customer name..",
+                                  hintStyle: TextStyle(
+                                    color: whiteColor.withOpacity(0.5),
+                                    fontSize: 13,
+                                    fontWeight: FontWeight.w600,
+                                  ),
+                                  border: InputBorder.none,
+                                  fillColor: blackColor,
+                                  suffixIcon: Padding(
+                                    padding: const EdgeInsets.all(12),
+                                    child: Image.asset(
+                                      "assets/icons/search.png",
+                                      color: primaryColor,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ),
+
+                            const SizedBox(height: 12),
+
+                            /// FILTER + REFRESH
                             Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
                                 Expanded(
-                                  flex: 1,
-                                  child: TextField(
-                                    style: const TextStyle(color: whiteColor),
-                                    controller: _searchController,
-                                    onChanged: (value) {
-                                      if (value.length > 2) {
-                                        context.read<PurchesInvoiceBloc>().add(
-                                              FetchPurchesInvoiceList(
-                                                searchKeyword:
-                                                    _searchController.text,
-                                                fromDate: "",
-                                                toDate: "",
-                                                status: PurchesInvoiceStatus
-                                                    .loading,
-                                              ),
-                                            );
-                                      } else if (value.isEmpty) {
-                                        _fetchPurchaseInvoice();
-                                      }
-                                    },
-                                    decoration: InputDecoration(
-                                      hintStyle: TextStyle(
-                                        fontWeight: FontWeight.w600,
-                                        color: whiteColor.withOpacity(0.5),
-                                        fontFamily: 'Mulish',
-                                        fontSize: 13,
+                                  child: Container(
+                                    padding: const EdgeInsets.symmetric(
+                                        horizontal: 12),
+                                    decoration: BoxDecoration(
+                                      color: blackColor,
+                                      borderRadius: BorderRadius.circular(10),
+                                      border: Border.all(
+                                          color: whiteColor.withOpacity(0.2)),
+                                    ),
+                                    child: DropdownButton<String>(
+                                      value: _selectedPaymentStatus,
+                                      underline: const SizedBox(),
+                                      dropdownColor: blackColor,
+                                      isExpanded: true,
+                                      hint: const Text(
+                                        "Filter By",
+                                        style: TextStyle(
+                                            color: whiteColor, fontSize: 13),
                                       ),
-                                      focusedBorder: OutlineInputBorder(
-                                        borderRadius: BorderRadius.circular(8),
-                                        borderSide: const BorderSide(
-                                          width: 0,
-                                          color: hintTextColor,
-                                        ),
-                                      ),
-                                      disabledBorder: OutlineInputBorder(
-                                        borderRadius: BorderRadius.circular(8),
-                                        borderSide: const BorderSide(
-                                          width: 0,
-                                          color: hintTextColor,
-                                        ),
-                                      ),
-                                      enabledBorder: OutlineInputBorder(
-                                        borderRadius: BorderRadius.circular(8),
-                                        borderSide: const BorderSide(
-                                          width: 0,
-                                          color: hintTextColor,
-                                        ),
-                                      ),
-                                      border: OutlineInputBorder(
-                                        borderRadius: BorderRadius.circular(8),
-                                        borderSide: const BorderSide(
-                                          color: hintTextColor,
-                                          width: 0,
-                                        ),
-                                      ),
-                                      contentPadding: const EdgeInsets.only(
-                                        left: 10,
-                                        right: 15.0,
-                                      ),
-                                      filled: true,
-                                      fillColor: blackColor,
-                                      suffixIcon: Container(
-                                        height: 30,
-                                        width: 30,
-                                        decoration: BoxDecoration(
-                                          color: primaryColor, // LIGHT SHADE
-                                          borderRadius:
-                                              BorderRadius.circular(12),
-                                        ),
-                                        padding: const EdgeInsets.only(
-                                            top: 15, bottom: 15),
-                                        child: Image.asset(
-                                          "assets/icons/search.png",
-                                          height: 30,
-                                          width: 30,
-                                          color: whiteColor,
-                                        ),
-                                      ),
-                                      hintText: 'Search by vendor name ',
+                                      iconEnabledColor: whiteColor,
+                                      style: const TextStyle(
+                                          color: whiteColor, fontSize: 13),
+                                      items: stockFilter.map((String option) {
+                                        return DropdownMenuItem<String>(
+                                          value: option,
+                                          child: Text(option),
+                                        );
+                                      }).toList(),
+                                      onChanged: (value) {
+                                        if (value != null) {
+                                          setState(() {
+                                            selectedFilter = value;
+                                            _selectedPaymentStatus = value;
+                                          });
+                                          performFilterOperation(
+                                              filterOption: value);
+                                        }
+                                      },
                                     ),
                                   ),
                                 ),
-                                Padding(
-                                  padding:
-                                      const EdgeInsets.only(left: 8, right: 15),
-                                  child: DropdownButton<String>(
-                                    value: _selectedPaymentStatus,
-                                    hint: const Text(
-                                      "Filter By",
-                                      style: TextStyle(
-                                          color: whiteColor, fontSize: 11),
-                                    ),
-                                    dropdownColor: blackColor,
-                                    style: const TextStyle(
-                                        color: whiteColor, fontSize: 13),
-                                    iconEnabledColor: whiteColor,
-                                    items: stockFilter.map((String option) {
-                                      return DropdownMenuItem<String>(
-                                        value: option,
-                                        child: Text(
-                                          option,
-                                          style: const TextStyle(
-                                              color: whiteColor, fontSize: 13),
-                                        ),
-                                      );
-                                    }).toList(),
-                                    onChanged: (value) {
-                                      if (value != null) {
-                                        setState(() {
-                                          selectedFilter = value;
-                                          _selectedPaymentStatus = value;
-                                        });
-                                        performFilterOperation(
-                                            filterOption: value);
-                                      }
-                                    },
+                                const SizedBox(width: 10),
+                                Container(
+                                  height: 45,
+                                  width: 45,
+                                  decoration: BoxDecoration(
+                                    color: blackColor,
+                                    border: Border.all(
+                                        color: hintTextColor, width: 0),
+                                    borderRadius: BorderRadius.circular(10),
                                   ),
-                                ),
-                                IconButton(
-                                  onPressed: () {
-                                    _searchController.clear();
-                                    selectedTabIndex = 0;
-                                    setState(() {
-                                      _selectedPaymentStatus = null;
-                                      selectedFilter = null;
-                                    });
-                                    _fetchPurchaseInvoice();
-                                  },
-                                  icon: Icon(
-                                    Icons.refresh,
-                                    color: whiteColor.withOpacity(0.7),
-                                    size: 28,
+                                  child: IconButton(
+                                    icon: Icon(Icons.refresh,
+                                        color: whiteColor.withOpacity(0.8),
+                                        size: 26),
+                                    onPressed: () {
+                                      _searchController.clear();
+                                      setState(() {
+                                        selectedFilter = null;
+                                        _selectedPaymentStatus = null;
+                                      });
+                                      _fetchPurchaseInvoice();
+                                    },
                                   ),
                                 ),
                               ],
                             ),
+
                             const SizedBox(height: 12),
                             //  Tab Pills
-                            SingleChildScrollView(
-                              scrollDirection: Axis.horizontal,
-                              child: Row(
-                                children: [
-                                  _TabPill(
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Expanded(
+                                  child: _TabPill(
                                     label: "All",
                                     count: allCount,
                                     selected: state.selectedGstFilter == null,
@@ -346,8 +336,10 @@ class _PurchesInvoiceListingPageState extends State<PurchesInvoiceListingPage> {
                                           );
                                     },
                                   ),
-                                  const SizedBox(width: 10),
-                                  _TabPill(
+                                ),
+                                const SizedBox(width: 6),
+                                Expanded(
+                                  child: _TabPill(
                                     label: "GST",
                                     count: gstCount,
                                     selected: state.selectedGstFilter == "1",
@@ -363,8 +355,10 @@ class _PurchesInvoiceListingPageState extends State<PurchesInvoiceListingPage> {
                                           );
                                     },
                                   ),
-                                  const SizedBox(width: 10),
-                                  _TabPill(
+                                ),
+                                const SizedBox(width: 6),
+                                Expanded(
+                                  child: _TabPill(
                                     label: "Non-GST",
                                     count: nonGstCount,
                                     selected: state.selectedGstFilter == "0",
@@ -380,8 +374,8 @@ class _PurchesInvoiceListingPageState extends State<PurchesInvoiceListingPage> {
                                           );
                                     },
                                   ),
-                                ],
-                              ),
+                                ),
+                              ],
                             ),
                           ],
                         ),
@@ -470,10 +464,12 @@ class _PurchesInvoiceListingPageState extends State<PurchesInvoiceListingPage> {
       case "Today":
         final todayDate = DateTime.now();
         final formattedTodayDate = DateFormat('yyyy-MM-dd').format(todayDate);
+        appliedFromDate = formattedTodayDate;
+        appliedToDate = formattedTodayDate;
         context.read<PurchesInvoiceBloc>().add(
               FetchPurchesInvoiceList(
-                fromDate: formattedTodayDate,
-                toDate: formattedTodayDate,
+                fromDate: appliedFromDate,
+                toDate: appliedToDate,
                 gstBill: purchesInvoiceState.selectedGstFilter,
                 status: PurchesInvoiceStatus.loading,
               ),
@@ -482,10 +478,12 @@ class _PurchesInvoiceListingPageState extends State<PurchesInvoiceListingPage> {
 
       case "Yesterday":
         final getYesterdaysDate = app_instance.utility.getOldDate(dayCount: 1);
+        appliedFromDate = getYesterdaysDate.toString();
+        appliedToDate = getYesterdaysDate.toString();
         context.read<PurchesInvoiceBloc>().add(
               FetchPurchesInvoiceList(
-                  fromDate: getYesterdaysDate.toString(),
-                  toDate: getYesterdaysDate.toString(),
+                  fromDate: appliedFromDate,
+                  toDate: appliedToDate,
                   gstBill: purchesInvoiceState.selectedGstFilter,
                   status: PurchesInvoiceStatus.loading),
             );
@@ -501,10 +499,12 @@ class _PurchesInvoiceListingPageState extends State<PurchesInvoiceListingPage> {
         );
         String formattedStartDate = formatter.format(startDate);
         String formattedEndDate = formatter.format(yesterday);
+        appliedFromDate = formattedStartDate;
+        appliedToDate = formattedEndDate;
         context.read<PurchesInvoiceBloc>().add(
               FetchPurchesInvoiceList(
-                fromDate: formattedStartDate,
-                toDate: formattedEndDate,
+                fromDate: appliedFromDate,
+                toDate: appliedToDate,
                 gstBill: purchesInvoiceState.selectedGstFilter,
                 status: PurchesInvoiceStatus.loading,
               ),
@@ -513,10 +513,12 @@ class _PurchesInvoiceListingPageState extends State<PurchesInvoiceListingPage> {
 
       case "This Month":
         final getFirstDate = app_instance.utility.thisMonthFirstDate();
+        appliedFromDate = getFirstDate.toString();
+        appliedToDate = getCurrentDate.toString();
         context.read<PurchesInvoiceBloc>().add(
               FetchPurchesInvoiceList(
-                fromDate: getFirstDate.toString(),
-                toDate: getCurrentDate.toString(),
+                fromDate: appliedFromDate,
+                toDate: appliedToDate,
                 gstBill: purchesInvoiceState.selectedGstFilter,
                 status: PurchesInvoiceStatus.loading,
               ),
@@ -527,10 +529,12 @@ class _PurchesInvoiceListingPageState extends State<PurchesInvoiceListingPage> {
         final getFirstDateOfLastMonth =
             app_instance.utility.lastMonthFirstDate();
         final getLastDateOfLastMonth = app_instance.utility.lastMonthLastDate();
+        appliedFromDate = getFirstDateOfLastMonth.toString();
+        appliedToDate = getLastDateOfLastMonth.toString();
         context.read<PurchesInvoiceBloc>().add(
               FetchPurchesInvoiceList(
-                fromDate: getFirstDateOfLastMonth.toString(),
-                toDate: getLastDateOfLastMonth.toString(),
+                fromDate: appliedFromDate,
+                toDate: appliedToDate,
                 gstBill: purchesInvoiceState.selectedGstFilter,
                 status: PurchesInvoiceStatus.loading,
               ),
@@ -568,10 +572,12 @@ class _PurchesInvoiceListingPageState extends State<PurchesInvoiceListingPage> {
               selectedDate = pickeddate;
               var formatter = DateFormat('yyyy-MM-dd');
               String formattedDate = formatter.format(selectedDate!);
+              appliedFromDate = formattedDate;
+              appliedToDate = "";
               context.read<PurchesInvoiceBloc>().add(
                     FetchPurchesInvoiceList(
-                      fromDate: formattedDate,
-                      toDate: "",
+                      fromDate: appliedFromDate,
+                      toDate: appliedToDate,
                       gstBill: purchesInvoiceState.selectedGstFilter,
                       status: PurchesInvoiceStatus.loading,
                     ),
@@ -607,10 +613,12 @@ class _PurchesInvoiceListingPageState extends State<PurchesInvoiceListingPage> {
         if (pickedDate != null) {
           String formattedStartDate = formatter.format(pickedDate.start);
           String formattedEndDate = formatter.format(pickedDate.end);
+          appliedFromDate = formattedStartDate;
+          appliedToDate = formattedEndDate;
           context.read<PurchesInvoiceBloc>().add(
                 FetchPurchesInvoiceList(
-                    fromDate: formattedStartDate,
-                    toDate: formattedEndDate,
+                    fromDate: appliedFromDate,
+                    toDate: appliedToDate,
                     gstBill: purchesInvoiceState.selectedGstFilter,
                     status: PurchesInvoiceStatus.loading),
               );
@@ -648,7 +656,7 @@ class _TabPill extends StatelessWidget {
     return GestureDetector(
       onTap: onTap,
       child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 8),
+        padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
         decoration: BoxDecoration(
           color: selected ? primaryColor : whiteColor,
           borderRadius: BorderRadius.circular(25),
@@ -672,12 +680,12 @@ class _TabPill extends StatelessWidget {
                 ),
               ),
             ),
-            const SizedBox(width: 10),
+            const SizedBox(width: 4),
             Text(
               label,
               style: TextStyle(
                 fontWeight: FontWeight.w700,
-                fontSize: 14,
+                fontSize: 13,
                 color: selected ? whiteColor : blackColorDark,
               ),
             ),

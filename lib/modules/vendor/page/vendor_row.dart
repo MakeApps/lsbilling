@@ -303,6 +303,7 @@ class _VendorListRowState extends State<VendorListRow> {
       barrierDismissible: false,
       builder: (context) {
         return AlertDialog(
+          backgroundColor: whiteColor,
           shape: const RoundedRectangleBorder(
             borderRadius: BorderRadius.all(
               Radius.circular(3),

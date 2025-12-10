@@ -103,7 +103,7 @@ class _EditInvoiceNewGstSparePartState
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 const Text(
-                  "Edit Spare Part",
+                  "Edit Item",
                   style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                 ),
                 IconButton(
@@ -113,11 +113,11 @@ class _EditInvoiceNewGstSparePartState
               ],
             ),
             const SizedBox(height: 10),
-            const Text("Spare Part Name:", style: TextStyle(fontSize: 14)),
+            const Text("Item Name:", style: TextStyle(fontSize: 14)),
             const SizedBox(height: 5),
             TextField(
               controller: nameController,
-              decoration: _inputDecoration("Enter Spare Part Name"),
+              decoration: _inputDecoration("Enter Item Name"),
             ),
             const SizedBox(height: 15),
             Row(

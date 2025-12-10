@@ -64,7 +64,7 @@ class _CreateCategoryDialogState extends State<CreateCategoryDialog> {
                   children: <Widget>[
                     const Expanded(
                       child: Text(
-                        'Spare Part Category',
+                        'Item Category',
                         style: TextStyle(
                             fontSize: 15, fontWeight: FontWeight.bold),
                       ),

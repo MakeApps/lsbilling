@@ -147,7 +147,7 @@ class _AddSparePartsDialogState extends State<AddSparePartsDialog> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 const Text(
-                  'Add Spare Part',
+                  'Add Item',
                   style: TextStyle(
                       fontSize: 15,
                       fontWeight: FontWeight.bold,
@@ -163,10 +163,10 @@ class _AddSparePartsDialogState extends State<AddSparePartsDialog> {
               ],
             ),
 
-            // Toggle Spare Part Name / Stock
+            // Toggle Item Name / Stock
             DropdownButton<String>(
-              value: addNewMode ? 'Spare Part Name' : 'Stock',
-              items: ['Spare Part Name', 'Stock']
+              value: addNewMode ? 'Items' : 'Stock',
+              items: ['Items', 'Stock']
                   .map(
                     (e) => DropdownMenuItem(
                       value: e,
@@ -175,7 +175,7 @@ class _AddSparePartsDialogState extends State<AddSparePartsDialog> {
                   )
                   .toList(),
               onChanged: (val) => setState(() {
-                addNewMode = val == 'Spare Part Name';
+                addNewMode = val == 'Items';
               }),
             ),
 
@@ -401,7 +401,7 @@ class _AddSparePartsDialogState extends State<AddSparePartsDialog> {
                 controller: sparePartNameController,
                 focusNode: fieldFocusNode,
                 decoration: InputDecoration(
-                  hintText: "Enter Spare Part Name",
+                  hintText: "Enter Item Name",
                   hintStyle: const TextStyle(
                     color: hintTextColor,
                     fontFamily: 'Mulish',
@@ -538,7 +538,7 @@ class _AddSparePartsDialogState extends State<AddSparePartsDialog> {
                       color: blackColor,
                       fontWeight: FontWeight.normal),
                   decoration: InputDecoration(
-                    hintText: "Search Spare Part Name",
+                    hintText: "Search Item Name",
                     hintStyle: const TextStyle(
                       color: hintTextColor,
                       fontFamily: 'Mulish',

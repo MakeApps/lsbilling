@@ -130,7 +130,7 @@ class _CreateVendorScreenState extends State<CreateVendorScreen> {
                   child: ElevatedButton(
                     style: ButtonStyle(
                       foregroundColor:
-                          WidgetStateProperty.all<Color>(blackColor),
+                          WidgetStateProperty.all<Color>(whiteColor),
                       backgroundColor:
                           WidgetStateProperty.all<Color>(primaryColor),
                       shape: WidgetStateProperty.all<RoundedRectangleBorder>(
@@ -161,7 +161,7 @@ class _CreateVendorScreenState extends State<CreateVendorScreen> {
                       children: <Widget>[
                         Text(
                           "Create",
-                          style: TextStyle(color: blackColor, fontSize: 15),
+                          style: TextStyle(color: whiteColor, fontSize: 15),
                         ),
                       ],
                     ),
@@ -179,326 +179,329 @@ class _CreateVendorScreenState extends State<CreateVendorScreen> {
           body: Form(
             key: _formKey,
             child: SingleChildScrollView(
-              child: Column(
-                children: [
-                  const FormFieldTitle(title: "Vendor Details:"),
-                  const Padding(
-                    padding: EdgeInsets.only(left: 15, top: 15, bottom: 5),
-                    child: Align(
-                      alignment: Alignment.topLeft,
-                      child: Row(
-                        children: [
-                          Text(
-                            "Vendor Name:",
-                            style: TextStyle(fontSize: 14, color: blackColor),
-                          ),
-                          Icon(Icons.star, color: redColor, size: 10)
+              child: Card(
+                color: whiteColor,
+                child: Column(
+                  children: [
+                    const FormFieldTitle(title: "Vendor Details:"),
+                    const Padding(
+                      padding: EdgeInsets.only(left: 15, top: 15, bottom: 5),
+                      child: Align(
+                        alignment: Alignment.topLeft,
+                        child: Row(
+                          children: [
+                            Text(
+                              "Vendor Name:",
+                              style: TextStyle(fontSize: 14, color: blackColor),
+                            ),
+                            Icon(Icons.star, color: redColor, size: 10)
+                          ],
+                        ),
+                      ),
+                    ),
+                    Padding(
+                      padding:
+                          const EdgeInsets.only(left: 13, right: 10, bottom: 5),
+                      child: TextFormField(
+                        controller: vendorNameController,
+                        style: const TextStyle(
+                            fontSize: 14,
+                            color: blackColor,
+                            fontWeight: FontWeight.w500),
+                        inputFormatters: [
+                          NoLeadingSpaceFormatter(),
+                          LengthLimitingTextInputFormatter(50),
                         ],
-                      ),
-                    ),
-                  ),
-                  Padding(
-                    padding:
-                        const EdgeInsets.only(left: 13, right: 10, bottom: 5),
-                    child: TextFormField(
-                      controller: vendorNameController,
-                      style: const TextStyle(
-                          fontSize: 14,
-                          color: blackColor,
-                          fontWeight: FontWeight.w500),
-                      inputFormatters: [
-                        NoLeadingSpaceFormatter(),
-                        LengthLimitingTextInputFormatter(50),
-                      ],
-                      keyboardType: TextInputType.text,
-                      autovalidateMode: AutovalidateMode.onUserInteraction,
-                      decoration: InputDecoration(
-                        hintText: "Enter Vendor Name",
-                        hintStyle: const TextStyle(
-                            color: hintTextColor,
-                            fontFamily: 'Mulish',
-                            fontSize: 13),
-                        contentPadding: const EdgeInsets.only(
-                          left: 15,
-                          right: 20.0,
-                        ),
-                        errorText: errorMesage,
-                        errorStyle:
-                            const TextStyle(color: redColor, fontSize: 12),
-                        filled: true,
-                        fillColor: whiteColor,
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(8),
-                          borderSide: const BorderSide(
-                            width: 0,
-                            style: BorderStyle.none,
+                        keyboardType: TextInputType.text,
+                        autovalidateMode: AutovalidateMode.onUserInteraction,
+                        decoration: InputDecoration(
+                          hintText: "Enter Vendor Name",
+                          hintStyle: const TextStyle(
+                              color: hintTextColor,
+                              fontFamily: 'Mulish',
+                              fontSize: 13),
+                          contentPadding: const EdgeInsets.only(
+                            left: 15,
+                            right: 20.0,
+                          ),
+                          errorText: errorMesage,
+                          errorStyle:
+                              const TextStyle(color: redColor, fontSize: 12),
+                          filled: true,
+                          fillColor: textfieldBg,
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(8),
+                            borderSide: const BorderSide(
+                              width: 0,
+                              style: BorderStyle.none,
+                            ),
                           ),
                         ),
+                        onChanged: (value) {
+                          setState(
+                            () {
+                              errorMesage = null;
+                            },
+                          );
+                        },
                       ),
-                      onChanged: (value) {
-                        setState(
-                          () {
-                            errorMesage = null;
-                          },
-                        );
-                      },
                     ),
-                  ),
-                  const Padding(
-                    padding: EdgeInsets.only(left: 15, top: 15, bottom: 5),
-                    child: Align(
-                      alignment: Alignment.topLeft,
-                      child: Row(
-                        children: [
-                          Text(
-                            "Phone Number:",
-                            style: TextStyle(fontSize: 14, color: blackColor),
-                          ),
-                          Icon(Icons.star, color: redColor, size: 10)
+                    const Padding(
+                      padding: EdgeInsets.only(left: 15, top: 15, bottom: 5),
+                      child: Align(
+                        alignment: Alignment.topLeft,
+                        child: Row(
+                          children: [
+                            Text(
+                              "Phone Number:",
+                              style: TextStyle(fontSize: 14, color: blackColor),
+                            ),
+                            Icon(Icons.star, color: redColor, size: 10)
+                          ],
+                        ),
+                      ),
+                    ),
+                    Padding(
+                      padding:
+                          const EdgeInsets.only(left: 13, right: 10, bottom: 5),
+                      child: TextFormField(
+                        controller: phoneNumberController,
+                        style: const TextStyle(
+                            fontSize: 14,
+                            color: blackColor,
+                            fontWeight: FontWeight.w500),
+                        keyboardType: TextInputType.number,
+                        inputFormatters: [
+                          FilteringTextInputFormatter.digitsOnly,
+                          LengthLimitingTextInputFormatter(10),
                         ],
-                      ),
-                    ),
-                  ),
-                  Padding(
-                    padding:
-                        const EdgeInsets.only(left: 13, right: 10, bottom: 5),
-                    child: TextFormField(
-                      controller: phoneNumberController,
-                      style: const TextStyle(
-                          fontSize: 14,
-                          color: blackColor,
-                          fontWeight: FontWeight.w500),
-                      keyboardType: TextInputType.number,
-                      inputFormatters: [
-                        FilteringTextInputFormatter.digitsOnly,
-                        LengthLimitingTextInputFormatter(10),
-                      ],
-                      decoration: InputDecoration(
-                        hintText: "Enter Phone Number",
-                        hintStyle: const TextStyle(
-                            color: hintTextColor,
-                            fontFamily: 'Mulish',
-                            fontSize: 13),
-                        contentPadding: const EdgeInsets.only(
-                          left: 15,
-                          right: 20.0,
-                        ),
-                        errorText: phoneError,
-                        errorStyle:
-                            const TextStyle(color: redColor, fontSize: 12),
-                        filled: true,
-                        fillColor: whiteColor,
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(8),
-                          borderSide: const BorderSide(
-                            width: 0,
-                            style: BorderStyle.none,
+                        decoration: InputDecoration(
+                          hintText: "Enter Phone Number",
+                          hintStyle: const TextStyle(
+                              color: hintTextColor,
+                              fontFamily: 'Mulish',
+                              fontSize: 13),
+                          contentPadding: const EdgeInsets.only(
+                            left: 15,
+                            right: 20.0,
+                          ),
+                          errorText: phoneError,
+                          errorStyle:
+                              const TextStyle(color: redColor, fontSize: 12),
+                          filled: true,
+                          fillColor: textfieldBg,
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(8),
+                            borderSide: const BorderSide(
+                              width: 0,
+                              style: BorderStyle.none,
+                            ),
                           ),
                         ),
-                      ),
-                      onChanged: (value) {
-                        setState(
-                          () {
-                            phoneError = null;
-                          },
-                        );
-                      },
-                    ),
-                  ),
-                  const Padding(
-                    padding: EdgeInsets.only(left: 15, top: 15, bottom: 5),
-                    child: Align(
-                      alignment: Alignment.topLeft,
-                      child: Text(
-                        "Address:",
-                        style: TextStyle(fontSize: 14, color: blackColor),
+                        onChanged: (value) {
+                          setState(
+                            () {
+                              phoneError = null;
+                            },
+                          );
+                        },
                       ),
                     ),
-                  ),
-                  Padding(
-                    padding:
-                        const EdgeInsets.only(left: 13, right: 10, bottom: 5),
-                    child: TextFormField(
-                      controller: adressController,
-                      style: const TextStyle(
-                          fontSize: 14,
-                          color: blackColor,
-                          fontWeight: FontWeight.w500),
-                      inputFormatters: [
-                        NoLeadingSpaceFormatter(),
-                        LengthLimitingTextInputFormatter(50),
-                      ],
-                      keyboardType: TextInputType.streetAddress,
-                      decoration: InputDecoration(
-                        hintText: "Enter Address",
-                        hintStyle: const TextStyle(
-                            color: hintTextColor,
-                            fontFamily: 'Mulish',
-                            fontSize: 13),
-                        contentPadding: const EdgeInsets.only(
-                          left: 15,
-                          right: 20.0,
+                    const Padding(
+                      padding: EdgeInsets.only(left: 15, top: 15, bottom: 5),
+                      child: Align(
+                        alignment: Alignment.topLeft,
+                        child: Text(
+                          "Address:",
+                          style: TextStyle(fontSize: 14, color: blackColor),
                         ),
-                        filled: true,
-                        fillColor: whiteColor,
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(8),
-                          borderSide: const BorderSide(
-                            width: 0,
-                            style: BorderStyle.none,
+                      ),
+                    ),
+                    Padding(
+                      padding:
+                          const EdgeInsets.only(left: 13, right: 10, bottom: 5),
+                      child: TextFormField(
+                        controller: adressController,
+                        style: const TextStyle(
+                            fontSize: 14,
+                            color: blackColor,
+                            fontWeight: FontWeight.w500),
+                        inputFormatters: [
+                          NoLeadingSpaceFormatter(),
+                          LengthLimitingTextInputFormatter(50),
+                        ],
+                        keyboardType: TextInputType.streetAddress,
+                        decoration: InputDecoration(
+                          hintText: "Enter Address",
+                          hintStyle: const TextStyle(
+                              color: hintTextColor,
+                              fontFamily: 'Mulish',
+                              fontSize: 13),
+                          contentPadding: const EdgeInsets.only(
+                            left: 15,
+                            right: 20.0,
+                          ),
+                          filled: true,
+                          fillColor: textfieldBg,
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(8),
+                            borderSide: const BorderSide(
+                              width: 0,
+                              style: BorderStyle.none,
+                            ),
                           ),
                         ),
                       ),
                     ),
-                  ),
-                  const Padding(
-                    padding: EdgeInsets.only(left: 15, top: 15, bottom: 5),
-                    child: Align(
-                      alignment: Alignment.topLeft,
-                      child: Text(
-                        "GST Number:",
-                        style: TextStyle(fontSize: 14, color: blackColor),
+                    const Padding(
+                      padding: EdgeInsets.only(left: 15, top: 15, bottom: 5),
+                      child: Align(
+                        alignment: Alignment.topLeft,
+                        child: Text(
+                          "GST Number:",
+                          style: TextStyle(fontSize: 14, color: blackColor),
+                        ),
                       ),
                     ),
-                  ),
-                  Padding(
-                    padding:
-                        const EdgeInsets.only(left: 13, right: 10, bottom: 5),
-                    child: TextFormField(
-                      controller: gstNumberController,
-                      style: const TextStyle(
-                          fontSize: 14,
-                          color: blackColor,
-                          fontWeight: FontWeight.w500),
-                      inputFormatters: [
-                        NoLeadingSpaceFormatter(),
-                        LengthLimitingTextInputFormatter(15),
-                      ],
-                      keyboardType: TextInputType.text,
-                      decoration: InputDecoration(
-                        hintText: "Enter GST Number",
-                        hintStyle: const TextStyle(
-                            color: hintTextColor,
-                            fontFamily: 'Mulish',
-                            fontSize: 13),
-                        contentPadding: const EdgeInsets.only(
-                          left: 15,
-                          right: 20.0,
-                        ),
-                        filled: true,
-                        fillColor: whiteColor,
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(8),
-                          borderSide: const BorderSide(
-                            width: 0,
-                            style: BorderStyle.none,
+                    Padding(
+                      padding:
+                          const EdgeInsets.only(left: 13, right: 10, bottom: 5),
+                      child: TextFormField(
+                        controller: gstNumberController,
+                        style: const TextStyle(
+                            fontSize: 14,
+                            color: blackColor,
+                            fontWeight: FontWeight.w500),
+                        inputFormatters: [
+                          NoLeadingSpaceFormatter(),
+                          LengthLimitingTextInputFormatter(15),
+                        ],
+                        keyboardType: TextInputType.text,
+                        decoration: InputDecoration(
+                          hintText: "Enter GST Number",
+                          hintStyle: const TextStyle(
+                              color: hintTextColor,
+                              fontFamily: 'Mulish',
+                              fontSize: 13),
+                          contentPadding: const EdgeInsets.only(
+                            left: 15,
+                            right: 20.0,
+                          ),
+                          filled: true,
+                          fillColor: textfieldBg,
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(8),
+                            borderSide: const BorderSide(
+                              width: 0,
+                              style: BorderStyle.none,
+                            ),
                           ),
                         ),
                       ),
                     ),
-                  ),
-                  const Padding(
-                    padding: EdgeInsets.only(left: 15, top: 15, bottom: 5),
-                    child: Align(
-                      alignment: Alignment.topLeft,
-                      child: Text(
-                        "Email:",
-                        style: TextStyle(fontSize: 14, color: blackColor),
+                    const Padding(
+                      padding: EdgeInsets.only(left: 15, top: 15, bottom: 5),
+                      child: Align(
+                        alignment: Alignment.topLeft,
+                        child: Text(
+                          "Email:",
+                          style: TextStyle(fontSize: 14, color: blackColor),
+                        ),
                       ),
                     ),
-                  ),
-                  Padding(
-                    padding:
-                        const EdgeInsets.only(left: 13, right: 10, bottom: 5),
-                    child: TextFormField(
-                      controller: emailController,
-                      style: const TextStyle(
-                          fontSize: 14,
-                          color: blackColor,
-                          fontWeight: FontWeight.w500),
-                      inputFormatters: [
-                        NoLeadingSpaceFormatter(),
-                        LengthLimitingTextInputFormatter(50),
-                      ],
-                      keyboardType: TextInputType.emailAddress,
-                      decoration: InputDecoration(
-                        hintText: "Enter Email",
-                        hintStyle: const TextStyle(
-                            color: hintTextColor,
-                            fontFamily: 'Mulish',
-                            fontSize: 13),
-                        contentPadding: const EdgeInsets.only(
-                          left: 15,
-                          right: 20.0,
-                        ),
-                        filled: true,
-                        fillColor: whiteColor,
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(8),
-                          borderSide: const BorderSide(
-                            width: 0,
-                            style: BorderStyle.none,
+                    Padding(
+                      padding:
+                          const EdgeInsets.only(left: 13, right: 10, bottom: 5),
+                      child: TextFormField(
+                        controller: emailController,
+                        style: const TextStyle(
+                            fontSize: 14,
+                            color: blackColor,
+                            fontWeight: FontWeight.w500),
+                        inputFormatters: [
+                          NoLeadingSpaceFormatter(),
+                          LengthLimitingTextInputFormatter(50),
+                        ],
+                        keyboardType: TextInputType.emailAddress,
+                        decoration: InputDecoration(
+                          hintText: "Enter Email",
+                          hintStyle: const TextStyle(
+                              color: hintTextColor,
+                              fontFamily: 'Mulish',
+                              fontSize: 13),
+                          contentPadding: const EdgeInsets.only(
+                            left: 15,
+                            right: 20.0,
+                          ),
+                          filled: true,
+                          fillColor: textfieldBg,
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(8),
+                            borderSide: const BorderSide(
+                              width: 0,
+                              style: BorderStyle.none,
+                            ),
                           ),
                         ),
-                      ),
-                      validator: (value) {
-                        if (value != null && value.isNotEmpty) {
-                          String pattern = r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$';
-                          RegExp regex = RegExp(pattern);
-                          if (!regex.hasMatch(value)) {
-                            return "Enter a valid email address";
+                        validator: (value) {
+                          if (value != null && value.isNotEmpty) {
+                            String pattern = r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$';
+                            RegExp regex = RegExp(pattern);
+                            if (!regex.hasMatch(value)) {
+                              return "Enter a valid email address";
+                            }
                           }
-                        }
-                        return null;
-                      },
-                    ),
-                  ),
-                  const Padding(
-                    padding: EdgeInsets.only(left: 15, top: 15, bottom: 5),
-                    child: Align(
-                      alignment: Alignment.topLeft,
-                      child: Text(
-                        "Total Balance:",
-                        style: TextStyle(fontSize: 14, color: blackColor),
+                          return null;
+                        },
                       ),
                     ),
-                  ),
-                  Padding(
-                    padding:
-                        const EdgeInsets.only(left: 13, right: 10, bottom: 5),
-                    child: TextFormField(
-                      controller: totalBalanceController,
-                      style: const TextStyle(
-                          fontSize: 14,
-                          color: blackColor,
-                          fontWeight: FontWeight.w500),
-                      keyboardType: TextInputType.number,
-                      inputFormatters: [
-                        NoLeadingSpaceFormatter(),
-                      ],
-                      decoration: InputDecoration(
-                        hintText: "Enter Total Balance",
-                        hintStyle: const TextStyle(
-                            color: hintTextColor,
-                            fontFamily: 'Mulish',
-                            fontSize: 13),
-                        contentPadding: const EdgeInsets.only(
-                          left: 15,
-                          right: 20.0,
+                    const Padding(
+                      padding: EdgeInsets.only(left: 15, top: 15, bottom: 5),
+                      child: Align(
+                        alignment: Alignment.topLeft,
+                        child: Text(
+                          "Total Balance:",
+                          style: TextStyle(fontSize: 14, color: blackColor),
                         ),
-                        filled: true,
-                        fillColor: whiteColor,
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(8),
-                          borderSide: const BorderSide(
-                            width: 0,
-                            style: BorderStyle.none,
+                      ),
+                    ),
+                    Padding(
+                      padding:
+                          const EdgeInsets.only(left: 13, right: 10, bottom: 5),
+                      child: TextFormField(
+                        controller: totalBalanceController,
+                        style: const TextStyle(
+                            fontSize: 14,
+                            color: blackColor,
+                            fontWeight: FontWeight.w500),
+                        keyboardType: TextInputType.number,
+                        inputFormatters: [
+                          NoLeadingSpaceFormatter(),
+                        ],
+                        decoration: InputDecoration(
+                          hintText: "Enter Total Balance",
+                          hintStyle: const TextStyle(
+                              color: hintTextColor,
+                              fontFamily: 'Mulish',
+                              fontSize: 13),
+                          contentPadding: const EdgeInsets.only(
+                            left: 15,
+                            right: 20.0,
+                          ),
+                          filled: true,
+                          fillColor: textfieldBg,
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(8),
+                            borderSide: const BorderSide(
+                              width: 0,
+                              style: BorderStyle.none,
+                            ),
                           ),
                         ),
                       ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
             ),
           ),

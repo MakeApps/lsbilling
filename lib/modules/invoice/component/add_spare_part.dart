@@ -145,7 +145,7 @@ class _AddSparePartDialogState extends State<InvoiceAddSparePartDialog> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 const Text(
-                  'Add Spare Part',
+                  'Add Item',
                   style: TextStyle(
                       fontSize: 15,
                       fontWeight: FontWeight.bold,
@@ -169,10 +169,10 @@ class _AddSparePartDialogState extends State<InvoiceAddSparePartDialog> {
               child: DropdownButton<String>(
                 style: const TextStyle(fontSize: 14, color: blackColor),
                 dropdownColor: whiteColor,
-                value: addNewMode ? 'Spare Part Name' : 'Stock',
+                value: addNewMode ? 'Items' : 'Stock',
                 onChanged: (String? newValue) {
                   setState(() {
-                    addNewMode = newValue == 'Spare Part Name';
+                    addNewMode = newValue == 'Items';
                     if (addNewMode) {
                       productNameController.clear();
                       rateProductController.text = '00';
@@ -185,7 +185,7 @@ class _AddSparePartDialogState extends State<InvoiceAddSparePartDialog> {
                     }
                   });
                 },
-                items: <String>['Spare Part Name', 'Stock']
+                items: <String>['Items', 'Stock']
                     .map<DropdownMenuItem<String>>((String value) {
                   return DropdownMenuItem<String>(
                     value: value,
@@ -232,7 +232,7 @@ class _AddSparePartDialogState extends State<InvoiceAddSparePartDialog> {
                           style:
                               const TextStyle(color: blackColor, fontSize: 14),
                           decoration: InputDecoration(
-                            hintText: "Enter Spare Part Name",
+                            hintText: "Enter Item Name",
                             hintStyle: const TextStyle(
                               color: hintTextColor,
                               fontFamily: 'Mulish',
@@ -374,7 +374,7 @@ class _AddSparePartDialogState extends State<InvoiceAddSparePartDialog> {
                               const TextStyle(color: blackColor, fontSize: 14),
                           focusNode: fieldFocusNode,
                           decoration: InputDecoration(
-                            hintText: "Search Spare Part Name",
+                            hintText: "Search Item Name",
                             hintStyle: const TextStyle(
                               color: hintTextColor,
                               fontFamily: 'Mulish',

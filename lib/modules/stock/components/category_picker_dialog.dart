@@ -52,7 +52,7 @@ class _CategoryPickerDialogState extends State<CategoryPickerDialog> {
                           children: <Widget>[
                             const Expanded(
                               child: Text(
-                                'Spare Part Category',
+                                'Item Category',
                                 style: TextStyle(
                                     fontSize: 13, fontWeight: FontWeight.bold),
                               ),

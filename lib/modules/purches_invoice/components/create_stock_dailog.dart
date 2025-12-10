@@ -117,7 +117,7 @@ class _PurchesCreateSparePartPromptState
                     const Padding(
                       padding: EdgeInsets.only(left: 20),
                       child: Text(
-                        "Create Spare Part",
+                        "Create Item",
                         style: TextStyle(
                           color: whiteColor,
                           fontWeight: FontWeight.bold,
@@ -151,7 +151,7 @@ class _PurchesCreateSparePartPromptState
                           child: _buildPriceSection(),
                         ),
                         _Section(
-                          title: "Spare Part Details",
+                          title: "Item Details",
                           child: _buildDetailsSection(),
                         ),
                         const SizedBox(height: 15),
@@ -217,7 +217,7 @@ class _PurchesCreateSparePartPromptState
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const _FieldLabel("Spare part category :", required: true),
+        const _FieldLabel("Item category :", required: true),
         TextFormField(
           controller: categoryController,
           readOnly: true,
@@ -225,22 +225,22 @@ class _PurchesCreateSparePartPromptState
           validator: (value) => (value == null || value.trim().isEmpty)
               ? 'Please select category'
               : null,
-          decoration: _inputDecoration('Select spare part category'),
+          decoration: _inputDecoration('Select Item category'),
         ),
         const SizedBox(height: 12),
-        const _FieldLabel("Spare part name:", required: true),
+        const _FieldLabel("Item name:", required: true),
         TextFormField(
           controller: sparePartNameController,
-          decoration: _inputDecoration('Enter spare part name'),
+          decoration: _inputDecoration('Enter Item name'),
           validator: (value) => (value == null || value.trim().isEmpty)
-              ? 'Spare part name is required'
+              ? 'Item name is required'
               : null,
         ),
         const SizedBox(height: 12),
-        const _FieldLabel("Spare part code:"),
+        const _FieldLabel("Item code:"),
         TextFormField(
           controller: sparePartCodeController,
-          decoration: _inputDecoration('Enter spare part code'),
+          decoration: _inputDecoration('Enter Item code'),
         ),
       ],
     );

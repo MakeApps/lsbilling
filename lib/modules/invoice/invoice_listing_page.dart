@@ -21,6 +21,8 @@ class _InvoiceListingPageState extends State<InvoiceListingPage> {
   final TextEditingController _searchController = TextEditingController();
   String? _selectedPaymentStatus;
   bool isFilterApplied = false;
+  String appliedFromDate = "";
+  String appliedToDate = "";
 
   @override
   void initState() {
@@ -166,107 +168,85 @@ class _InvoiceListingPageState extends State<InvoiceListingPage> {
           children: [
             BlocBuilder<JobSheetBloc, JobSheetState>(
               builder: (context, state) {
-                // int? allCount = state.allInvoiceCount;
-                // int? gstCount = state.gstInvoiceCount;
-                // int? nonGstCount = state.nonGstInvoiceCount;
-
                 return Padding(
                   padding: const EdgeInsets.only(bottom: 10),
                   child: Container(
                     padding: const EdgeInsets.only(
-                        left: 18, bottom: 15, top: 10, right: 5),
+                        left: 18, right: 18, top: 12, bottom: 12),
                     decoration: const BoxDecoration(
                       color: blackColor,
-                      borderRadius: BorderRadiusDirectional.only(
-                        bottomStart: Radius.circular(25),
-                        bottomEnd: Radius.circular(25),
+                      borderRadius: BorderRadius.vertical(
+                        bottom: Radius.circular(25),
                       ),
                     ),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Row(
-                          children: [
-                            Expanded(
-                              flex: 1,
-                              child: TextField(
-                                style: const TextStyle(color: whiteColor),
-                                controller: _searchController,
-                                onChanged: (value) {
-                                  if (value.length > 2) {
-                                    context.read<JobSheetBloc>().add(
-                                          FetchInvoiceList(
-                                            searchKeyword:
-                                                _searchController.text,
-                                            status: JobSheetStatus.loading,
-                                          ),
-                                        );
-                                  } else if (value.isEmpty) {
-                                    _fetchInitialInvoice();
-                                  }
-                                },
-                                decoration: InputDecoration(
-                                  hintStyle: TextStyle(
-                                    fontWeight: FontWeight.w600,
-                                    color: whiteColor.withOpacity(0.5),
-                                    fontFamily: 'Mulish',
-                                    fontSize: 13,
-                                  ),
-                                  focusedBorder: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(8),
-                                    borderSide: const BorderSide(
-                                      width: 0,
-                                      color: hintTextColor,
-                                    ),
-                                  ),
-                                  disabledBorder: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(8),
-                                    borderSide: const BorderSide(
-                                      width: 0,
-                                      color: hintTextColor,
-                                    ),
-                                  ),
-                                  enabledBorder: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(8),
-                                    borderSide: const BorderSide(
-                                      width: 0,
-                                      color: hintTextColor,
-                                    ),
-                                  ),
-                                  border: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(8),
-                                    borderSide: const BorderSide(
-                                      color: hintTextColor,
-                                      width: 0,
-                                    ),
-                                  ),
-                                  contentPadding: const EdgeInsets.only(
-                                    left: 10,
-                                    right: 15.0,
-                                  ),
-                                  filled: true,
-                                  fillColor: blackColor,
-                                  suffixIcon: Container(
-                                    height: 30,
-                                    width: 30,
-                                    decoration: BoxDecoration(
-                                      color: primaryColor, // LIGHT SHADE
-                                      borderRadius: BorderRadius.circular(12),
-                                    ),
-                                    padding: const EdgeInsets.only(
-                                        top: 15, bottom: 15),
-                                    child: Image.asset(
-                                      "assets/icons/search.png",
-                                      height: 30,
-                                      width: 30,
-                                      color: whiteColor,
-                                    ),
-                                  ),
-                                  hintText: 'Search by customer name....',
+                        // --------------------------- ROW 1 : SEARCH BAR ---------------------------
+                        Container(
+                          height: 46,
+                          decoration: BoxDecoration(
+                            color: blackColor,
+                            borderRadius: BorderRadius.circular(6),
+                            border: Border.all(color: hintTextColor, width: 0),
+                          ),
+                          child: TextField(
+                            controller: _searchController,
+                            onChanged: (value) {
+                              if (value.length > 2) {
+                                context.read<JobSheetBloc>().add(
+                                      FetchInvoiceList(
+                                        searchKeyword: _searchController.text,
+                                        fromDate: appliedFromDate,
+                                        toDate: appliedToDate,
+                                        paymentStatus: _mapToApiPaymentStatus(
+                                            _selectedPaymentStatus),
+                                        status: JobSheetStatus.loading,
+                                      ),
+                                    );
+                              } else if (value.isEmpty) {
+                                context.read<JobSheetBloc>().add(
+                                      FetchInvoiceList(
+                                        searchKeyword: "",
+                                        fromDate: appliedFromDate,
+                                        toDate: appliedToDate,
+                                        paymentStatus: _mapToApiPaymentStatus(
+                                            _selectedPaymentStatus),
+                                        status: JobSheetStatus.loading,
+                                      ),
+                                    );
+                              }
+                            },
+                            style: const TextStyle(color: whiteColor),
+                            decoration: InputDecoration(
+                              isCollapsed: true, //
+                              contentPadding: const EdgeInsets.symmetric(
+                                horizontal: 14,
+                                vertical: 14,
+                              ),
+                              hintText: "Search by customer name..",
+                              hintStyle: TextStyle(
+                                color: whiteColor.withOpacity(0.5),
+                                fontSize: 13,
+                                fontWeight: FontWeight.w600,
+                              ),
+                              border: InputBorder.none,
+                              fillColor: blackColor,
+                              suffixIcon: Padding(
+                                padding: const EdgeInsets.all(12),
+                                child: Image.asset(
+                                  "assets/icons/search.png",
+                                  color: primaryColor,
                                 ),
                               ),
                             ),
-                            const SizedBox(width: 1),
+                          ),
+                        ),
+                        const SizedBox(height: 12),
+
+                        Row(
+                          children: [
+                            // FILTER BUTTON
                             PopupMenuButton<String>(
                               icon: Container(
                                 height: 42,
@@ -276,26 +256,20 @@ class _InvoiceListingPageState extends State<InvoiceListingPage> {
                                   color: isFilterApplied
                                       ? successColor
                                       : blackColor,
-                                  borderRadius: const BorderRadius.all(
-                                    Radius.circular(5),
-                                  ),
+                                  borderRadius: BorderRadius.circular(6),
                                   border: Border.all(
                                     color: hintTextColor,
-                                    width: 1,
+                                    width: 0,
                                   ),
                                 ),
                                 child: Image.asset(
                                   "assets/icons/filter.png",
-                                  height: 20,
-                                  width: 20,
-                                  color: whiteColor,
+                                  color: whiteColor.withOpacity(0.7),
                                 ),
                               ),
                               itemBuilder: (BuildContext context) {
                                 return filterBy.map((String option) {
-                                  return PopupMenuItem<String>(
-                                    textStyle: const TextStyle(
-                                        backgroundColor: whiteColor),
+                                  return PopupMenuItem(
                                     value: option,
                                     child: Text(option),
                                   );
@@ -310,43 +284,62 @@ class _InvoiceListingPageState extends State<InvoiceListingPage> {
                               offset: const Offset(0, 60),
                               color: whiteColor,
                             ),
-                            DropdownButton<String>(
-                              value: _selectedPaymentStatus,
-                              hint: const Text(
-                                "Payment Status",
-                                style:
-                                    TextStyle(color: whiteColor, fontSize: 11),
-                              ),
-                              dropdownColor: blackColor,
-                              style: const TextStyle(
-                                  color: whiteColor, fontSize: 13),
-                              iconEnabledColor: whiteColor,
-                              items: paymentStatusList.map((String value) {
-                                return DropdownMenuItem<String>(
-                                  value: value,
-                                  child: Text(
-                                    value,
-                                    style: const TextStyle(
-                                        color: whiteColor, fontSize: 13),
-                                  ),
-                                );
-                              }).toList(),
-                              onChanged: (String? newValue) {
-                                setState(() {
-                                  _selectedPaymentStatus = newValue;
-                                });
 
-                                context.read<JobSheetBloc>().add(
-                                      FetchInvoiceList(
-                                        status: JobSheetStatus.loading,
-                                        paymentStatus:
-                                            _mapToApiPaymentStatus(newValue),
-                                      ),
-                                    );
-                              },
+                            const SizedBox(width: 12),
+
+                            // PAYMENT STATUS
+                            Expanded(
+                              child: DropdownButtonFormField<String>(
+                                value: _selectedPaymentStatus,
+                                decoration: InputDecoration(
+                                  contentPadding: const EdgeInsets.symmetric(
+                                      horizontal: 10, vertical: 8),
+                                  border: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(6),
+                                  ),
+                                  filled: true,
+                                  fillColor: blackColor,
+                                ),
+                                dropdownColor: blackColor,
+                                hint: const Text(
+                                  "Payment Status",
+                                  style: TextStyle(
+                                      color: whiteColor, fontSize: 12),
+                                ),
+                                iconEnabledColor: whiteColor,
+                                items: paymentStatusList.map((String value) {
+                                  return DropdownMenuItem(
+                                    value: value,
+                                    child: Text(
+                                      value,
+                                      style: const TextStyle(color: whiteColor),
+                                    ),
+                                  );
+                                }).toList(),
+                                onChanged: (String? newValue) {
+                                  setState(() {
+                                    _selectedPaymentStatus = newValue;
+                                  });
+
+                                  context.read<JobSheetBloc>().add(
+                                        FetchInvoiceList(
+                                          searchKeyword: _searchController.text,
+                                          fromDate: appliedFromDate,
+                                          toDate: appliedToDate,
+                                          status: JobSheetStatus.loading,
+                                          paymentStatus:
+                                              _mapToApiPaymentStatus(newValue),
+                                        ),
+                                      );
+                                },
+                              ),
                             ),
-                            IconButton(
-                              onPressed: () {
+
+                            const SizedBox(width: 8),
+
+                            // REFRESH BUTTON
+                            InkWell(
+                              onTap: () {
                                 setState(() {
                                   _selectedPaymentStatus = null;
                                   _searchController.clear();
@@ -354,14 +347,28 @@ class _InvoiceListingPageState extends State<InvoiceListingPage> {
                                 });
                                 _fetchInitialInvoice();
                               },
-                              icon: Icon(
-                                Icons.refresh,
-                                color: whiteColor.withOpacity(0.7),
-                                size: 32,
+                              child: Container(
+                                height: 44,
+                                width: 44,
+                                margin: const EdgeInsets.only(left: 5),
+                                decoration: BoxDecoration(
+                                  color: blackColor,
+                                  borderRadius: BorderRadius.circular(6),
+                                  border: Border.all(
+                                      color: hintTextColor, width: 0),
+                                ),
+                                child: Icon(
+                                  Icons.refresh,
+                                  color: whiteColor.withOpacity(0.7),
+                                  size: 28,
+                                ),
                               ),
                             ),
                           ],
                         ),
+
+// --------------------------- ROW 3 : GST FILTER TABS ---------------------------
+
                         const SizedBox(height: 12),
                         Row(
                           mainAxisAlignment: MainAxisAlignment.center,
@@ -373,9 +380,11 @@ class _InvoiceListingPageState extends State<InvoiceListingPage> {
                                 onTap: () {
                                   context.read<JobSheetBloc>().add(
                                         FetchInvoiceList(
+                                          searchKeyword: _searchController.text,
+                                          fromDate: appliedFromDate,
+                                          toDate: appliedToDate,
                                           status: JobSheetStatus.loading,
                                           gstFilter: null,
-                                          searchKeyword: _searchController.text,
                                           paymentStatus: _mapToApiPaymentStatus(
                                               _selectedPaymentStatus),
                                         ),
@@ -391,9 +400,11 @@ class _InvoiceListingPageState extends State<InvoiceListingPage> {
                                 onTap: () {
                                   context.read<JobSheetBloc>().add(
                                         FetchInvoiceList(
+                                          searchKeyword: _searchController.text,
+                                          fromDate: appliedFromDate,
+                                          toDate: appliedToDate,
                                           status: JobSheetStatus.loading,
                                           gstFilter: "1",
-                                          searchKeyword: _searchController.text,
                                           paymentStatus: _mapToApiPaymentStatus(
                                               _selectedPaymentStatus),
                                         ),
@@ -409,9 +420,11 @@ class _InvoiceListingPageState extends State<InvoiceListingPage> {
                                 onTap: () {
                                   context.read<JobSheetBloc>().add(
                                         FetchInvoiceList(
+                                          searchKeyword: _searchController.text,
+                                          fromDate: appliedFromDate,
+                                          toDate: appliedToDate,
                                           status: JobSheetStatus.loading,
                                           gstFilter: "0",
-                                          searchKeyword: _searchController.text,
                                           paymentStatus: _mapToApiPaymentStatus(
                                               _selectedPaymentStatus),
                                         ),
@@ -476,12 +489,15 @@ class _InvoiceListingPageState extends State<InvoiceListingPage> {
       case "Today":
         final todayDate = DateTime.now();
         final formattedTodayDate = DateFormat('yyyy-MM-dd').format(todayDate);
+        appliedFromDate = formattedTodayDate;
+        appliedToDate = formattedTodayDate;
         context.read<JobSheetBloc>().add(
               FetchInvoiceList(
                 searchKeyword: searchKeyword,
                 gstFilter: jobSheetState.selectedGstFilter,
-                fromDate: formattedTodayDate,
-                toDate: formattedTodayDate,
+                fromDate: appliedFromDate,
+                toDate: appliedToDate,
+                paymentStatus: _mapToApiPaymentStatus(_selectedPaymentStatus),
                 status: JobSheetStatus.loading,
               ),
             );
@@ -489,12 +505,15 @@ class _InvoiceListingPageState extends State<InvoiceListingPage> {
 
       case "Yesterday":
         final getYesterdaysDate = app_instance.utility.getOldDate(dayCount: 1);
+        appliedFromDate = getYesterdaysDate.toString();
+        appliedToDate = getYesterdaysDate.toString();
         context.read<JobSheetBloc>().add(
               FetchInvoiceList(
                   searchKeyword: searchKeyword,
                   gstFilter: jobSheetState.selectedGstFilter,
-                  fromDate: getYesterdaysDate.toString(),
-                  toDate: getYesterdaysDate.toString(),
+                  fromDate: appliedFromDate,
+                  toDate: appliedToDate,
+                  paymentStatus: _mapToApiPaymentStatus(_selectedPaymentStatus),
                   status: JobSheetStatus.loading),
             );
         break;
@@ -509,12 +528,15 @@ class _InvoiceListingPageState extends State<InvoiceListingPage> {
         );
         String formattedStartDate = formatter.format(startDate);
         String formattedEndDate = formatter.format(yesterday);
+        appliedFromDate = formattedStartDate;
+        appliedToDate = formattedEndDate;
         context.read<JobSheetBloc>().add(
               FetchInvoiceList(
                 searchKeyword: searchKeyword,
                 gstFilter: jobSheetState.selectedGstFilter,
-                fromDate: formattedStartDate,
-                toDate: formattedEndDate,
+                fromDate: appliedFromDate,
+                toDate: appliedToDate,
+                paymentStatus: _mapToApiPaymentStatus(_selectedPaymentStatus),
                 status: JobSheetStatus.loading,
               ),
             );
@@ -522,12 +544,15 @@ class _InvoiceListingPageState extends State<InvoiceListingPage> {
 
       case "This Month":
         final getFirstDate = app_instance.utility.thisMonthFirstDate();
+        appliedFromDate = getFirstDate.toString();
+        appliedToDate = getCurrentDate.toString();
         context.read<JobSheetBloc>().add(
               FetchInvoiceList(
                 searchKeyword: searchKeyword,
                 gstFilter: jobSheetState.selectedGstFilter,
-                fromDate: getFirstDate.toString(),
-                toDate: getCurrentDate.toString(),
+                fromDate: appliedFromDate,
+                toDate: appliedToDate,
+                paymentStatus: _mapToApiPaymentStatus(_selectedPaymentStatus),
                 status: JobSheetStatus.loading,
               ),
             );
@@ -537,12 +562,15 @@ class _InvoiceListingPageState extends State<InvoiceListingPage> {
         final getFirstDateOfLastMonth =
             app_instance.utility.lastMonthFirstDate();
         final getLastDateOfLastMonth = app_instance.utility.lastMonthLastDate();
+        appliedFromDate = getFirstDateOfLastMonth.toString();
+        appliedToDate = getLastDateOfLastMonth.toString();
         context.read<JobSheetBloc>().add(
               FetchInvoiceList(
                 searchKeyword: searchKeyword,
                 gstFilter: jobSheetState.selectedGstFilter,
-                fromDate: getFirstDateOfLastMonth.toString(),
-                toDate: getLastDateOfLastMonth.toString(),
+                fromDate: appliedFromDate,
+                toDate: appliedToDate,
+                paymentStatus: _mapToApiPaymentStatus(_selectedPaymentStatus),
                 status: JobSheetStatus.loading,
               ),
             );
@@ -579,12 +607,16 @@ class _InvoiceListingPageState extends State<InvoiceListingPage> {
               selectedDate = pickeddate;
               var formatter = DateFormat('yyyy-MM-dd');
               String formattedDate = formatter.format(selectedDate!);
+              appliedFromDate = formattedDate;
+              appliedToDate = "";
               context.read<JobSheetBloc>().add(
                     FetchInvoiceList(
                       searchKeyword: searchKeyword,
                       gstFilter: jobSheetState.selectedGstFilter,
-                      fromDate: formattedDate,
-                      toDate: "",
+                      fromDate: appliedFromDate,
+                      toDate: appliedToDate,
+                      paymentStatus:
+                          _mapToApiPaymentStatus(_selectedPaymentStatus),
                       status: JobSheetStatus.loading,
                     ),
                   );
@@ -619,12 +651,16 @@ class _InvoiceListingPageState extends State<InvoiceListingPage> {
         if (pickedDate != null) {
           String formattedStartDate = formatter.format(pickedDate.start);
           String formattedEndDate = formatter.format(pickedDate.end);
+          appliedFromDate = formattedStartDate;
+          appliedToDate = formattedEndDate;
           context.read<JobSheetBloc>().add(
                 FetchInvoiceList(
                     searchKeyword: searchKeyword,
                     gstFilter: jobSheetState.selectedGstFilter,
-                    fromDate: formattedStartDate,
-                    toDate: formattedEndDate,
+                    fromDate: appliedFromDate,
+                    toDate: appliedToDate,
+                    paymentStatus:
+                        _mapToApiPaymentStatus(_selectedPaymentStatus),
                     status: JobSheetStatus.loading),
               );
         }
@@ -637,6 +673,7 @@ class _InvoiceListingPageState extends State<InvoiceListingPage> {
                   gstFilter: jobSheetState.selectedGstFilter,
                   fromDate: getCurrentDate.toString(),
                   toDate: getCurrentDate.toString(),
+                  paymentStatus: _mapToApiPaymentStatus(_selectedPaymentStatus),
                   status: JobSheetStatus.loading),
             );
         break;

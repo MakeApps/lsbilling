@@ -170,9 +170,9 @@ class _StockDetailsPageState extends State<StockDetailsPage> {
                                             columns;
 
                                     final items = <Widget>[
-                                      _detailTile("Spare Part Category",
+                                      _detailTile("Item Category",
                                           state.stockDetails?.sparePartCat),
-                                      _detailTile("Spare Part Code",
+                                      _detailTile("Item Code",
                                           state.stockDetails?.sparePartCode),
                                       _detailTile(
                                         "Purchase Price",

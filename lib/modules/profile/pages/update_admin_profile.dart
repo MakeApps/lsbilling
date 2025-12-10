@@ -273,61 +273,128 @@ class _UpdateProfileState extends State<UpdateProfile> {
                 ? const CenterLoader()
                 : Form(
                     key: _formKey,
-                    child: Container(
-                      child: SingleChildScrollView(
-                        child: Column(
-                          children: [
-                            Stack(
-                              children: [
-                                Padding(
-                                  padding: EdgeInsets.only(
-                                    top: MediaQuery.of(context).size.height *
-                                        0.09,
-                                  ),
-                                  child: Card(
-                                    color: whiteColor,
-                                    margin: const EdgeInsets.only(
-                                        left: 13, right: 13, top: 10),
-                                    child: Padding(
-                                      padding: const EdgeInsets.only(
-                                          left: 15,
-                                          top: 70,
-                                          right: 15,
-                                          bottom: 10),
-                                      child: Column(
-                                        children: [
-                                          const Align(
-                                            alignment: Alignment.topLeft,
-                                            child: Row(
-                                              children: [
-                                                Text(
-                                                  "Company Name:",
-                                                  style: TextStyle(
-                                                      fontSize: 14,
-                                                      color: blackColor,
-                                                      fontWeight:
-                                                          FontWeight.w500),
-                                                ),
-                                                Icon(Icons.star,
-                                                    color: redColor, size: 10)
-                                              ],
+                    child: SingleChildScrollView(
+                      child: Column(
+                        children: [
+                          Stack(
+                            children: [
+                              Padding(
+                                padding: EdgeInsets.only(
+                                  top: MediaQuery.of(context).size.height *
+                                      0.09,
+                                ),
+                                child: Card(
+                                  color: whiteColor,
+                                  margin: const EdgeInsets.only(
+                                      left: 13, right: 13, top: 10),
+                                  child: Padding(
+                                    padding: const EdgeInsets.only(
+                                        left: 15,
+                                        top: 70,
+                                        right: 15,
+                                        bottom: 10),
+                                    child: Column(
+                                      children: [
+                                        const Align(
+                                          alignment: Alignment.topLeft,
+                                          child: Row(
+                                            children: [
+                                              Text(
+                                                "Company Name:",
+                                                style: TextStyle(
+                                                    fontSize: 14,
+                                                    color: blackColor,
+                                                    fontWeight:
+                                                        FontWeight.w500),
+                                              ),
+                                              Icon(Icons.star,
+                                                  color: redColor, size: 10)
+                                            ],
+                                          ),
+                                        ),
+                                        const SizedBox(
+                                          height: 5,
+                                        ),
+                                        TextFormField(
+                                          controller: workshopnameController,
+                                          keyboardType: TextInputType.text,
+                                          style: const TextStyle(
+                                              color: blackColor,
+                                              fontSize: 14),
+                                          inputFormatters: [
+                                            NoLeadingSpaceFormatter(),
+                                          ],
+                                          decoration: InputDecoration(
+                                            border: const OutlineInputBorder(
+                                              borderRadius: BorderRadius.all(
+                                                Radius.circular(10.0),
+                                              ),
+                                              borderSide: BorderSide(
+                                                width: 0,
+                                                style: BorderStyle.none,
+                                              ),
                                             ),
+                                            errorText: validateWorkshopName
+                                                ? 'The company name field is required'
+                                                : null,
+                                            filled: true,
+                                            fillColor: lightGreyColor,
+                                            hintText: "Enter  Name",
+                                            hintStyle: const TextStyle(
+                                                color: hintTextColor,
+                                                fontFamily: 'Mulish',
+                                                fontWeight: FontWeight.w400,
+                                                fontSize: 13),
                                           ),
-                                          const SizedBox(
-                                            height: 5,
+                                          onChanged: (value) {
+                                            setState(
+                                              () {
+                                                validateWorkshopName =
+                                                    workshopnameController
+                                                        .text.isEmpty;
+                                              },
+                                            );
+                                          },
+                                        ),
+                                        const SizedBox(
+                                          height: 15,
+                                        ),
+                                        const Align(
+                                          alignment: Alignment.topLeft,
+                                          child: Row(
+                                            children: [
+                                              Text(
+                                                "Username:",
+                                                style: TextStyle(
+                                                    fontSize: 14,
+                                                    color: blackColor,
+                                                    fontWeight:
+                                                        FontWeight.w500),
+                                              ),
+                                              Icon(Icons.star,
+                                                  color: redColor, size: 10)
+                                            ],
                                           ),
-                                          TextFormField(
-                                            controller: workshopnameController,
-                                            keyboardType: TextInputType.text,
+                                        ),
+                                        const SizedBox(
+                                          height: 5,
+                                        ),
+                                        SizedBox(
+                                          height: 55,
+                                          child: TextFormField(
+                                            readOnly: true,
                                             style: const TextStyle(
                                                 color: blackColor,
                                                 fontSize: 14),
+                                            controller: usernameController,
+                                            keyboardType: TextInputType.text,
                                             inputFormatters: [
                                               NoLeadingSpaceFormatter(),
                                             ],
-                                            decoration: InputDecoration(
-                                              border: const OutlineInputBorder(
-                                                borderRadius: BorderRadius.all(
+                                            decoration: const InputDecoration(
+                                              border: OutlineInputBorder(
+                                                borderRadius:
+                                                    BorderRadius.all(
                                                   Radius.circular(10.0),
                                                 ),
                                                 borderSide: BorderSide(
@@ -335,881 +402,812 @@ class _UpdateProfileState extends State<UpdateProfile> {
                                                   style: BorderStyle.none,
                                                 ),
                                               ),
-                                              errorText: validateWorkshopName
-                                                  ? 'The company name field is required'
-                                                  : null,
                                               filled: true,
                                               fillColor: lightGreyColor,
-                                              hintText: "Enter  Name",
-                                              hintStyle: const TextStyle(
+                                              hintText: "Enter username",
+                                              hintStyle: TextStyle(
                                                   color: hintTextColor,
                                                   fontFamily: 'Mulish',
                                                   fontWeight: FontWeight.w400,
                                                   fontSize: 13),
                                             ),
-                                            onChanged: (value) {
-                                              setState(
-                                                () {
-                                                  validateWorkshopName =
-                                                      workshopnameController
-                                                          .text.isEmpty;
-                                                },
-                                              );
-                                            },
                                           ),
-                                          const SizedBox(
-                                            height: 15,
-                                          ),
-                                          const Align(
-                                            alignment: Alignment.topLeft,
-                                            child: Row(
-                                              children: [
-                                                Text(
-                                                  "Username:",
-                                                  style: TextStyle(
-                                                      fontSize: 14,
-                                                      color: blackColor,
-                                                      fontWeight:
-                                                          FontWeight.w500),
-                                                ),
-                                                Icon(Icons.star,
-                                                    color: redColor, size: 10)
-                                              ],
-                                            ),
-                                          ),
-                                          const SizedBox(
-                                            height: 5,
-                                          ),
-                                          SizedBox(
-                                            height: 55,
-                                            child: TextFormField(
-                                              readOnly: true,
-                                              style: const TextStyle(
-                                                  color: blackColor,
-                                                  fontSize: 14),
-                                              controller: usernameController,
-                                              keyboardType: TextInputType.text,
-                                              inputFormatters: [
-                                                NoLeadingSpaceFormatter(),
-                                              ],
-                                              decoration: const InputDecoration(
-                                                border: OutlineInputBorder(
-                                                  borderRadius:
-                                                      BorderRadius.all(
-                                                    Radius.circular(10.0),
-                                                  ),
-                                                  borderSide: BorderSide(
-                                                    width: 0,
-                                                    style: BorderStyle.none,
-                                                  ),
-                                                ),
-                                                filled: true,
-                                                fillColor: lightGreyColor,
-                                                hintText: "Enter username",
-                                                hintStyle: TextStyle(
-                                                    color: hintTextColor,
-                                                    fontFamily: 'Mulish',
-                                                    fontWeight: FontWeight.w400,
-                                                    fontSize: 13),
-                                              ),
-                                            ),
-                                          ),
-                                          const SizedBox(
-                                            height: 15,
-                                          ),
-                                          const Align(
-                                            alignment: Alignment.topLeft,
-                                            child: Row(
-                                              children: [
-                                                Text(
-                                                  "Email:",
-                                                  style: TextStyle(
-                                                      fontSize: 14,
-                                                      color: blackColor,
-                                                      fontWeight:
-                                                          FontWeight.w500),
-                                                ),
-                                                Icon(Icons.star,
-                                                    color: redColor, size: 10)
-                                              ],
-                                            ),
-                                          ),
-                                          const SizedBox(
-                                            height: 5,
-                                          ),
-                                          SizedBox(
-                                            height: 55,
-                                            child: TextFormField(
-                                              readOnly: true,
-                                              style: const TextStyle(
-                                                  color: blackColor,
-                                                  fontSize: 14),
-                                              controller: emailController,
-                                              keyboardType: TextInputType.text,
-                                              inputFormatters: [
-                                                NoLeadingSpaceFormatter(),
-                                              ],
-                                              decoration: const InputDecoration(
-                                                border: OutlineInputBorder(
-                                                  borderRadius:
-                                                      BorderRadius.all(
-                                                    Radius.circular(10.0),
-                                                  ),
-                                                  borderSide: BorderSide(
-                                                    width: 0,
-                                                    style: BorderStyle.none,
-                                                  ),
-                                                ),
-                                                filled: true,
-                                                fillColor: lightGreyColor,
-                                                hintText: "Enter Email",
-                                                hintStyle: TextStyle(
-                                                    color: hintTextColor,
-                                                    fontFamily: 'Mulish',
-                                                    fontWeight: FontWeight.w400,
-                                                    fontSize: 13),
-                                              ),
-                                            ),
-                                          ),
-                                          const SizedBox(
-                                            height: 15,
-                                          ),
-                                          const Align(
-                                            alignment: Alignment.topLeft,
-                                            child: Row(
-                                              children: [
-                                                Text(
-                                                  "Mobile Number:",
-                                                  style: TextStyle(
-                                                      fontSize: 14,
-                                                      color: blackColor,
-                                                      fontWeight:
-                                                          FontWeight.w500),
-                                                ),
-                                              ],
-                                            ),
-                                          ),
-                                          const SizedBox(
-                                            height: 5,
-                                          ),
-                                          Container(
-                                            height: 55,
-                                            child: TextFormField(
-                                              controller:
-                                                  mobileNumberController,
-                                              style: const TextStyle(
-                                                  color: blackColor,
-                                                  fontSize: 14),
-                                              keyboardType:
-                                                  TextInputType.number,
-                                              inputFormatters: [
-                                                NoLeadingSpaceFormatter(),
-                                                LengthLimitingTextInputFormatter(
-                                                    10)
-                                              ],
-                                              decoration: const InputDecoration(
-                                                border: OutlineInputBorder(
-                                                  borderRadius:
-                                                      BorderRadius.all(
-                                                    Radius.circular(10.0),
-                                                  ),
-                                                  borderSide: BorderSide(
-                                                    width: 0,
-                                                    style: BorderStyle.none,
-                                                  ),
-                                                ),
-                                                filled: true,
-                                                fillColor: lightGreyColor,
-                                                hintText: "Enter mobile number",
-                                                hintStyle: TextStyle(
-                                                    color: hintTextColor,
-                                                    fontFamily: 'Mulish',
-                                                    fontWeight: FontWeight.w400,
-                                                    fontSize: 13),
-                                              ),
-                                            ),
-                                          ),
-                                          const SizedBox(
-                                            height: 15,
-                                          ),
-                                          const Align(
-                                            alignment: Alignment.topLeft,
-                                            child: Row(
-                                              children: [
-                                                Text(
-                                                  "Street Address:",
-                                                  style: TextStyle(
-                                                      fontSize: 14,
-                                                      color: blackColor,
-                                                      fontWeight:
-                                                          FontWeight.w500),
-                                                ),
-                                              ],
-                                            ),
-                                          ),
-                                          const SizedBox(
-                                            height: 5,
-                                          ),
-                                          Container(
-                                            height: 55,
-                                            child: TextFormField(
-                                              controller:
-                                                  streetAddressController,
-                                              keyboardType: TextInputType.text,
-                                              style: const TextStyle(
-                                                  color: blackColor,
-                                                  fontSize: 14),
-                                              inputFormatters: [
-                                                NoLeadingSpaceFormatter(),
-                                                LengthLimitingTextInputFormatter(
-                                                    50)
-                                              ],
-                                              decoration: const InputDecoration(
-                                                border: OutlineInputBorder(
-                                                  borderRadius:
-                                                      BorderRadius.all(
-                                                    Radius.circular(10.0),
-                                                  ),
-                                                  borderSide: BorderSide(
-                                                    width: 0,
-                                                    style: BorderStyle.none,
-                                                  ),
-                                                ),
-                                                filled: true,
-                                                fillColor: lightGreyColor,
-                                                hintText:
-                                                    "Enter street address",
-                                                hintStyle: TextStyle(
-                                                    color: hintTextColor,
-                                                    fontFamily: 'Mulish',
-                                                    fontWeight: FontWeight.w400,
-                                                    fontSize: 13),
-                                              ),
-                                            ),
-                                          ),
-                                          const SizedBox(
-                                            height: 15,
-                                          ),
-                                          const Align(
-                                            alignment: Alignment.topLeft,
-                                            child: Row(
-                                              children: [
-                                                Text(
-                                                  "City:",
-                                                  style: TextStyle(
-                                                      fontSize: 14,
-                                                      color: blackColor,
-                                                      fontWeight:
-                                                          FontWeight.w500),
-                                                ),
-                                              ],
-                                            ),
-                                          ),
-                                          const SizedBox(
-                                            height: 5,
-                                          ),
-                                          Container(
-                                            height: 55,
-                                            child: TextFormField(
-                                              controller: cityController,
-                                              keyboardType: TextInputType.text,
-                                              style: const TextStyle(
-                                                  color: blackColor,
-                                                  fontSize: 14),
-                                              inputFormatters: [
-                                                NoLeadingSpaceFormatter(),
-                                              ],
-                                              decoration: const InputDecoration(
-                                                border: OutlineInputBorder(
-                                                  borderRadius:
-                                                      BorderRadius.all(
-                                                    Radius.circular(10.0),
-                                                  ),
-                                                  borderSide: BorderSide(
-                                                    width: 0,
-                                                    style: BorderStyle.none,
-                                                  ),
-                                                ),
-                                                filled: true,
-                                                fillColor: lightGreyColor,
-                                                hintText: "Enter city name",
-                                                hintStyle: TextStyle(
-                                                    color: hintTextColor,
-                                                    fontFamily: 'Mulish',
-                                                    fontWeight: FontWeight.w400,
-                                                    fontSize: 13),
-                                              ),
-                                            ),
-                                          ),
-                                          const SizedBox(
-                                            height: 15,
-                                          ),
-                                          const Align(
-                                            alignment: Alignment.topLeft,
-                                            child: Row(
-                                              children: [
-                                                Text(
-                                                  "State:",
-                                                  style: TextStyle(
-                                                      fontSize: 14,
-                                                      color: blackColor,
-                                                      fontWeight:
-                                                          FontWeight.w500),
-                                                ),
-                                              ],
-                                            ),
-                                          ),
-                                          const SizedBox(
-                                            height: 5,
-                                          ),
-                                          SizedBox(
-                                            width: MediaQuery.of(context)
-                                                .size
-                                                .width,
-                                            child: DropdownButtonFormField(
-                                              style: const TextStyle(
-                                                  color: blackColor,
-                                                  fontSize: 14),
-                                              menuMaxHeight: 400,
-                                              isExpanded: true,
-                                              value: stateController.isNotEmpty
-                                                  ? stateController
-                                                  : null,
-                                              decoration: const InputDecoration(
-                                                enabledBorder:
-                                                    OutlineInputBorder(
-                                                  borderRadius:
-                                                      BorderRadius.all(
-                                                    Radius.circular(10),
-                                                  ),
-                                                  borderSide: BorderSide(
-                                                    width: 1,
-                                                    color: Color.fromARGB(
-                                                        26, 233, 229, 212),
-                                                  ),
-                                                ),
-                                                focusedBorder:
-                                                    OutlineInputBorder(
-                                                  borderRadius:
-                                                      BorderRadius.all(
-                                                    Radius.circular(10),
-                                                  ),
-                                                  borderSide: BorderSide(
-                                                    width: 1,
-                                                    color: Color.fromARGB(
-                                                        26, 233, 229, 212),
-                                                  ),
-                                                ),
-                                                filled: true,
-                                                fillColor: lightGreyColor,
-                                              ),
-                                              dropdownColor: whiteColor,
-                                              hint: const Text(
-                                                "Select state",
+                                        ),
+                                        const SizedBox(
+                                          height: 15,
+                                        ),
+                                        const Align(
+                                          alignment: Alignment.topLeft,
+                                          child: Row(
+                                            children: [
+                                              Text(
+                                                "Email:",
                                                 style: TextStyle(
-                                                    color: hintTextColor,
-                                                    fontSize: 13),
+                                                    fontSize: 14,
+                                                    color: blackColor,
+                                                    fontWeight:
+                                                        FontWeight.w500),
                                               ),
-                                              items: stateList.map<
-                                                  DropdownMenuItem<String>>(
-                                                (value) {
-                                                  return DropdownMenuItem<
-                                                      String>(
-                                                    value: value.toString(),
-                                                    child: Text(
-                                                      value,
-                                                      style: const TextStyle(
-                                                          color: greyColor,
-                                                          fontFamily: 'Mulish',
-                                                          fontWeight:
-                                                              FontWeight.w400,
-                                                          fontSize: 14,
-                                                          wordSpacing: 3),
-                                                    ),
-                                                  );
-                                                },
-                                              ).toList(),
-                                              onChanged: (value) {
-                                                setState(() {
-                                                  stateController =
-                                                      value!.toString();
-                                                });
-                                              },
-                                            ),
+                                              Icon(Icons.star,
+                                                  color: redColor, size: 10)
+                                            ],
                                           ),
-                                          const SizedBox(
-                                            height: 15,
-                                          ),
-                                          const Align(
-                                            alignment: Alignment.topLeft,
-                                            child: Row(
-                                              children: [
-                                                Text(
-                                                  "Pincode:",
-                                                  style: TextStyle(
-                                                      fontSize: 14,
-                                                      color: blackColor,
-                                                      fontWeight:
-                                                          FontWeight.w500),
+                                        ),
+                                        const SizedBox(
+                                          height: 5,
+                                        ),
+                                        SizedBox(
+                                          height: 55,
+                                          child: TextFormField(
+                                            readOnly: true,
+                                            style: const TextStyle(
+                                                color: blackColor,
+                                                fontSize: 14),
+                                            controller: emailController,
+                                            keyboardType: TextInputType.text,
+                                            inputFormatters: [
+                                              NoLeadingSpaceFormatter(),
+                                            ],
+                                            decoration: const InputDecoration(
+                                              border: OutlineInputBorder(
+                                                borderRadius:
+                                                    BorderRadius.all(
+                                                  Radius.circular(10.0),
                                                 ),
-                                              ],
-                                            ),
-                                          ),
-                                          const SizedBox(
-                                            height: 5,
-                                          ),
-                                          Container(
-                                            height: 55,
-                                            child: TextFormField(
-                                              controller: pincodeController,
-                                              style: const TextStyle(
-                                                  color: blackColor,
-                                                  fontSize: 14),
-                                              keyboardType:
-                                                  TextInputType.number,
-                                              inputFormatters: [
-                                                NoLeadingSpaceFormatter(),
-                                                LengthLimitingTextInputFormatter(
-                                                    6)
-                                              ],
-                                              decoration: const InputDecoration(
-                                                border: OutlineInputBorder(
-                                                  borderRadius:
-                                                      BorderRadius.all(
-                                                    Radius.circular(10.0),
-                                                  ),
-                                                  borderSide: BorderSide(
-                                                    width: 0,
-                                                    style: BorderStyle.none,
-                                                  ),
+                                                borderSide: BorderSide(
+                                                  width: 0,
+                                                  style: BorderStyle.none,
                                                 ),
-                                                filled: true,
-                                                fillColor: lightGreyColor,
-                                                hintText:
-                                                    "Enter pincode number",
-                                                hintStyle: TextStyle(
-                                                    color: hintTextColor,
-                                                    fontFamily: 'Mulish',
-                                                    fontWeight: FontWeight.w400,
-                                                    fontSize: 13),
                                               ),
+                                              filled: true,
+                                              fillColor: lightGreyColor,
+                                              hintText: "Enter Email",
+                                              hintStyle: TextStyle(
+                                                  color: hintTextColor,
+                                                  fontFamily: 'Mulish',
+                                                  fontWeight: FontWeight.w400,
+                                                  fontSize: 13),
                                             ),
                                           ),
-                                          const SizedBox(
-                                            height: 15,
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                  ),
-                                ),
-
-                                //User image
-                                Padding(
-                                  padding: EdgeInsets.only(
-                                    top: MediaQuery.of(context).size.height *
-                                        0.045,
-                                  ),
-                                  child: Center(
-                                    child: GestureDetector(
-                                      child: Stack(
-                                        clipBehavior: Clip.none,
-                                        // fit: StackFit.expand,
-                                        alignment: Alignment.topCenter,
-                                        children: [
-                                          SelectProfileImage(
-                                            imageFile: profileImage,
-                                            existedImageUrl: userImage,
-                                            takeImage: takeCameraImage,
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                            Card(
-                              color: whiteColor,
-                              margin: const EdgeInsets.only(
-                                left: 13,
-                                right: 13,
-                                top: 10,
-                              ),
-                              child: Padding(
-                                padding: const EdgeInsets.only(
-                                    left: 15, top: 15, right: 15, bottom: 10),
-                                child: Column(
-                                  children: [
-                                    const Align(
-                                      alignment: Alignment.topLeft,
-                                      child: Text(
-                                        "Bank Details:",
-                                        style: TextStyle(
-                                            fontSize: 16,
-                                            color: blackColor,
-                                            fontWeight: FontWeight.w600),
-                                      ),
-                                    ),
-                                    const SizedBox(
-                                      height: 15,
-                                    ),
-                                    const Align(
-                                      alignment: Alignment.topLeft,
-                                      child: Text(
-                                        "Bank Name:",
-                                        style: TextStyle(
-                                            fontSize: 14,
-                                            color: blackColor,
-                                            fontWeight: FontWeight.w500),
-                                      ),
-                                    ),
-                                    const SizedBox(
-                                      height: 5,
-                                    ),
-                                    TextFormField(
-                                      controller: bankNameController,
-                                      keyboardType: TextInputType.text,
-                                      style: const TextStyle(
-                                          color: blackColor, fontSize: 14),
-                                      inputFormatters: [
-                                        NoLeadingSpaceFormatter(),
-                                        LengthLimitingTextInputFormatter(50)
-                                      ],
-                                      decoration: const InputDecoration(
-                                        border: OutlineInputBorder(
-                                          borderRadius: BorderRadius.all(
-                                            Radius.circular(10.0),
-                                          ),
-                                          borderSide: BorderSide(
-                                            width: 0,
-                                            style: BorderStyle.none,
+                                        ),
+                                        const SizedBox(
+                                          height: 15,
+                                        ),
+                                        const Align(
+                                          alignment: Alignment.topLeft,
+                                          child: Row(
+                                            children: [
+                                              Text(
+                                                "Mobile Number:",
+                                                style: TextStyle(
+                                                    fontSize: 14,
+                                                    color: blackColor,
+                                                    fontWeight:
+                                                        FontWeight.w500),
+                                              ),
+                                            ],
                                           ),
                                         ),
-                                        filled: true,
-                                        fillColor: lightGreyColor,
-                                        hintText: "Enter Bank Name",
-                                        hintStyle: TextStyle(
-                                            color: hintTextColor,
-                                            fontFamily: 'Mulish',
-                                            fontWeight: FontWeight.w400,
-                                            fontSize: 13),
-                                      ),
-                                    ),
-                                    const SizedBox(
-                                      height: 15,
-                                    ),
-                                    const Align(
-                                      alignment: Alignment.topLeft,
-                                      child: Text(
-                                        "Account Number:",
-                                        style: TextStyle(
-                                            fontSize: 14,
-                                            color: blackColor,
-                                            fontWeight: FontWeight.w500),
-                                      ),
-                                    ),
-                                    const SizedBox(
-                                      height: 5,
-                                    ),
-                                    TextFormField(
-                                      controller: accountNoController,
-                                      keyboardType: TextInputType.text,
-                                      style: const TextStyle(
-                                          color: blackColor, fontSize: 14),
-                                      inputFormatters: [
-                                        NoLeadingSpaceFormatter(),
-                                        LengthLimitingTextInputFormatter(20)
-                                      ],
-                                      decoration: const InputDecoration(
-                                        border: OutlineInputBorder(
-                                          borderRadius: BorderRadius.all(
-                                            Radius.circular(10.0),
-                                          ),
-                                          borderSide: BorderSide(
-                                            width: 0,
-                                            style: BorderStyle.none,
-                                          ),
+                                        const SizedBox(
+                                          height: 5,
                                         ),
-                                        filled: true,
-                                        fillColor: lightGreyColor,
-                                        hintText: "Enter Account Number",
-                                        hintStyle: TextStyle(
-                                            color: hintTextColor,
-                                            fontFamily: 'Mulish',
-                                            fontWeight: FontWeight.w400,
-                                            fontSize: 13),
-                                      ),
-                                    ),
-                                    const SizedBox(
-                                      height: 15,
-                                    ),
-                                    const Align(
-                                      alignment: Alignment.topLeft,
-                                      child: Text(
-                                        "IFSC:",
-                                        style: TextStyle(
-                                            fontSize: 14,
-                                            color: blackColor,
-                                            fontWeight: FontWeight.w500),
-                                      ),
-                                    ),
-                                    const SizedBox(
-                                      height: 5,
-                                    ),
-                                    TextFormField(
-                                      controller: ifscController,
-                                      keyboardType: TextInputType.text,
-                                      inputFormatters: [
-                                        NoLeadingSpaceFormatter(),
-                                        LengthLimitingTextInputFormatter(12)
-                                      ],
-                                      decoration: const InputDecoration(
-                                        border: OutlineInputBorder(
-                                          borderRadius: BorderRadius.all(
-                                            Radius.circular(10.0),
-                                          ),
-                                          borderSide: BorderSide(
-                                            width: 0,
-                                            style: BorderStyle.none,
-                                          ),
-                                        ),
-                                        filled: true,
-                                        fillColor: lightGreyColor,
-                                        hintText: "Enter IFSC",
-                                        hintStyle: TextStyle(
-                                            color: hintTextColor,
-                                            fontFamily: 'Mulish',
-                                            fontWeight: FontWeight.w400,
-                                            fontSize: 13),
-                                      ),
-                                    ),
-                                    const SizedBox(
-                                      height: 15,
-                                    ),
-                                    const Align(
-                                      alignment: Alignment.topLeft,
-                                      child: Text(
-                                        "Branch Name:",
-                                        style: TextStyle(
-                                            fontSize: 14,
-                                            color: blackColor,
-                                            fontWeight: FontWeight.w500),
-                                      ),
-                                    ),
-                                    const SizedBox(
-                                      height: 5,
-                                    ),
-                                    TextFormField(
-                                      controller: branchNameController,
-                                      style: const TextStyle(
-                                          color: blackColor, fontSize: 14),
-                                      keyboardType: TextInputType.text,
-                                      inputFormatters: [
-                                        NoLeadingSpaceFormatter(),
-                                        LengthLimitingTextInputFormatter(30)
-                                      ],
-                                      decoration: const InputDecoration(
-                                        border: OutlineInputBorder(
-                                          borderRadius: BorderRadius.all(
-                                            Radius.circular(10.0),
-                                          ),
-                                          borderSide: BorderSide(
-                                            width: 0,
-                                            style: BorderStyle.none,
-                                          ),
-                                        ),
-                                        filled: true,
-                                        fillColor: lightGreyColor,
-                                        hintText: "Enter Branch Name",
-                                        hintStyle: TextStyle(
-                                            color: hintTextColor,
-                                            fontFamily: 'Mulish',
-                                            fontWeight: FontWeight.w400,
-                                            fontSize: 13),
-                                      ),
-                                    ),
-                                    const SizedBox(
-                                      height: 15,
-                                    ),
-                                    const Align(
-                                      alignment: Alignment.topLeft,
-                                      child: Text(
-                                        "VPA:",
-                                        style: TextStyle(
-                                            fontSize: 14,
-                                            color: blackColor,
-                                            fontWeight: FontWeight.w500),
-                                      ),
-                                    ),
-                                    const SizedBox(
-                                      height: 5,
-                                    ),
-                                    TextFormField(
-                                      controller: vpaController,
-                                      keyboardType: TextInputType.text,
-                                      style: const TextStyle(
-                                          color: blackColor, fontSize: 14),
-                                      inputFormatters: [
-                                        NoLeadingSpaceFormatter(),
-                                        LengthLimitingTextInputFormatter(50)
-                                      ],
-                                      decoration: const InputDecoration(
-                                        border: OutlineInputBorder(
-                                          borderRadius: BorderRadius.all(
-                                            Radius.circular(10.0),
-                                          ),
-                                          borderSide: BorderSide(
-                                            width: 0,
-                                            style: BorderStyle.none,
-                                          ),
-                                        ),
-                                        filled: true,
-                                        fillColor: lightGreyColor,
-                                        hintText: "Enter VPA",
-                                        hintStyle: TextStyle(
-                                            color: hintTextColor,
-                                            fontFamily: 'Mulish',
-                                            fontWeight: FontWeight.w400,
-                                            fontSize: 13),
-                                      ),
-                                    ),
-                                    const SizedBox(
-                                      height: 15,
-                                    ),
-                                    const Align(
-                                      alignment: Alignment.topLeft,
-                                      child: Text(
-                                        "Currency:",
-                                        style: TextStyle(
-                                            fontSize: 14,
-                                            color: blackColor,
-                                            fontWeight: FontWeight.w500),
-                                      ),
-                                    ),
-                                    const SizedBox(
-                                      height: 5,
-                                    ),
-                                    Container(
-                                      height: 55,
-                                      child: TextFormField(
-                                        controller: currencyController,
-                                        style: const TextStyle(
-                                            color: blackColor, fontSize: 14),
-                                        keyboardType: TextInputType.text,
-                                        inputFormatters: [
-                                          NoLeadingSpaceFormatter(),
-                                        ],
-                                        decoration: const InputDecoration(
-                                          border: OutlineInputBorder(
-                                            borderRadius: BorderRadius.all(
-                                              Radius.circular(10.0),
-                                            ),
-                                            borderSide: BorderSide(
-                                              width: 0,
-                                              style: BorderStyle.none,
+                                        Container(
+                                          height: 55,
+                                          child: TextFormField(
+                                            controller:
+                                                mobileNumberController,
+                                            style: const TextStyle(
+                                                color: blackColor,
+                                                fontSize: 14),
+                                            keyboardType:
+                                                TextInputType.number,
+                                            inputFormatters: [
+                                              NoLeadingSpaceFormatter(),
+                                              LengthLimitingTextInputFormatter(
+                                                  10)
+                                            ],
+                                            decoration: const InputDecoration(
+                                              border: OutlineInputBorder(
+                                                borderRadius:
+                                                    BorderRadius.all(
+                                                  Radius.circular(10.0),
+                                                ),
+                                                borderSide: BorderSide(
+                                                  width: 0,
+                                                  style: BorderStyle.none,
+                                                ),
+                                              ),
+                                              filled: true,
+                                              fillColor: lightGreyColor,
+                                              hintText: "Enter mobile number",
+                                              hintStyle: TextStyle(
+                                                  color: hintTextColor,
+                                                  fontFamily: 'Mulish',
+                                                  fontWeight: FontWeight.w400,
+                                                  fontSize: 13),
                                             ),
                                           ),
-                                          filled: true,
-                                          fillColor: lightGreyColor,
-                                          hintStyle: TextStyle(
-                                              color: hintTextColor,
-                                              fontFamily: 'Mulish',
-                                              fontWeight: FontWeight.w400,
-                                              fontSize: 13),
                                         ),
-                                      ),
-                                    ),
-                                    const SizedBox(
-                                      height: 15,
-                                    ),
-                                    Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceBetween,
-                                      children: [
-                                        const Column(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
-                                          children: [
-                                            Text(
-                                              "GST support:",
+                                        const SizedBox(
+                                          height: 15,
+                                        ),
+                                        const Align(
+                                          alignment: Alignment.topLeft,
+                                          child: Row(
+                                            children: [
+                                              Text(
+                                                "Street Address:",
+                                                style: TextStyle(
+                                                    fontSize: 14,
+                                                    color: blackColor,
+                                                    fontWeight:
+                                                        FontWeight.w500),
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                        const SizedBox(
+                                          height: 5,
+                                        ),
+                                        Container(
+                                          height: 55,
+                                          child: TextFormField(
+                                            controller:
+                                                streetAddressController,
+                                            keyboardType: TextInputType.text,
+                                            style: const TextStyle(
+                                                color: blackColor,
+                                                fontSize: 14),
+                                            inputFormatters: [
+                                              NoLeadingSpaceFormatter(),
+                                              LengthLimitingTextInputFormatter(
+                                                  50)
+                                            ],
+                                            decoration: const InputDecoration(
+                                              border: OutlineInputBorder(
+                                                borderRadius:
+                                                    BorderRadius.all(
+                                                  Radius.circular(10.0),
+                                                ),
+                                                borderSide: BorderSide(
+                                                  width: 0,
+                                                  style: BorderStyle.none,
+                                                ),
+                                              ),
+                                              filled: true,
+                                              fillColor: lightGreyColor,
+                                              hintText:
+                                                  "Enter street address",
+                                              hintStyle: TextStyle(
+                                                  color: hintTextColor,
+                                                  fontFamily: 'Mulish',
+                                                  fontWeight: FontWeight.w400,
+                                                  fontSize: 13),
+                                            ),
+                                          ),
+                                        ),
+                                        const SizedBox(
+                                          height: 15,
+                                        ),
+                                        const Align(
+                                          alignment: Alignment.topLeft,
+                                          child: Row(
+                                            children: [
+                                              Text(
+                                                "City:",
+                                                style: TextStyle(
+                                                    fontSize: 14,
+                                                    color: blackColor,
+                                                    fontWeight:
+                                                        FontWeight.w500),
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                        const SizedBox(
+                                          height: 5,
+                                        ),
+                                        Container(
+                                          height: 55,
+                                          child: TextFormField(
+                                            controller: cityController,
+                                            keyboardType: TextInputType.text,
+                                            style: const TextStyle(
+                                                color: blackColor,
+                                                fontSize: 14),
+                                            inputFormatters: [
+                                              NoLeadingSpaceFormatter(),
+                                            ],
+                                            decoration: const InputDecoration(
+                                              border: OutlineInputBorder(
+                                                borderRadius:
+                                                    BorderRadius.all(
+                                                  Radius.circular(10.0),
+                                                ),
+                                                borderSide: BorderSide(
+                                                  width: 0,
+                                                  style: BorderStyle.none,
+                                                ),
+                                              ),
+                                              filled: true,
+                                              fillColor: lightGreyColor,
+                                              hintText: "Enter city name",
+                                              hintStyle: TextStyle(
+                                                  color: hintTextColor,
+                                                  fontFamily: 'Mulish',
+                                                  fontWeight: FontWeight.w400,
+                                                  fontSize: 13),
+                                            ),
+                                          ),
+                                        ),
+                                        const SizedBox(
+                                          height: 15,
+                                        ),
+                                        const Align(
+                                          alignment: Alignment.topLeft,
+                                          child: Row(
+                                            children: [
+                                              Text(
+                                                "State:",
+                                                style: TextStyle(
+                                                    fontSize: 14,
+                                                    color: blackColor,
+                                                    fontWeight:
+                                                        FontWeight.w500),
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                        const SizedBox(
+                                          height: 5,
+                                        ),
+                                        SizedBox(
+                                          width: MediaQuery.of(context)
+                                              .size
+                                              .width,
+                                          child: DropdownButtonFormField(
+                                            style: const TextStyle(
+                                                color: blackColor,
+                                                fontSize: 14),
+                                            menuMaxHeight: 400,
+                                            isExpanded: true,
+                                            value: stateController.isNotEmpty
+                                                ? stateController
+                                                : null,
+                                            decoration: const InputDecoration(
+                                              enabledBorder:
+                                                  OutlineInputBorder(
+                                                borderRadius:
+                                                    BorderRadius.all(
+                                                  Radius.circular(10),
+                                                ),
+                                                borderSide: BorderSide(
+                                                  width: 1,
+                                                  color: Color.fromARGB(
+                                                      26, 233, 229, 212),
+                                                ),
+                                              ),
+                                              focusedBorder:
+                                                  OutlineInputBorder(
+                                                borderRadius:
+                                                    BorderRadius.all(
+                                                  Radius.circular(10),
+                                                ),
+                                                borderSide: BorderSide(
+                                                  width: 1,
+                                                  color: Color.fromARGB(
+                                                      26, 233, 229, 212),
+                                                ),
+                                              ),
+                                              filled: true,
+                                              fillColor: lightGreyColor,
+                                            ),
+                                            dropdownColor: whiteColor,
+                                            hint: const Text(
+                                              "Select state",
                                               style: TextStyle(
-                                                fontSize: 14,
-                                                fontWeight: FontWeight.w500,
-                                              ),
+                                                  color: hintTextColor,
+                                                  fontSize: 13),
                                             ),
-                                            SizedBox(height: 4),
-                                            Text(
-                                              "Toggle to enable tax billing feature",
-                                              style: TextStyle(
-                                                fontSize: 12,
-                                                color: hintTextColor,
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-                                        Switch(
-                                          value: isGstEnabled,
-                                          onChanged: (value) {
-                                            setState(() {
-                                              isGstEnabled = value;
-                                            });
-                                            gstFlag =
-                                                convertBoolToString(value);
-                                            context.read<EditBloc>().add(
-                                                  UpdateGstGlag(
-                                                    id: state
-                                                        .updateProfileModel!.id
-                                                        .toString(),
-                                                    gstFlag: gstFlag,
+                                            items: stateList.map<
+                                                DropdownMenuItem<String>>(
+                                              (value) {
+                                                return DropdownMenuItem<
+                                                    String>(
+                                                  value: value.toString(),
+                                                  child: Text(
+                                                    value,
+                                                    style: const TextStyle(
+                                                        color: greyColor,
+                                                        fontFamily: 'Mulish',
+                                                        fontWeight:
+                                                            FontWeight.w400,
+                                                        fontSize: 14,
+                                                        wordSpacing: 3),
                                                   ),
                                                 );
-                                          },
-                                          activeColor: Colors.amber,
+                                              },
+                                            ).toList(),
+                                            onChanged: (value) {
+                                              setState(() {
+                                                stateController =
+                                                    value!.toString();
+                                              });
+                                            },
+                                          ),
+                                        ),
+                                        const SizedBox(
+                                          height: 15,
+                                        ),
+                                        const Align(
+                                          alignment: Alignment.topLeft,
+                                          child: Row(
+                                            children: [
+                                              Text(
+                                                "Pincode:",
+                                                style: TextStyle(
+                                                    fontSize: 14,
+                                                    color: blackColor,
+                                                    fontWeight:
+                                                        FontWeight.w500),
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                        const SizedBox(
+                                          height: 5,
+                                        ),
+                                        Container(
+                                          height: 55,
+                                          child: TextFormField(
+                                            controller: pincodeController,
+                                            style: const TextStyle(
+                                                color: blackColor,
+                                                fontSize: 14),
+                                            keyboardType:
+                                                TextInputType.number,
+                                            inputFormatters: [
+                                              NoLeadingSpaceFormatter(),
+                                              LengthLimitingTextInputFormatter(
+                                                  6)
+                                            ],
+                                            decoration: const InputDecoration(
+                                              border: OutlineInputBorder(
+                                                borderRadius:
+                                                    BorderRadius.all(
+                                                  Radius.circular(10.0),
+                                                ),
+                                                borderSide: BorderSide(
+                                                  width: 0,
+                                                  style: BorderStyle.none,
+                                                ),
+                                              ),
+                                              filled: true,
+                                              fillColor: lightGreyColor,
+                                              hintText:
+                                                  "Enter pincode number",
+                                              hintStyle: TextStyle(
+                                                  color: hintTextColor,
+                                                  fontFamily: 'Mulish',
+                                                  fontWeight: FontWeight.w400,
+                                                  fontSize: 13),
+                                            ),
+                                          ),
+                                        ),
+                                        const SizedBox(
+                                          height: 15,
                                         ),
                                       ],
                                     ),
-                                    if (isGstEnabled)
-                                      const SizedBox(height: 16),
-                                    if (isGstEnabled)
-                                      TextFormField(
-                                        controller: gstNumberController,
-                                        keyboardType: TextInputType.text,
-                                        style: const TextStyle(
-                                            color: blackColor, fontSize: 14),
-                                        inputFormatters: [
-                                          NoLeadingSpaceFormatter(),
-                                          LengthLimitingTextInputFormatter(15)
-                                        ],
-                                        decoration: const InputDecoration(
-                                          border: OutlineInputBorder(
-                                            borderRadius: BorderRadius.all(
-                                              Radius.circular(10.0),
-                                            ),
-                                            borderSide: BorderSide(
-                                              width: 0,
-                                              style: BorderStyle.none,
-                                            ),
-                                          ),
-                                          filled: true,
-                                          fillColor: lightGreyColor,
-                                          hintText: "Enter GST Number",
-                                          hintStyle: TextStyle(
-                                              color: hintTextColor,
-                                              fontFamily: 'Mulish',
-                                              fontWeight: FontWeight.w400,
-                                              fontSize: 13),
-                                        ),
-                                      ),
-                                    const SizedBox(
-                                      height: 15,
-                                    ),
-                                  ],
+                                  ),
                                 ),
                               ),
-                            )
-                          ],
-                        ),
+                    
+                              //User image
+                              Padding(
+                                padding: EdgeInsets.only(
+                                  top: MediaQuery.of(context).size.height *
+                                      0.045,
+                                ),
+                                child: Center(
+                                  child: GestureDetector(
+                                    child: Stack(
+                                      clipBehavior: Clip.none,
+                                      // fit: StackFit.expand,
+                                      alignment: Alignment.topCenter,
+                                      children: [
+                                        SelectProfileImage(
+                                          imageFile: profileImage,
+                                          existedImageUrl: userImage,
+                                          takeImage: takeCameraImage,
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                          Card(
+                            color: whiteColor,
+                            margin: const EdgeInsets.only(
+                              left: 13,
+                              right: 13,
+                              top: 10,
+                            ),
+                            child: Padding(
+                              padding: const EdgeInsets.only(
+                                  left: 15, top: 15, right: 15, bottom: 10),
+                              child: Column(
+                                children: [
+                                  const Align(
+                                    alignment: Alignment.topLeft,
+                                    child: Text(
+                                      "Bank Details:",
+                                      style: TextStyle(
+                                          fontSize: 16,
+                                          color: blackColor,
+                                          fontWeight: FontWeight.w600),
+                                    ),
+                                  ),
+                                  const SizedBox(
+                                    height: 15,
+                                  ),
+                                  const Align(
+                                    alignment: Alignment.topLeft,
+                                    child: Text(
+                                      "Bank Name:",
+                                      style: TextStyle(
+                                          fontSize: 14,
+                                          color: blackColor,
+                                          fontWeight: FontWeight.w500),
+                                    ),
+                                  ),
+                                  const SizedBox(
+                                    height: 5,
+                                  ),
+                                  TextFormField(
+                                    controller: bankNameController,
+                                    keyboardType: TextInputType.text,
+                                    style: const TextStyle(
+                                        color: blackColor, fontSize: 14),
+                                    inputFormatters: [
+                                      NoLeadingSpaceFormatter(),
+                                      LengthLimitingTextInputFormatter(50)
+                                    ],
+                                    decoration: const InputDecoration(
+                                      border: OutlineInputBorder(
+                                        borderRadius: BorderRadius.all(
+                                          Radius.circular(10.0),
+                                        ),
+                                        borderSide: BorderSide(
+                                          width: 0,
+                                          style: BorderStyle.none,
+                                        ),
+                                      ),
+                                      filled: true,
+                                      fillColor: lightGreyColor,
+                                      hintText: "Enter Bank Name",
+                                      hintStyle: TextStyle(
+                                          color: hintTextColor,
+                                          fontFamily: 'Mulish',
+                                          fontWeight: FontWeight.w400,
+                                          fontSize: 13),
+                                    ),
+                                  ),
+                                  const SizedBox(
+                                    height: 15,
+                                  ),
+                                  const Align(
+                                    alignment: Alignment.topLeft,
+                                    child: Text(
+                                      "Account Number:",
+                                      style: TextStyle(
+                                          fontSize: 14,
+                                          color: blackColor,
+                                          fontWeight: FontWeight.w500),
+                                    ),
+                                  ),
+                                  const SizedBox(
+                                    height: 5,
+                                  ),
+                                  TextFormField(
+                                    controller: accountNoController,
+                                    keyboardType: TextInputType.text,
+                                    style: const TextStyle(
+                                        color: blackColor, fontSize: 14),
+                                    inputFormatters: [
+                                      NoLeadingSpaceFormatter(),
+                                      LengthLimitingTextInputFormatter(20)
+                                    ],
+                                    decoration: const InputDecoration(
+                                      border: OutlineInputBorder(
+                                        borderRadius: BorderRadius.all(
+                                          Radius.circular(10.0),
+                                        ),
+                                        borderSide: BorderSide(
+                                          width: 0,
+                                          style: BorderStyle.none,
+                                        ),
+                                      ),
+                                      filled: true,
+                                      fillColor: lightGreyColor,
+                                      hintText: "Enter Account Number",
+                                      hintStyle: TextStyle(
+                                          color: hintTextColor,
+                                          fontFamily: 'Mulish',
+                                          fontWeight: FontWeight.w400,
+                                          fontSize: 13),
+                                    ),
+                                  ),
+                                  const SizedBox(
+                                    height: 15,
+                                  ),
+                                  const Align(
+                                    alignment: Alignment.topLeft,
+                                    child: Text(
+                                      "IFSC:",
+                                      style: TextStyle(
+                                          fontSize: 14,
+                                          color: blackColor,
+                                          fontWeight: FontWeight.w500),
+                                    ),
+                                  ),
+                                  const SizedBox(
+                                    height: 5,
+                                  ),
+                                  TextFormField(
+                                    controller: ifscController,
+                                    keyboardType: TextInputType.text,
+                                    inputFormatters: [
+                                      NoLeadingSpaceFormatter(),
+                                      LengthLimitingTextInputFormatter(12)
+                                    ],
+                                    decoration: const InputDecoration(
+                                      border: OutlineInputBorder(
+                                        borderRadius: BorderRadius.all(
+                                          Radius.circular(10.0),
+                                        ),
+                                        borderSide: BorderSide(
+                                          width: 0,
+                                          style: BorderStyle.none,
+                                        ),
+                                      ),
+                                      filled: true,
+                                      fillColor: lightGreyColor,
+                                      hintText: "Enter IFSC",
+                                      hintStyle: TextStyle(
+                                          color: hintTextColor,
+                                          fontFamily: 'Mulish',
+                                          fontWeight: FontWeight.w400,
+                                          fontSize: 13),
+                                    ),
+                                  ),
+                                  const SizedBox(
+                                    height: 15,
+                                  ),
+                                  const Align(
+                                    alignment: Alignment.topLeft,
+                                    child: Text(
+                                      "Branch Name:",
+                                      style: TextStyle(
+                                          fontSize: 14,
+                                          color: blackColor,
+                                          fontWeight: FontWeight.w500),
+                                    ),
+                                  ),
+                                  const SizedBox(
+                                    height: 5,
+                                  ),
+                                  TextFormField(
+                                    controller: branchNameController,
+                                    style: const TextStyle(
+                                        color: blackColor, fontSize: 14),
+                                    keyboardType: TextInputType.text,
+                                    inputFormatters: [
+                                      NoLeadingSpaceFormatter(),
+                                      LengthLimitingTextInputFormatter(30)
+                                    ],
+                                    decoration: const InputDecoration(
+                                      border: OutlineInputBorder(
+                                        borderRadius: BorderRadius.all(
+                                          Radius.circular(10.0),
+                                        ),
+                                        borderSide: BorderSide(
+                                          width: 0,
+                                          style: BorderStyle.none,
+                                        ),
+                                      ),
+                                      filled: true,
+                                      fillColor: lightGreyColor,
+                                      hintText: "Enter Branch Name",
+                                      hintStyle: TextStyle(
+                                          color: hintTextColor,
+                                          fontFamily: 'Mulish',
+                                          fontWeight: FontWeight.w400,
+                                          fontSize: 13),
+                                    ),
+                                  ),
+                                  const SizedBox(
+                                    height: 15,
+                                  ),
+                                  const Align(
+                                    alignment: Alignment.topLeft,
+                                    child: Text(
+                                      "VPA:",
+                                      style: TextStyle(
+                                          fontSize: 14,
+                                          color: blackColor,
+                                          fontWeight: FontWeight.w500),
+                                    ),
+                                  ),
+                                  const SizedBox(
+                                    height: 5,
+                                  ),
+                                  TextFormField(
+                                    controller: vpaController,
+                                    keyboardType: TextInputType.text,
+                                    style: const TextStyle(
+                                        color: blackColor, fontSize: 14),
+                                    inputFormatters: [
+                                      NoLeadingSpaceFormatter(),
+                                      LengthLimitingTextInputFormatter(50)
+                                    ],
+                                    decoration: const InputDecoration(
+                                      border: OutlineInputBorder(
+                                        borderRadius: BorderRadius.all(
+                                          Radius.circular(10.0),
+                                        ),
+                                        borderSide: BorderSide(
+                                          width: 0,
+                                          style: BorderStyle.none,
+                                        ),
+                                      ),
+                                      filled: true,
+                                      fillColor: lightGreyColor,
+                                      hintText: "Enter VPA",
+                                      hintStyle: TextStyle(
+                                          color: hintTextColor,
+                                          fontFamily: 'Mulish',
+                                          fontWeight: FontWeight.w400,
+                                          fontSize: 13),
+                                    ),
+                                  ),
+                                  const SizedBox(
+                                    height: 15,
+                                  ),
+                                  const Align(
+                                    alignment: Alignment.topLeft,
+                                    child: Text(
+                                      "Currency:",
+                                      style: TextStyle(
+                                          fontSize: 14,
+                                          color: blackColor,
+                                          fontWeight: FontWeight.w500),
+                                    ),
+                                  ),
+                                  const SizedBox(
+                                    height: 5,
+                                  ),
+                                  Container(
+                                    height: 55,
+                                    child: TextFormField(
+                                      controller: currencyController,
+                                      style: const TextStyle(
+                                          color: blackColor, fontSize: 14),
+                                      keyboardType: TextInputType.text,
+                                      inputFormatters: [
+                                        NoLeadingSpaceFormatter(),
+                                      ],
+                                      decoration: const InputDecoration(
+                                        border: OutlineInputBorder(
+                                          borderRadius: BorderRadius.all(
+                                            Radius.circular(10.0),
+                                          ),
+                                          borderSide: BorderSide(
+                                            width: 0,
+                                            style: BorderStyle.none,
+                                          ),
+                                        ),
+                                        filled: true,
+                                        fillColor: lightGreyColor,
+                                        hintStyle: TextStyle(
+                                            color: hintTextColor,
+                                            fontFamily: 'Mulish',
+                                            fontWeight: FontWeight.w400,
+                                            fontSize: 13),
+                                      ),
+                                    ),
+                                  ),
+                                  const SizedBox(
+                                    height: 15,
+                                  ),
+                                  Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      const Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Text(
+                                            "GST support:",
+                                            style: TextStyle(
+                                              fontSize: 14,
+                                              fontWeight: FontWeight.w500,
+                                            ),
+                                          ),
+                                          SizedBox(height: 4),
+                                          Text(
+                                            "Toggle to enable tax billing feature",
+                                            style: TextStyle(
+                                              fontSize: 12,
+                                              color: hintTextColor,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                      Switch(
+                                        value: isGstEnabled,
+                                        onChanged: (value) {
+                                          setState(() {
+                                            isGstEnabled = value;
+                                          });
+                                          gstFlag =
+                                              convertBoolToString(value);
+                                          context.read<EditBloc>().add(
+                                                UpdateGstGlag(
+                                                  id: state
+                                                      .updateProfileModel!.id
+                                                      .toString(),
+                                                  gstFlag: gstFlag,
+                                                ),
+                                              );
+                                        },
+                                        activeColor:primaryColor,
+                                      ),
+                                    ],
+                                  ),
+                                  if (isGstEnabled)
+                                    const SizedBox(height: 16),
+                                  if (isGstEnabled)
+                                    TextFormField(
+                                      controller: gstNumberController,
+                                      keyboardType: TextInputType.text,
+                                      style: const TextStyle(
+                                          color: blackColor, fontSize: 14),
+                                      inputFormatters: [
+                                        NoLeadingSpaceFormatter(),
+                                        LengthLimitingTextInputFormatter(15)
+                                      ],
+                                      decoration: const InputDecoration(
+                                        border: OutlineInputBorder(
+                                          borderRadius: BorderRadius.all(
+                                            Radius.circular(10.0),
+                                          ),
+                                          borderSide: BorderSide(
+                                            width: 0,
+                                            style: BorderStyle.none,
+                                          ),
+                                        ),
+                                        filled: true,
+                                        fillColor: lightGreyColor,
+                                        hintText: "Enter GST Number",
+                                        hintStyle: TextStyle(
+                                            color: hintTextColor,
+                                            fontFamily: 'Mulish',
+                                            fontWeight: FontWeight.w400,
+                                            fontSize: 13),
+                                      ),
+                                    ),
+                                  const SizedBox(
+                                    height: 15,
+                                  ),
+                                ],
+                              ),
+                            ),
+                          )
+                        ],
                       ),
                     ),
                   ),

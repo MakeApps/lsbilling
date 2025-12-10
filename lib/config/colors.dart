@@ -45,9 +45,20 @@ const Color successColor = Color.fromARGB(255, 0, 177, 80);
 const Color successLightColor = Color.fromARGB(255, 183, 231, 173);
 const Color successDarkColor = Color.fromARGB(255, 2, 139, 64);
 const Color blackColorDark = Color.fromARGB(255, 61, 62, 65);
-const Color lightbgColor =  Color.fromARGB(255, 233, 232, 232);
+const Color lightbgColor = Color.fromARGB(255, 233, 232, 232);
 const Color drawerColor = Color.fromARGB(255, 8, 16, 31);
+/////////
+const Color drawerBg = Color.fromARGB(1, 184, 184, 184);
+const Color selectDrawer = Color.fromARGB(1, 178, 174, 184);
+const Color bgColor = Color.fromARGB(1, 178, 178, 178);
+const Color buttonColor = Color.fromARGB(1, 115, 69, 183);
 
+const Color textfieldBg = Color.fromARGB(255, 243, 244, 246);
+const Color dashboardbox1 = Color.fromARGB(255, 250, 234, 234);
+const Color dashboardbox2 = Color.fromARGB(255, 247, 226, 193);
+const Color dashboardbox3 = Color.fromARGB(255, 152, 43, 170);
+const Color dashboardbox4 = Color.fromARGB(255, 249, 235, 251);
+const Color stockImage = Color.fromARGB(255, 186, 52, 208);
 Color hexToColor(String code) {
   return Color(int.parse(code.substring(1, 7), radix: 16) + 0xFF000000);
 }

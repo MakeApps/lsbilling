@@ -1054,7 +1054,7 @@ class _EstimatePageState extends State<EstimatePage> {
                                             MainAxisAlignment.start,
                                         children: [
                                           Text(
-                                            'Spare Parts:',
+                                            'Items:',
                                             textAlign: TextAlign.start,
                                             style: TextStyle(
                                                 color: blackColor,
@@ -1066,7 +1066,7 @@ class _EstimatePageState extends State<EstimatePage> {
                                             padding: EdgeInsets.only(
                                                 left: 15, top: 4),
                                             child: Text(
-                                              "Spare Parts  .  Qty  .   Rate",
+                                              "Items .  Qty  .   Rate",
                                               style: TextStyle(
                                                   color: hintTextColor,
                                                   fontWeight: FontWeight.w500,
@@ -2152,7 +2152,7 @@ class _EstimatePageState extends State<EstimatePage> {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         const Text(
-                          'Edit Spare Part',
+                          'Edit Item',
                           style: TextStyle(
                               fontSize: 15,
                               fontWeight: FontWeight.bold,
@@ -2170,7 +2170,7 @@ class _EstimatePageState extends State<EstimatePage> {
                     const Align(
                         alignment: Alignment.topLeft,
                         child: Text(
-                          'Spare Part Name:',
+                          'Item Name:',
                           style: TextStyle(fontSize: 14, color: blackColor),
                         )),
                     const SizedBox(height: 5),
@@ -2189,7 +2189,7 @@ class _EstimatePageState extends State<EstimatePage> {
                           ),
                           contentPadding:
                               const EdgeInsets.only(left: 15, right: 20),
-                          hintText: 'Enter Spare Part Name',
+                          hintText: 'Enter Item Name',
                           filled: true,
                           fillColor: lightGreyColor,
                           border: OutlineInputBorder(
@@ -2497,7 +2497,7 @@ class _EstimatePageState extends State<EstimatePage> {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         const Text(
-                          'Edit Spare Part',
+                          'Edit Item',
                           style: TextStyle(
                               fontSize: 15,
                               fontWeight: FontWeight.bold,
@@ -2514,7 +2514,7 @@ class _EstimatePageState extends State<EstimatePage> {
                     const Align(
                       alignment: Alignment.topLeft,
                       child: Text(
-                        'Spare Part Name:',
+                        'Item Name:',
                         style: TextStyle(fontSize: 14, color: blackColor),
                       ),
                     ),
@@ -2533,7 +2533,7 @@ class _EstimatePageState extends State<EstimatePage> {
                           ),
                           contentPadding:
                               const EdgeInsets.only(left: 15, right: 20),
-                          hintText: 'Enter Spare Part Name',
+                          hintText: 'Enter Item Name',
                           filled: true,
                           fillColor: lightGreyColor,
                           border: OutlineInputBorder(
@@ -2940,7 +2940,7 @@ class _EstimatePageState extends State<EstimatePage> {
                     const Align(
                       alignment: Alignment.topLeft,
                       child: Text(
-                        'Spare Part Name:',
+                        'Item Name:',
                         style: TextStyle(fontSize: 14, color: blackColor),
                       ),
                     ),
@@ -2958,7 +2958,7 @@ class _EstimatePageState extends State<EstimatePage> {
                           ),
                           contentPadding:
                               const EdgeInsets.only(left: 15, right: 20),
-                          hintText: 'Enter Spare Part Name',
+                          hintText: 'Enter Item Name',
                           filled: true,
                           fillColor: lightGreyColor,
                           border: OutlineInputBorder(
@@ -3256,7 +3256,7 @@ class _EstimatePageState extends State<EstimatePage> {
                     const Align(
                       alignment: Alignment.topLeft,
                       child: Text(
-                        'Spare Part Name:',
+                        'Item Name:',
                         style: TextStyle(fontSize: 14, color: blackColor),
                       ),
                     ),
@@ -3274,7 +3274,7 @@ class _EstimatePageState extends State<EstimatePage> {
                           ),
                           contentPadding:
                               const EdgeInsets.only(left: 15, right: 20),
-                          hintText: 'Enter Spare Part Name',
+                          hintText: 'Enter Item Name',
                           filled: true,
                           fillColor: lightGreyColor,
                           border: OutlineInputBorder(

@@ -230,7 +230,7 @@ class _CreateStaffScreenState extends State<CreateStaffScreen> {
             ),
             contentPadding: const EdgeInsets.only(left: 15, right: 20.0),
             filled: true,
-            fillColor: lightGreyColor,
+            fillColor: textfieldBg,
             border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(8),
               borderSide: const BorderSide(width: 0, style: BorderStyle.none),

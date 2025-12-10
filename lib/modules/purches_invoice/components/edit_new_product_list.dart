@@ -67,7 +67,7 @@ class _EditNewProductDialogState extends State<EditNewProductDialog> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 const Text(
-                  'Edit Spare Part',
+                  'Edit Item',
                   style: TextStyle(
                     fontSize: 15,
                     fontWeight: FontWeight.bold,

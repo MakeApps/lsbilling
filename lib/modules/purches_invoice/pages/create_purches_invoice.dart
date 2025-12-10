@@ -414,327 +414,330 @@ class _CreatePurchesInvoicePageState extends State<CreatePurchesInvoicePage> {
             body: Form(
               key: _formKey,
               child: SingleChildScrollView(
-                child: Padding(
-                  padding: const EdgeInsets.all(25.0),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      const Row(
-                        children: [
-                          Text(
-                            'Vendor Name:',
-                            style: TextStyle(fontSize: 14),
+                child: Card(
+                  color: whiteColor,
+                  child: Padding(
+                    padding: const EdgeInsets.all(25.0),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const Row(
+                          children: [
+                            Text(
+                              'Vendor Name:',
+                              style: TextStyle(fontSize: 14),
+                            ),
+                            Icon(
+                              Icons.star,
+                              color: redColor,
+                              size: 8,
+                            )
+                          ],
+                        ),
+                        const SizedBox(
+                          height: 5,
+                        ),
+                        BlocBuilder<SearchBloc, SearchBlocState>(
+                          builder: (context, state) {
+                            return Autocomplete<StockVendorModel>(
+                              optionsBuilder:
+                                  (TextEditingValue textEditingValue) {
+                                if (textEditingValue.text.isEmpty) {
+                                  return [];
+                                }
+                                return state.vendorList!.where(
+                                  (element) => element.vendorName!
+                                      .trim()
+                                      .toLowerCase()
+                                      .contains(
+                                        textEditingValue.text
+                                            .trim()
+                                            .toLowerCase(),
+                                      ),
+                                );
+                              },
+                              displayStringForOption: (vendor) =>
+                                  vendor.vendorName!,
+                              fieldViewBuilder: (BuildContext context,
+                                  TextEditingController
+                                      fieldTextEditingController,
+                                  FocusNode fieldFocusNode,
+                                  VoidCallback onFieldSubmitted) {
+                                vendorNameController = fieldTextEditingController;
+                  
+                                return TextField(
+                                  controller: vendorNameController,
+                                  focusNode: fieldFocusNode,
+                                  style: const TextStyle(
+                                      color: blackColor, fontSize: 14),
+                                  decoration: InputDecoration(
+                                    hintText: 'Enter vendor name',
+                                    hintStyle: const TextStyle(
+                                      color: hintTextColor,
+                                      fontFamily: 'Mulish',
+                                      fontSize: 13,
+                                    ),
+                                    contentPadding: const EdgeInsets.only(
+                                        right: 20, left: 15),
+                                    errorText: _validate
+                                        ? "The vendor name field is required"
+                                        : null,
+                                    filled: true,
+                                    fillColor: textfieldBg,
+                                    border: OutlineInputBorder(
+                                      borderRadius: BorderRadius.circular(5),
+                                      borderSide: BorderSide.none,
+                                    ),
+                                  ),
+                                  onChanged: (text) {
+                                    setState(() {
+                                      _validate = text.trim().isEmpty;
+                                    });
+                  
+                                    if (text.trim().length >= 3) {
+                                      context.read<SearchBloc>().add(
+                                            SearchVendor(searchKeyword: text),
+                                          );
+                                    }
+                                  },
+                                );
+                              },
+                              optionsViewBuilder: (context, onSelected, options) {
+                                return Align(
+                                  alignment: Alignment.topLeft,
+                                  child: Material(
+                                    elevation: 4.0,
+                                    child: Container(
+                                      color: whiteColor,
+                                      constraints: BoxConstraints(
+                                        maxWidth: 290,
+                                        maxHeight: options.isEmpty
+                                            ? 0
+                                            : (options.length * 50).toDouble(),
+                                      ),
+                                      child: ListView.builder(
+                                        padding: EdgeInsets.zero,
+                                        itemCount: options.length,
+                                        itemBuilder:
+                                            (BuildContext context, int index) {
+                                          final StockVendorModel option =
+                                              options.elementAt(index);
+                                          return ListTile(
+                                            title: Text(option.vendorName ?? ""),
+                                            onTap: () {
+                                              onSelected(option);
+                                            },
+                                          );
+                                        },
+                                      ),
+                                    ),
+                                  ),
+                                );
+                              },
+                              onSelected: (suggestion) {
+                                vendorNameController.text =
+                                    suggestion.vendorName ?? "";
+                                phoneNumberController.text =
+                                    suggestion.phoneNumber ?? "";
+                                gstNumberController.text =
+                                    suggestion.gstNumber ?? "";
+                                emailController.text = suggestion.email ?? "";
+                                adressController.text = suggestion.address ?? "";
+                                _validate = false;
+                                _mobileValidate = false;
+                              },
+                            );
+                          },
+                        ),
+                        const SizedBox(
+                          height: 10,
+                        ),
+                        const Padding(
+                          padding: EdgeInsets.only(top: 10, bottom: 5),
+                          child: Align(
+                            alignment: Alignment.topLeft,
+                            child: Row(
+                              children: [
+                                Text(
+                                  "Phone Number:",
+                                  style:
+                                      TextStyle(fontSize: 14, color: blackColor),
+                                ),
+                                Icon(
+                                  Icons.star,
+                                  color: redColor,
+                                  size: 8,
+                                )
+                              ],
+                            ),
                           ),
-                          Icon(
-                            Icons.star,
-                            color: redColor,
-                            size: 8,
-                          )
-                        ],
-                      ),
-                      const SizedBox(
-                        height: 5,
-                      ),
-                      BlocBuilder<SearchBloc, SearchBlocState>(
-                        builder: (context, state) {
-                          return Autocomplete<StockVendorModel>(
-                            optionsBuilder:
-                                (TextEditingValue textEditingValue) {
-                              if (textEditingValue.text.isEmpty) {
-                                return [];
-                              }
-                              return state.vendorList!.where(
-                                (element) => element.vendorName!
-                                    .trim()
-                                    .toLowerCase()
-                                    .contains(
-                                      textEditingValue.text
-                                          .trim()
-                                          .toLowerCase(),
-                                    ),
-                              );
-                            },
-                            displayStringForOption: (vendor) =>
-                                vendor.vendorName!,
-                            fieldViewBuilder: (BuildContext context,
-                                TextEditingController
-                                    fieldTextEditingController,
-                                FocusNode fieldFocusNode,
-                                VoidCallback onFieldSubmitted) {
-                              vendorNameController = fieldTextEditingController;
-
-                              return TextField(
-                                controller: vendorNameController,
-                                focusNode: fieldFocusNode,
-                                style: const TextStyle(
-                                    color: blackColor, fontSize: 14),
-                                decoration: InputDecoration(
-                                  hintText: 'Enter vendor name',
-                                  hintStyle: const TextStyle(
-                                    color: hintTextColor,
-                                    fontFamily: 'Mulish',
-                                    fontSize: 13,
-                                  ),
-                                  contentPadding: const EdgeInsets.only(
-                                      right: 20, left: 15),
-                                  errorText: _validate
-                                      ? "The vendor name field is required"
-                                      : null,
-                                  filled: true,
-                                  fillColor: lightbgColor,
-                                  border: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(5),
-                                    borderSide: BorderSide.none,
-                                  ),
-                                ),
-                                onChanged: (text) {
-                                  setState(() {
-                                    _validate = text.trim().isEmpty;
-                                  });
-
-                                  if (text.trim().length >= 3) {
-                                    context.read<SearchBloc>().add(
-                                          SearchVendor(searchKeyword: text),
-                                        );
-                                  }
-                                },
-                              );
-                            },
-                            optionsViewBuilder: (context, onSelected, options) {
-                              return Align(
-                                alignment: Alignment.topLeft,
-                                child: Material(
-                                  elevation: 4.0,
-                                  child: Container(
-                                    color: whiteColor,
-                                    constraints: BoxConstraints(
-                                      maxWidth: 290,
-                                      maxHeight: options.isEmpty
-                                          ? 0
-                                          : (options.length * 50).toDouble(),
-                                    ),
-                                    child: ListView.builder(
-                                      padding: EdgeInsets.zero,
-                                      itemCount: options.length,
-                                      itemBuilder:
-                                          (BuildContext context, int index) {
-                                        final StockVendorModel option =
-                                            options.elementAt(index);
-                                        return ListTile(
-                                          title: Text(option.vendorName ?? ""),
-                                          onTap: () {
-                                            onSelected(option);
-                                          },
-                                        );
-                                      },
-                                    ),
-                                  ),
-                                ),
-                              );
-                            },
-                            onSelected: (suggestion) {
-                              vendorNameController.text =
-                                  suggestion.vendorName ?? "";
-                              phoneNumberController.text =
-                                  suggestion.phoneNumber ?? "";
-                              gstNumberController.text =
-                                  suggestion.gstNumber ?? "";
-                              emailController.text = suggestion.email ?? "";
-                              adressController.text = suggestion.address ?? "";
-                              _validate = false;
-                              _mobileValidate = false;
-                            },
-                          );
-                        },
-                      ),
-                      const SizedBox(
-                        height: 10,
-                      ),
-                      const Padding(
-                        padding: EdgeInsets.only(top: 10, bottom: 5),
-                        child: Align(
-                          alignment: Alignment.topLeft,
-                          child: Row(
-                            children: [
-                              Text(
-                                "Phone Number:",
-                                style:
-                                    TextStyle(fontSize: 14, color: blackColor),
+                        ),
+                        TextFormField(
+                          controller: phoneNumberController,
+                          keyboardType: TextInputType.number,
+                          style: const TextStyle(color: blackColor, fontSize: 14),
+                          inputFormatters: [
+                            NoLeadingSpaceFormatter(),
+                            LengthLimitingTextInputFormatter(10)
+                          ],
+                          decoration: InputDecoration(
+                            hintText: "Enter Phone Number",
+                            hintStyle: const TextStyle(
+                                color: hintTextColor,
+                                fontFamily: 'Mulish',
+                                fontSize: 13),
+                            contentPadding: const EdgeInsets.only(
+                              left: 15,
+                              right: 20.0,
+                            ),
+                            errorText: _mobileValidate
+                                ? "The phone number field is required"
+                                : null,
+                            filled: true,
+                            fillColor: textfieldBg,
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(8),
+                              borderSide: const BorderSide(
+                                width: 0,
+                                style: BorderStyle.none,
                               ),
-                              Icon(
-                                Icons.star,
-                                color: redColor,
-                                size: 8,
-                              )
-                            ],
+                            ),
                           ),
+                          onChanged: (value) {
+                            if (_mobileValidate && value.isNotEmpty) {
+                              setState(() => _mobileValidate = false);
+                            }
+                          },
                         ),
-                      ),
-                      TextFormField(
-                        controller: phoneNumberController,
-                        keyboardType: TextInputType.number,
-                        style: const TextStyle(color: blackColor, fontSize: 14),
-                        inputFormatters: [
-                          NoLeadingSpaceFormatter(),
-                          LengthLimitingTextInputFormatter(10)
-                        ],
-                        decoration: InputDecoration(
-                          hintText: "Enter Phone Number",
-                          hintStyle: const TextStyle(
-                              color: hintTextColor,
-                              fontFamily: 'Mulish',
-                              fontSize: 13),
-                          contentPadding: const EdgeInsets.only(
-                            left: 15,
-                            right: 20.0,
-                          ),
-                          errorText: _mobileValidate
-                              ? "The phone number field is required"
-                              : null,
-                          filled: true,
-                          fillColor: lightbgColor,
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(8),
-                            borderSide: const BorderSide(
-                              width: 0,
-                              style: BorderStyle.none,
+                        const SizedBox(
+                          height: 10,
+                        ),
+                        const Padding(
+                          padding: EdgeInsets.only(top: 10, bottom: 5),
+                          child: Align(
+                            alignment: Alignment.topLeft,
+                            child: Text(
+                              "GST Number:",
+                              style: TextStyle(fontSize: 14, color: blackColor),
                             ),
                           ),
                         ),
-                        onChanged: (value) {
-                          if (_mobileValidate && value.isNotEmpty) {
-                            setState(() => _mobileValidate = false);
-                          }
-                        },
-                      ),
-                      const SizedBox(
-                        height: 10,
-                      ),
-                      const Padding(
-                        padding: EdgeInsets.only(top: 10, bottom: 5),
-                        child: Align(
-                          alignment: Alignment.topLeft,
-                          child: Text(
-                            "GST Number:",
-                            style: TextStyle(fontSize: 14, color: blackColor),
-                          ),
-                        ),
-                      ),
-                      TextFormField(
-                        controller: gstNumberController,
-                        keyboardType: TextInputType.text,
-                        style: const TextStyle(color: blackColor, fontSize: 14),
-                        inputFormatters: [
-                          NoLeadingSpaceFormatter(),
-                          LengthLimitingTextInputFormatter(15),
-                        ],
-                        decoration: InputDecoration(
-                          hintText: "Enter GST number",
-                          hintStyle: const TextStyle(
-                              color: hintTextColor,
-                              fontFamily: 'Mulish',
-                              fontSize: 13),
-                          contentPadding: const EdgeInsets.only(
-                            left: 15,
-                            right: 20.0,
-                          ),
-                          filled: true,
-                          fillColor: lightbgColor,
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(8),
-                            borderSide: const BorderSide(
-                              width: 0,
-                              style: BorderStyle.none,
+                        TextFormField(
+                          controller: gstNumberController,
+                          keyboardType: TextInputType.text,
+                          style: const TextStyle(color: blackColor, fontSize: 14),
+                          inputFormatters: [
+                            NoLeadingSpaceFormatter(),
+                            LengthLimitingTextInputFormatter(15),
+                          ],
+                          decoration: InputDecoration(
+                            hintText: "Enter GST number",
+                            hintStyle: const TextStyle(
+                                color: hintTextColor,
+                                fontFamily: 'Mulish',
+                                fontSize: 13),
+                            contentPadding: const EdgeInsets.only(
+                              left: 15,
+                              right: 20.0,
+                            ),
+                            filled: true,
+                            fillColor: textfieldBg,
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(8),
+                              borderSide: const BorderSide(
+                                width: 0,
+                                style: BorderStyle.none,
+                              ),
                             ),
                           ),
                         ),
-                      ),
-                      const SizedBox(
-                        height: 10,
-                      ),
-                      const Padding(
-                        padding: EdgeInsets.only(top: 10, bottom: 5),
-                        child: Align(
-                          alignment: Alignment.topLeft,
-                          child: Text(
-                            "Email:",
-                            style: TextStyle(fontSize: 14, color: blackColor),
-                          ),
+                        const SizedBox(
+                          height: 10,
                         ),
-                      ),
-                      TextFormField(
-                        controller: emailController,
-                        keyboardType: TextInputType.emailAddress,
-                        style: const TextStyle(color: blackColor, fontSize: 14),
-                        inputFormatters: [
-                          NoLeadingSpaceFormatter(),
-                        ],
-                        decoration: InputDecoration(
-                          hintText: "Enter email",
-                          hintStyle: const TextStyle(
-                              color: hintTextColor,
-                              fontFamily: 'Mulish',
-                              fontSize: 13),
-                          contentPadding: const EdgeInsets.only(
-                            left: 15,
-                            right: 20.0,
-                          ),
-                          filled: true,
-                          fillColor: lightbgColor,
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(8),
-                            borderSide: const BorderSide(
-                              width: 0,
-                              style: BorderStyle.none,
+                        const Padding(
+                          padding: EdgeInsets.only(top: 10, bottom: 5),
+                          child: Align(
+                            alignment: Alignment.topLeft,
+                            child: Text(
+                              "Email:",
+                              style: TextStyle(fontSize: 14, color: blackColor),
                             ),
                           ),
                         ),
-                      ),
-                      const SizedBox(
-                        height: 10,
-                      ),
-                      const Padding(
-                        padding: EdgeInsets.only(top: 10, bottom: 5),
-                        child: Align(
-                          alignment: Alignment.topLeft,
-                          child: Text(
-                            "Address:",
-                            style: TextStyle(fontSize: 14, color: blackColor),
-                          ),
-                        ),
-                      ),
-                      TextFormField(
-                        controller: adressController,
-                        keyboardType: TextInputType.text,
-                        style: const TextStyle(color: blackColor, fontSize: 14),
-                        inputFormatters: [
-                          NoLeadingSpaceFormatter(),
-                        ],
-                        decoration: InputDecoration(
-                          hintText: "Enter address",
-                          hintStyle: const TextStyle(
-                              color: hintTextColor,
-                              fontFamily: 'Mulish',
-                              fontSize: 13),
-                          contentPadding: const EdgeInsets.only(
-                            left: 15,
-                            right: 20.0,
-                          ),
-                          filled: true,
-                          fillColor: lightbgColor,
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(8),
-                            borderSide: const BorderSide(
-                              width: 0,
-                              style: BorderStyle.none,
+                        TextFormField(
+                          controller: emailController,
+                          keyboardType: TextInputType.emailAddress,
+                          style: const TextStyle(color: blackColor, fontSize: 14),
+                          inputFormatters: [
+                            NoLeadingSpaceFormatter(),
+                          ],
+                          decoration: InputDecoration(
+                            hintText: "Enter email",
+                            hintStyle: const TextStyle(
+                                color: hintTextColor,
+                                fontFamily: 'Mulish',
+                                fontSize: 13),
+                            contentPadding: const EdgeInsets.only(
+                              left: 15,
+                              right: 20.0,
+                            ),
+                            filled: true,
+                            fillColor: textfieldBg,
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(8),
+                              borderSide: const BorderSide(
+                                width: 0,
+                                style: BorderStyle.none,
+                              ),
                             ),
                           ),
                         ),
-                      ),
-                      const SizedBox(
-                        height: 10,
-                      ),
-                    ],
+                        const SizedBox(
+                          height: 10,
+                        ),
+                        const Padding(
+                          padding: EdgeInsets.only(top: 10, bottom: 5),
+                          child: Align(
+                            alignment: Alignment.topLeft,
+                            child: Text(
+                              "Address:",
+                              style: TextStyle(fontSize: 14, color: blackColor),
+                            ),
+                          ),
+                        ),
+                        TextFormField(
+                          controller: adressController,
+                          keyboardType: TextInputType.text,
+                          style: const TextStyle(color: blackColor, fontSize: 14),
+                          inputFormatters: [
+                            NoLeadingSpaceFormatter(),
+                          ],
+                          decoration: InputDecoration(
+                            hintText: "Enter address",
+                            hintStyle: const TextStyle(
+                                color: hintTextColor,
+                                fontFamily: 'Mulish',
+                                fontSize: 13),
+                            contentPadding: const EdgeInsets.only(
+                              left: 15,
+                              right: 20.0,
+                            ),
+                            filled: true,
+                            fillColor: textfieldBg,
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(8),
+                              borderSide: const BorderSide(
+                                width: 0,
+                                style: BorderStyle.none,
+                              ),
+                            ),
+                          ),
+                        ),
+                        const SizedBox(
+                          height: 10,
+                        ),
+                      ],
+                    ),
                   ),
                 ),
               ),

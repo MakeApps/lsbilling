@@ -16,6 +16,7 @@ class DashboardPage extends StatefulWidget {
 
 class _DashboardPageState extends State<DashboardPage> {
   String? selectedFilter;
+
   @override
   void initState() {
     super.initState();
@@ -121,49 +122,64 @@ class _DashboardPageState extends State<DashboardPage> {
                     padding: EdgeInsets.all(8),
                     child: DashboardSkeleton(),
                   )
-                : SingleChildScrollView(
-                    child: Center(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          SizedBox(
-                            width: MediaQuery.of(context).size.width * 0.95,
-                            child: Card(
-                              color: backgroundColor,
-                              elevation: 0,
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
+                : Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      BlocBuilder<ProfileSectionBloc, ProfileSectionState>(
+                        builder: (context, state) {
+                          final firstName = state.profileModel!.name;
+                          return Padding(
+                            padding: const EdgeInsets.only(top: 15, left: 15),
+                            child: Row(
+                              children: [
+                                const Text(
+                                  '''Welcome Back , ''',
+                                  style: TextStyle(
+                                      color: blackColor,
+                                      fontSize: 17,
+                                      fontWeight: FontWeight.w600),
+                                ),
+                                Text(
+                                  firstName.toString(),
+                                  style: const TextStyle(
+                                      color: indigo,
+                                      fontSize: 15,
+                                      fontWeight: FontWeight.w500),
+                                ),
+                              ],
+                            ),
+                          );
+                        },
+                      ),
+                      const SizedBox(
+                        height: 8,
+                      ),
+                      Card(
+                        color: whiteColor,
+                        shape: const RoundedRectangleBorder(),
+                        elevation: 0,
+                        child: Padding(
+                          padding: const EdgeInsets.only(
+                              left: 8, right: 8, top: 12, bottom: 12),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Row(
                                 children: [
-                                  BlocBuilder<ProfileSectionBloc,
-                                          ProfileSectionState>(
-                                      builder: (context, state) {
-                                    final firstName = state.profileModel!.name;
-                                    return Padding(
-                                      padding: const EdgeInsets.only(
-                                          top: 10, left: 10),
-                                      child: Text(
-                                        '''Hi, $firstName''',
-                                        style: const TextStyle(
-                                            color: blackColor,
-                                            fontSize: 17,
-                                            fontWeight: FontWeight.w600),
-                                      ),
-                                    );
-                                  }),
+                                  const Text(
+                                    "Overview",
+                                    style: TextStyle(
+                                        color: blackColor,
+                                        fontSize: 15,
+                                        fontWeight: FontWeight.w500),
+                                  ),
                                   Padding(
                                     padding: const EdgeInsets.only(
                                         top: 10, left: 10, right: 1),
                                     child: Row(
                                       mainAxisAlignment:
-                                          MainAxisAlignment.spaceBetween,
+                                          MainAxisAlignment.start,
                                       children: [
-                                        const Text(
-                                          "Today's Status",
-                                          style: TextStyle(
-                                            color: blackColor,
-                                            fontSize: 16,
-                                          ),
-                                        ),
                                         SizedBox(
                                           height: 30,
                                           width: 130,
@@ -206,7 +222,9 @@ class _DashboardPageState extends State<DashboardPage> {
                                                     child: Text(
                                                       value,
                                                       style: const TextStyle(
-                                                        color: blackColor,
+                                                        color: blackColorDark,
+                                                        fontWeight:
+                                                            FontWeight.w500,
                                                         fontSize: 13,
                                                       ),
                                                     ),
@@ -230,204 +248,85 @@ class _DashboardPageState extends State<DashboardPage> {
                                   ),
                                 ],
                               ),
-                            ),
-                          ),
-                          const SizedBox(
-                            height: 4,
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.symmetric(horizontal: 10),
-                            child: Column(
-                              children: [
-                                Wrap(
-                                  spacing: 10,
-                                  runSpacing: 10,
-                                  children: [
-                                    _buildDashboardCard(
-                                      title: "New Entries",
-                                      count: state.dashboardModel!.newEntries
-                                          .toString(),
-                                      color: blueColor,
-                                      icon: bill,
-                                      arrowIcon: downarrow,
-                                    ),
-                                    _buildDashboardCard(
-                                      title: "Delivered",
-                                      count: state.dashboardModel!.delivered
-                                          .toString(),
-                                      color: successColor,
-                                      icon: bill,
-                                      arrowIcon: uparrow,
-                                    ),
-                                    _buildDashboardCardWithImage(
-                                      title: "Total Outstanding",
-                                      count: state
-                                          .dashboardModel!.totalOutstanding
-                                          .toString(),
-                                      color: redColor,
-                                      imagePath: 'assets/icons/estimate.png',
-                                    ),
-                                    _buildDashboardCardWithImage(
-                                      title: "Total Revenue",
-                                      count: state.dashboardModel!.totalRevenue
-                                          .toString(),
-                                      color: purpleColor,
-                                      imagePath: 'assets/icons/estimate.png',
-                                    ),
-                                  ],
-                                ),
-                              ],
-                            ),
-                          ),
-                          const SizedBox(
-                            height: 20,
-                          ),
-                          Center(
-                            child: SizedBox(
-                              width: MediaQuery.of(context).size.width * 0.95,
-                              child: Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  // Estimate Card
-                                  GestureDetector(
-                                    behavior: HitTestBehavior.opaque,
-                                    onTap: () {
-                                      context.read<JobSheetBloc>().add(
-                                            const FetchEstimateList(
-                                                status: JobSheetStatus.success),
-                                          );
-                                      Navigator.pushNamed(
-                                          context, '/estimate_listing');
-                                    },
-                                    child: Card(
-                                      shape: RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.circular(6),
-                                      ),
-                                      color: darkBlue,
-                                      child: Container(
-                                        width: 105,
-                                        height: 136,
-                                        padding: const EdgeInsets.symmetric(
-                                            vertical: 12),
-                                        child: Column(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.center,
-                                          children: [
-                                            Container(
-                                              height: 44,
-                                              width: 44,
-                                              decoration: BoxDecoration(
-                                                color: whiteColor,
-                                                borderRadius:
-                                                    BorderRadius.circular(8),
-                                              ),
-                                              padding: const EdgeInsets.all(9),
-                                              child: Image.asset(
-                                                "assets/icons/estimate.png",
-                                                height: 24,
-                                                width: 24,
-                                                color: darkBlue,
-                                              ),
-                                            ),
-                                            const SizedBox(height: 8),
-                                            Text(
-                                              state
-                                                  .dashboardModel!.totalEstimate
-                                                  .toString(),
-                                              style: const TextStyle(
-                                                color: whiteColor,
-                                                fontSize: 20,
-                                                fontWeight: FontWeight.w600,
-                                              ),
-                                            ),
-                                            const SizedBox(height: 3),
-                                            const Text(
-                                              "Estimate",
-                                              style: TextStyle(
-                                                color: whiteColor,
-                                                fontSize: 14,
-                                                fontWeight: FontWeight.w600,
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-                                      ),
-                                    ),
-                                  ),
 
-                                  // Invoice Card
-                                  GestureDetector(
-                                    behavior: HitTestBehavior.opaque,
-                                    onTap: () {
-                                      context.read<JobSheetBloc>().add(
-                                            const FetchInvoiceList(
-                                                status: JobSheetStatus.success),
-                                          );
-                                      Navigator.pushNamed(
-                                          context, '/invoice_page_listing');
-                                    },
-                                    child: Card(
-                                      shape: RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.circular(6),
+                              //box
+                              const SizedBox(
+                                height: 20,
+                              ),
+                              Row(
+                                children: [
+                                  Wrap(
+                                    spacing: 6,
+                                    runSpacing: 10,
+                                    children: [
+                                      _buildDashboardCardWithImage(
+                                        title: "Total Outstanding",
+                                        count: state
+                                            .dashboardModel!.totalOutstanding
+                                            .toString(),
+                                        color: redColor,
+                                        boxBgColor: dashboardbox1,
+                                        imagePath: 'assets/icons/estimate.png',
                                       ),
-                                      color: indigo,
-                                      child: Container(
-                                        width: 105,
-                                        height: 136,
-                                        padding: const EdgeInsets.symmetric(
-                                            vertical: 12),
-                                        child: Column(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.center,
-                                          children: [
-                                            Container(
-                                              height: 44,
-                                              width: 44,
-                                              decoration: BoxDecoration(
-                                                color: whiteColor,
-                                                borderRadius:
-                                                    BorderRadius.circular(8),
-                                              ),
-                                              padding: const EdgeInsets.all(9),
-                                              child: Image.asset(
-                                                "assets/icons/invoice.png",
-                                                height: 24,
-                                                width: 24,
-                                                color: indigo,
-                                              ),
-                                            ),
-                                            const SizedBox(height: 8),
-                                            Text(
-                                              state.dashboardModel!.totalInvoice
-                                                  .toString(),
-                                              style: const TextStyle(
-                                                color: whiteColor,
-                                                fontSize: 20,
-                                                fontWeight: FontWeight.w600,
-                                              ),
-                                            ),
-                                            const SizedBox(height: 3),
-                                            const Text(
-                                              "Invoice",
-                                              style: TextStyle(
-                                                color: whiteColor,
-                                                fontSize: 14,
-                                                fontWeight: FontWeight.w600,
-                                              ),
-                                            ),
-                                          ],
-                                        ),
+                                      _buildDashboardCardWithImage(
+                                        title: "Total Revenue",
+                                        count: state
+                                            .dashboardModel!.totalRevenue
+                                            .toString(),
+                                        color: optButton,
+                                        boxBgColor: dashboardbox2,
+                                        imagePath: 'assets/icons/estimate.png',
                                       ),
-                                    ),
+                                    ],
                                   ),
                                 ],
                               ),
-                            ),
+                              const SizedBox(
+                                height: 30,
+                              ),
+
+                              Column(
+                                children: [
+                                  _buildCardWithCountAndTitle(
+                                    title: "Total Estimate",
+                                    count: state.dashboardModel!.totalEstimate
+                                        .toString(),
+                                    imageColor: redColor,
+                                    boxBgColor: dashboardbox1,
+                                    imagePath: 'assets/icons/estimate.png',
+                                  ),
+                                  const SizedBox(
+                                    height: 10,
+                                  ),
+                                  _buildCardWithCountAndTitle(
+                                    title: "Total Invoices",
+                                    count: state.dashboardModel!.totalInvoice
+                                        .toString(),
+                                    imageColor: optButton,
+                                    boxBgColor: dashboardbox2,
+                                    imagePath: 'assets/icons/estimate.png',
+                                  ),
+                                  const SizedBox(
+                                    height: 10,
+                                  ),
+                                  _buildCardWithCountAndTitle(
+                                    title: "Total Stocks",
+                                    count: state.dashboardModel!.totalProduct
+                                        .toString(),
+                                    imageColor: stockImage,
+                                    boxBgColor: dashboardbox4,
+                                    imagePath: 'assets/icons/estimate.png',
+                                  ),
+                                  const SizedBox(
+                                    height: 20,
+                                  ),
+                                ],
+                              ),
+                            ],
                           ),
-                        ],
+                        ),
                       ),
-                    ),
+                    ],
                   );
           },
         ),
@@ -595,91 +494,127 @@ class _DashboardPageState extends State<DashboardPage> {
     }
   }
 
-  Widget _buildDashboardCard({
-    required String title,
-    required String count,
-    required Color color,
-    required IconData icon,
-    required IconData arrowIcon,
-  }) {
-    return Container(
-      width: (MediaQuery.of(context).size.width - 30) / 2,
-      height: 86,
-      padding: const EdgeInsets.all(13),
-      decoration: BoxDecoration(
-        border: Border.all(color: color),
-        color: backgroundColor,
-        borderRadius: BorderRadius.circular(5),
-      ),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Text(
-            title,
-            style: TextStyle(
-                fontSize: 14, color: color, fontWeight: FontWeight.w500),
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Icon(icon, color: color),
-              const SizedBox(width: 3),
-              Text(
-                count,
-                style: TextStyle(
-                    color: color, fontSize: 14, fontWeight: FontWeight.w500),
-              ),
-              const SizedBox(width: 3),
-              Icon(arrowIcon, color: color),
-            ],
-          )
-        ],
-      ),
-    );
-  }
-
   Widget _buildDashboardCardWithImage({
     required String title,
     required String count,
     required Color color,
+    required Color boxBgColor,
     required String imagePath,
   }) {
     return Container(
       width: (MediaQuery.of(context).size.width - 30) / 2,
       height: 86,
-      padding: const EdgeInsets.all(13),
+      padding: const EdgeInsets.all(10),
       decoration: BoxDecoration(
         border: Border.all(color: color),
-        color: backgroundColor,
+        color: boxBgColor,
         borderRadius: BorderRadius.circular(5),
       ),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.start,
         children: [
-          Text(
-            title,
-            style: TextStyle(
-                fontSize: 14, color: color, fontWeight: FontWeight.w500),
+          Container(
+            decoration: BoxDecoration(
+              color: color,
+              borderRadius: BorderRadius.circular(4),
+            ),
+            padding: const EdgeInsets.all(6),
+            child: Image.asset(
+              imagePath,
+              width: 25,
+              height: 25,
+              color: whiteColor,
+              fit: BoxFit.contain,
+            ),
           ),
-          Row(
+          const SizedBox(width: 10),
+          Column(
             mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Image.asset(
-                imagePath,
-                width: 19,
-                height: 19,
-                color: color,
-                fit: BoxFit.contain,
+              Text(
+                title,
+                style: const TextStyle(
+                    fontSize: 13,
+                    color: blackColor,
+                    fontWeight: FontWeight.w500),
               ),
               const SizedBox(width: 3),
               Text(
                 count,
-                style: TextStyle(
-                    fontSize: 14, fontWeight: FontWeight.w500, color: color),
+                style: const TextStyle(
+                    fontSize: 14,
+                    fontWeight: FontWeight.w600,
+                    color: blackColor),
               ),
             ],
           ),
         ],
+      ),
+    );
+  }
+
+  Widget _buildCardWithCountAndTitle({
+    required String title,
+    required String count,
+    required Color imageColor,
+    required Color boxBgColor,
+    required String imagePath,
+  }) {
+    return GestureDetector(
+      onTap: () {
+        Navigator.pushNamed(context, '');
+      },
+      child: Container(
+        width: (MediaQuery.of(context).size.width - 25),
+        height: 86,
+        padding: const EdgeInsets.all(10),
+        decoration: BoxDecoration(
+          border: Border.all(color: hintTextColor),
+          color: whiteColor,
+          borderRadius: BorderRadius.circular(5),
+        ),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: [
+            Container(
+              decoration: BoxDecoration(
+                color: boxBgColor,
+                borderRadius: BorderRadius.circular(4),
+              ),
+              padding: const EdgeInsets.all(6),
+              child: Image.asset(
+                imagePath,
+                width: 25,
+                height: 25,
+                color: imageColor,
+                fit: BoxFit.contain,
+              ),
+            ),
+            const SizedBox(width: 10),
+            Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  title,
+                  style: const TextStyle(
+                      fontSize: 13,
+                      color: blackColor,
+                      fontWeight: FontWeight.w500),
+                ),
+                const SizedBox(width: 3),
+                Text(
+                  count,
+                  style: const TextStyle(
+                      fontSize: 14,
+                      fontWeight: FontWeight.w600,
+                      color: blackColor),
+                ),
+              ],
+            ),
+          ],
+        ),
       ),
     );
   }

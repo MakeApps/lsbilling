@@ -163,8 +163,8 @@ class _StaffListingScreenState extends State<StaffListingScreen> {
                 Padding(
                   padding: const EdgeInsets.only(bottom: 10),
                   child: Container(
-                    padding:
-                        const EdgeInsets.only(left: 10, bottom: 15, top: 10),
+                    padding: const EdgeInsets.only(
+                        left: 18, right: 18, top: 12, bottom: 12),
                     decoration: const BoxDecoration(
                       color: blackColor,
                       borderRadius: BorderRadiusDirectional.only(
@@ -199,7 +199,7 @@ class _StaffListingScreenState extends State<StaffListingScreen> {
                                 fontWeight: FontWeight.w600,
                                 color: whiteColor.withOpacity(0.5),
                                 fontFamily: 'Mulish',
-                                fontSize: 12,
+                                fontSize: 13,
                               ),
                               focusedBorder: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(8),
@@ -246,19 +246,29 @@ class _StaffListingScreenState extends State<StaffListingScreen> {
                                   color: primaryColor,
                                 ),
                               ),
-                              hintText: 'Search by staff name',
+                              hintText: 'Search by staff name..',
                             ),
                           ),
                         ),
-                        IconButton(
-                          onPressed: () {
-                            _fetchInitialStaff();
-                            _searchController.clear();
-                          },
-                          icon: Icon(
-                            Icons.refresh,
-                            color: whiteColor.withOpacity(0.8),
-                            size: 35,
+                        const SizedBox(width: 8,),
+                        Container(
+                           height: 45,
+                          width: 45,
+                          decoration: BoxDecoration(
+                            color: blackColor,
+                            border: Border.all(color: hintTextColor, width: 0),
+                            borderRadius: BorderRadius.circular(6),
+                          ),
+                          child: IconButton(
+                            onPressed: () {
+                              _fetchInitialStaff();
+                              _searchController.clear();
+                            },
+                            icon: Icon(
+                              Icons.refresh,
+                              color: whiteColor.withOpacity(0.8),
+                              size: 35,
+                            ),
                           ),
                         ),
                       ],
@@ -306,7 +316,7 @@ class _StaffListingScreenState extends State<StaffListingScreen> {
                 shape: const CircleBorder(),
                 heroTag: 'createStaff',
                 backgroundColor: primaryColor,
-                foregroundColor: blackColor,
+                foregroundColor: whiteColor,
                 onPressed: () {
                   Navigator.push(
                     context,

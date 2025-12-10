@@ -71,7 +71,7 @@ class _EditCategoryDialogState extends State<EditCategoryDialog> {
                   children: <Widget>[
                     const Expanded(
                       child: Text(
-                        'Spare Part Category',
+                        'Item Category',
                         style: TextStyle(
                             fontSize: 18, fontWeight: FontWeight.w600),
                       ),

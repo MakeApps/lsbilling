@@ -87,7 +87,7 @@ class _EditInvoiceExistingSparePartState
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 const Text(
-                  'Edit Spare Part',
+                  'Edit Item',
                   style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                 ),
                 IconButton(
@@ -98,15 +98,15 @@ class _EditInvoiceExistingSparePartState
             ),
             const SizedBox(height: 10),
 
-            /// Spare Part Name
+            /// Item Name
             const Text(
-              "Spare Part Name:",
+              "Item Name:",
               style: TextStyle(fontSize: 14),
             ),
             const SizedBox(height: 5),
             TextFormField(
               controller: productNameController,
-              decoration: _fieldDecoration("Enter Spare Part Name"),
+              decoration: _fieldDecoration("Enter Item Name"),
             ),
             const SizedBox(height: 15),
 
