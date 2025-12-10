@@ -141,7 +141,7 @@ class _EditCustomerBoxState extends State<EditCustomerBox> {
                               ? "Please enter correct full name"
                               : null,
                           filled: true,
-                          fillColor: lightGreyColor,
+                          fillColor: textfieldBg,
                           border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(5),
                             borderSide: const BorderSide(
@@ -182,7 +182,7 @@ class _EditCustomerBoxState extends State<EditCustomerBox> {
                             right: 20.0,
                           ),
                           filled: true,
-                          fillColor: lightGreyColor,
+                          fillColor: textfieldBg,
                           border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(5),
                             borderSide: const BorderSide(
@@ -223,7 +223,7 @@ class _EditCustomerBoxState extends State<EditCustomerBox> {
                             right: 20.0,
                           ),
                           filled: true,
-                          fillColor: lightGreyColor,
+                          fillColor: textfieldBg,
                           border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(5),
                             borderSide: const BorderSide(
@@ -276,7 +276,7 @@ class _EditCustomerBoxState extends State<EditCustomerBox> {
                               ? "The mobile Number field is reqired"
                               : null,
                           filled: true,
-                          fillColor: lightGreyColor,
+                          fillColor: textfieldBg,
                           border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(5),
                             borderSide: const BorderSide(

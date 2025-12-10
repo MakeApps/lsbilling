@@ -2696,7 +2696,7 @@ class _InvoiceDetailsPageState extends State<InvoiceDetailsPage> {
                               const EdgeInsets.only(left: 15, right: 20),
                           hintText: 'Enter Item Name',
                           filled: true,
-                          fillColor: lightGreyColor,
+                          fillColor: textfieldBg,
                           border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(5),
                             borderSide: const BorderSide(
@@ -2748,7 +2748,7 @@ class _InvoiceDetailsPageState extends State<InvoiceDetailsPage> {
                                               left: 15, right: 20),
                                           hintText: '',
                                           filled: true,
-                                          fillColor: lightGreyColor,
+                                          fillColor: textfieldBg,
                                           border: OutlineInputBorder(
                                             borderRadius:
                                                 BorderRadius.circular(5),
@@ -2812,7 +2812,7 @@ class _InvoiceDetailsPageState extends State<InvoiceDetailsPage> {
                                   dropdownColor: whiteColor,
                                   decoration: InputDecoration(
                                     filled: true,
-                                    fillColor: lightGreyColor,
+                                    fillColor: textfieldBg,
                                     border: OutlineInputBorder(
                                       borderRadius: BorderRadius.circular(5),
                                       borderSide: const BorderSide(
@@ -2900,7 +2900,7 @@ class _InvoiceDetailsPageState extends State<InvoiceDetailsPage> {
                               const EdgeInsets.only(left: 15, right: 20),
                           hintText: '',
                           filled: true,
-                          fillColor: lightGreyColor,
+                          fillColor: textfieldBg,
                           border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(5),
                             borderSide: const BorderSide(

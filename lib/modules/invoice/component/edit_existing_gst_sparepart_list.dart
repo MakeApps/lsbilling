@@ -167,7 +167,7 @@ class _EditInvoiceExistingSparePartState
                                       left: 15, right: 20),
                                   hintText: '',
                                   filled: true,
-                                  fillColor: lightGreyColor,
+                                  fillColor: textfieldBg,
                                   border: OutlineInputBorder(
                                     borderRadius: BorderRadius.circular(5),
                                     borderSide: const BorderSide(
@@ -284,7 +284,7 @@ class _EditInvoiceExistingSparePartState
               dropdownColor: whiteColor,
               decoration: InputDecoration(
                 filled: true,
-                fillColor: lightGreyColor,
+                fillColor: textfieldBg,
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(5),
                   borderSide: const BorderSide(
@@ -382,7 +382,7 @@ class _EditInvoiceExistingSparePartState
       contentPadding: const EdgeInsets.only(left: 15, right: 20),
       hintText: hint,
       filled: true,
-      fillColor: lightGreyColor,
+      fillColor: textfieldBg,
       border: OutlineInputBorder(
         borderRadius: BorderRadius.circular(5),
         borderSide: const BorderSide(

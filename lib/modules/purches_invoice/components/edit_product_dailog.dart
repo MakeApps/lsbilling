@@ -92,7 +92,7 @@ class _EditSparePartListState extends State<EditSparePartList> {
               decoration: InputDecoration(
                 hintText: "Enter Stock Name",
                 filled: true,
-                fillColor: lightGreyColor,
+                fillColor: textfieldBg,
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(5),
                   borderSide: BorderSide.none,
@@ -224,7 +224,7 @@ class _EditSparePartListState extends State<EditSparePartList> {
                   contentPadding: const EdgeInsets.only(left: 15, right: 20),
                   hintText: '',
                   filled: true,
-                  fillColor: lightGreyColor,
+                  fillColor: textfieldBg,
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(5),
                     borderSide: const BorderSide(
@@ -290,7 +290,7 @@ class _EditSparePartListState extends State<EditSparePartList> {
           color: hintTextColor, fontFamily: 'Mulish', fontSize: 13),
       contentPadding: const EdgeInsets.symmetric(horizontal: 15),
       filled: true,
-      fillColor: lightGreyColor,
+      fillColor: textfieldBg,
       border: OutlineInputBorder(
         borderRadius: BorderRadius.circular(5),
         borderSide: BorderSide.none,

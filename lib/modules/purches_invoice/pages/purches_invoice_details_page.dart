@@ -388,7 +388,7 @@ class _PurchesInvoiceDetailScreenState
                                               fontWeight: FontWeight.w600),
                                           decoration: InputDecoration(
                                             filled: true,
-                                            fillColor: lightGreyColor,
+                                            fillColor: textfieldBg,
                                             contentPadding:
                                                 const EdgeInsets.symmetric(
                                                     vertical: 12,

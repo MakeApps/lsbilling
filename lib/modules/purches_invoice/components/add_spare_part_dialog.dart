@@ -252,7 +252,7 @@ class _PurchesAddSparePartDialogState extends State<PurchesAddSparePartDialog> {
                 dropdownColor: whiteColor,
                 decoration: InputDecoration(
                   filled: true,
-                  fillColor: lightGreyColor,
+                  fillColor: textfieldBg,
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(5),
                     borderSide: const BorderSide(
@@ -540,7 +540,7 @@ class _PurchesAddSparePartDialogState extends State<PurchesAddSparePartDialog> {
           color: hintTextColor, fontFamily: 'Mulish', fontSize: 13),
       contentPadding: const EdgeInsets.symmetric(horizontal: 15),
       filled: true,
-      fillColor: lightGreyColor,
+      fillColor: textfieldBg,
       border: OutlineInputBorder(
         borderRadius: BorderRadius.circular(5),
         borderSide: BorderSide.none,
@@ -555,7 +555,7 @@ class _PurchesAddSparePartDialogState extends State<PurchesAddSparePartDialog> {
           color: hintTextColor, fontFamily: 'Mulish', fontSize: 13),
       contentPadding: const EdgeInsets.symmetric(horizontal: 15),
       filled: true,
-      fillColor: lightGreyColor,
+      fillColor: textfieldBg,
       border: OutlineInputBorder(
         borderRadius: BorderRadius.circular(5),
         borderSide: BorderSide.none,

@@ -241,7 +241,7 @@ class _AddSparePartDialogState extends State<InvoiceAddSparePartDialog> {
                             contentPadding:
                                 const EdgeInsets.only(left: 15, right: 20.0),
                             filled: true,
-                            fillColor: lightGreyColor,
+                            fillColor: textfieldBg,
                             border: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(5),
                               borderSide: const BorderSide(
@@ -383,7 +383,7 @@ class _AddSparePartDialogState extends State<InvoiceAddSparePartDialog> {
                             contentPadding:
                                 const EdgeInsets.only(left: 15, right: 20.0),
                             filled: true,
-                            fillColor: lightGreyColor,
+                            fillColor: textfieldBg,
                             border: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(5),
                               borderSide: const BorderSide(
@@ -511,7 +511,7 @@ class _AddSparePartDialogState extends State<InvoiceAddSparePartDialog> {
                                       left: 15, right: 20),
                                   hintText: '',
                                   filled: true,
-                                  fillColor: lightGreyColor,
+                                  fillColor: textfieldBg,
                                   border: OutlineInputBorder(
                                     borderRadius: BorderRadius.circular(5),
                                     borderSide: const BorderSide(
@@ -566,7 +566,7 @@ class _AddSparePartDialogState extends State<InvoiceAddSparePartDialog> {
                           dropdownColor: whiteColor,
                           decoration: InputDecoration(
                             filled: true,
-                            fillColor: lightGreyColor,
+                            fillColor: textfieldBg,
                             border: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(5),
                               borderSide: const BorderSide(
@@ -649,7 +649,7 @@ class _AddSparePartDialogState extends State<InvoiceAddSparePartDialog> {
                   contentPadding: const EdgeInsets.only(left: 15, right: 20),
                   hintText: '00',
                   filled: true,
-                  fillColor: lightGreyColor,
+                  fillColor: textfieldBg,
                   errorText: rateError,
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(5),
@@ -690,7 +690,7 @@ class _AddSparePartDialogState extends State<InvoiceAddSparePartDialog> {
                   dropdownColor: whiteColor,
                   decoration: InputDecoration(
                     filled: true,
-                    fillColor: lightGreyColor,
+                    fillColor: textfieldBg,
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(5),
                       borderSide: const BorderSide(
@@ -748,7 +748,7 @@ class _AddSparePartDialogState extends State<InvoiceAddSparePartDialog> {
                     contentPadding: const EdgeInsets.only(left: 15, right: 20),
                     hintText: 'Enter HSN code',
                     filled: true,
-                    fillColor: lightGreyColor,
+                    fillColor: textfieldBg,
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(5),
                       borderSide: const BorderSide(

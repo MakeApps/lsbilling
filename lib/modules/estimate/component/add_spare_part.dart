@@ -242,7 +242,7 @@ class _AddSparePartsDialogState extends State<AddSparePartsDialog> {
                   contentPadding: const EdgeInsets.only(left: 15, right: 20),
                   hintText: '00',
                   filled: true,
-                  fillColor: lightGreyColor,
+                  fillColor: textfieldBg,
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(5),
                     borderSide: const BorderSide(
@@ -273,7 +273,7 @@ class _AddSparePartsDialogState extends State<AddSparePartsDialog> {
                   dropdownColor: whiteColor,
                   decoration: InputDecoration(
                     filled: true,
-                    fillColor: lightGreyColor,
+                    fillColor: textfieldBg,
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(5),
                       borderSide: const BorderSide(
@@ -331,7 +331,7 @@ class _AddSparePartsDialogState extends State<AddSparePartsDialog> {
                     contentPadding: const EdgeInsets.only(left: 15, right: 20),
                     hintText: 'Enter HSN Code',
                     filled: true,
-                    fillColor: lightGreyColor,
+                    fillColor: textfieldBg,
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(5),
                       borderSide: const BorderSide(
@@ -409,7 +409,7 @@ class _AddSparePartsDialogState extends State<AddSparePartsDialog> {
                   ),
                   contentPadding: const EdgeInsets.only(left: 15, right: 20.0),
                   filled: true,
-                  fillColor: lightGreyColor,
+                  fillColor: textfieldBg,
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(5),
                     borderSide: const BorderSide(
@@ -547,7 +547,7 @@ class _AddSparePartsDialogState extends State<AddSparePartsDialog> {
                     contentPadding:
                         const EdgeInsets.only(left: 15, right: 20.0),
                     filled: true,
-                    fillColor: lightGreyColor,
+                    fillColor: textfieldBg,
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(5),
                       borderSide: const BorderSide(
@@ -657,7 +657,7 @@ class _AddSparePartsDialogState extends State<AddSparePartsDialog> {
                   contentPadding: const EdgeInsets.only(left: 15, right: 20),
                   hintText: '',
                   filled: true,
-                  fillColor: lightGreyColor,
+                  fillColor: textfieldBg,
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(5),
                     borderSide: const BorderSide(
@@ -709,7 +709,7 @@ class _AddSparePartsDialogState extends State<AddSparePartsDialog> {
   InputDecoration _inputDecoration({String? hint}) {
     return InputDecoration(
       filled: true,
-      fillColor: lightGreyColor,
+      fillColor: textfieldBg,
       hintText: hint,
       border: OutlineInputBorder(
         borderRadius: BorderRadius.circular(5),

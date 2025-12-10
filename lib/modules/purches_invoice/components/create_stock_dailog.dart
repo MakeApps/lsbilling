@@ -432,7 +432,7 @@ class _PurchesCreateSparePartPromptState
     return InputDecoration(
       hintText: hint,
       filled: true,
-      fillColor: lightGreyColor,
+      fillColor: textfieldBg,
       hintStyle: const TextStyle(fontSize: 13, color: hintTextColor),
       border: OutlineInputBorder(
         borderRadius: BorderRadius.circular(6),

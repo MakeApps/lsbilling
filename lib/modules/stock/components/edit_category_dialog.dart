@@ -115,7 +115,7 @@ class _EditCategoryDialogState extends State<EditCategoryDialog> {
                       decoration: const InputDecoration(
                         hintText: 'Enter category name',
                         filled: true,
-                        fillColor: lightGreyColor,
+                        fillColor: textfieldBg,
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.all(Radius.circular(8)),
                           borderSide:

@@ -93,7 +93,7 @@ class _CreateCategoryDialogState extends State<CreateCategoryDialog> {
                     hintText: 'Enter category name',
                     hintStyle: TextStyle(fontSize: 13, color: hintTextColor),
                     filled: true,
-                    fillColor: lightGreyColor,
+                    fillColor: textfieldBg,
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.all(Radius.circular(8)),
                       borderSide: BorderSide(width: 0, style: BorderStyle.none),
