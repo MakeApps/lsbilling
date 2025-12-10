@@ -170,7 +170,7 @@ class _AdjustStockDialogState extends State<AdjustStockDialog> {
                           contentPadding:
                               const EdgeInsets.only(left: 15, right: 20),
                           filled: true,
-                          fillColor: lightGreyColor,
+                          fillColor: textfieldBg,
                           border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(5),
                             borderSide: const BorderSide(

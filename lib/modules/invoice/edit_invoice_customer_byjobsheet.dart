@@ -148,7 +148,7 @@ class _EditInvoiceCustomerByJobSheetState
                               ? "Please enter correct full name"
                               : null,
                           filled: true,
-                          fillColor: lightGreyColor,
+                          fillColor: textfieldBg,
                           border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(5),
                             borderSide: const BorderSide(
@@ -191,7 +191,7 @@ class _EditInvoiceCustomerByJobSheetState
                             right: 20.0,
                           ),
                           filled: true,
-                          fillColor: lightGreyColor,
+                          fillColor: textfieldBg,
                           border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(5),
                             borderSide: const BorderSide(
@@ -233,7 +233,7 @@ class _EditInvoiceCustomerByJobSheetState
                             right: 20.0,
                           ),
                           filled: true,
-                          fillColor: lightGreyColor,
+                          fillColor: textfieldBg,
                           border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(5),
                             borderSide: const BorderSide(
@@ -286,7 +286,7 @@ class _EditInvoiceCustomerByJobSheetState
                               ? "The mobile Number field is reqired"
                               : null,
                           filled: true,
-                          fillColor: lightGreyColor,
+                          fillColor: textfieldBg,
                           border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(5),
                             borderSide: const BorderSide(

@@ -220,7 +220,7 @@ class _PurchesInvoiceDetailScreenState
                                   ScaffoldMessenger.of(context).showSnackBar(
                                     const SnackBar(
                                       content: Text(
-                                          "Please add at least one spare part before updating."),
+                                          "Please add at least one Item before updating."),
                                       backgroundColor: redColor,
                                       duration: Duration(seconds: 1),
                                     ),
@@ -388,7 +388,7 @@ class _PurchesInvoiceDetailScreenState
                                               fontWeight: FontWeight.w600),
                                           decoration: InputDecoration(
                                             filled: true,
-                                            fillColor: lightGreyColor,
+                                            fillColor: textfieldBg,
                                             contentPadding:
                                                 const EdgeInsets.symmetric(
                                                     vertical: 12,
@@ -428,7 +428,7 @@ class _PurchesInvoiceDetailScreenState
                                         MainAxisAlignment.spaceBetween,
                                     children: [
                                       const Text(
-                                        'Spare Parts',
+                                        'Items',
                                         style: TextStyle(
                                             fontSize: 15,
                                             fontWeight: FontWeight.w600,
@@ -532,7 +532,7 @@ class _PurchesInvoiceDetailScreenState
                                                       .spaceBetween,
                                               children: [
                                                 const Text(
-                                                  "Spare Part Total:",
+                                                  "Item Total:",
                                                   style: TextStyle(
                                                       color: whiteColor,
                                                       fontWeight:
@@ -882,7 +882,7 @@ class _PurchesInvoiceDetailScreenState
     );
   }
 
-  //new list of spare part
+  //new list of Item
   Widget _buildNewSparePartListCard(spareParts, String? gstBill, state) {
     double rate = double.tryParse(spareParts['product_price'].toString()) ?? 0;
     String gstText = spareParts['product_gst'].toString();
@@ -1199,7 +1199,7 @@ class _PurchesInvoiceDetailScreenState
     return totalPercentage;
   }
 
-//edit existing GST spare part dialog
+//edit existing GST Item dialog
   Future<void> editExistingGstSparePartDialog({
     required BuildContext context,
     required Map<String, dynamic> sparePart,
@@ -1223,7 +1223,7 @@ class _PurchesInvoiceDetailScreenState
     }
   }
 
-//edit existing NON-GST spare part dialog
+//edit existing NON-GST Item dialog
   editExistingSparePartDialog({
     required BuildContext context,
     required Map<String, dynamic> sparePart,
@@ -1243,7 +1243,7 @@ class _PurchesInvoiceDetailScreenState
     }
   }
 
-//edit new GST spare part dialog
+//edit new GST Item dialog
   Future<void> editNewGstSparePartDialog({
     required BuildContext context,
     required Map<String, dynamic> sparePart,
@@ -1267,7 +1267,7 @@ class _PurchesInvoiceDetailScreenState
     }
   }
 
-//edit new NON-GST spare part dialog
+//edit new NON-GST Item dialog
   editNewSparePartDialog({
     required BuildContext context,
     required Map<String, dynamic> sparePart,
@@ -1287,7 +1287,7 @@ class _PurchesInvoiceDetailScreenState
     }
   }
 
-  //calculate gst subtotal of spare part
+  //calculate gst subtotal of Item
   calculateSparePartGstSubtotal() {
     double totalGstList = calculateSubTotalWithGst();
     double totalGstNewList = calculateSubTotalWithGstNew();
@@ -1332,7 +1332,7 @@ class _PurchesInvoiceDetailScreenState
     return subtotalWithGst;
   }
 
-  //calculate subtotal of spare part
+  //calculate subtotal of Item
   calculateSparePartSubtotal() {
     double subtotal = 0.0;
     if (calculateSparePartListTotal() != 0 ||

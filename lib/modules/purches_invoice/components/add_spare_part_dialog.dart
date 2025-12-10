@@ -143,7 +143,7 @@ class _PurchesAddSparePartDialogState extends State<PurchesAddSparePartDialog> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 const Text(
-                  'Add Spare Part',
+                  'Add Item',
                   style: TextStyle(
                       fontSize: 15,
                       fontWeight: FontWeight.bold,
@@ -252,7 +252,7 @@ class _PurchesAddSparePartDialogState extends State<PurchesAddSparePartDialog> {
                 dropdownColor: whiteColor,
                 decoration: InputDecoration(
                   filled: true,
-                  fillColor: lightGreyColor,
+                  fillColor: textfieldBg,
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(5),
                     borderSide: const BorderSide(
@@ -383,7 +383,7 @@ class _PurchesAddSparePartDialogState extends State<PurchesAddSparePartDialog> {
               controller: _sparePartController,
               focusNode: focusNode,
               decoration: _sparePartInputDecoration(
-                hint: 'Enter Spare Part Name',
+                hint: 'Enter Item Name',
                 suffix: _showAddButton
                     ? TextButton(
                         onPressed: () async {
@@ -540,7 +540,7 @@ class _PurchesAddSparePartDialogState extends State<PurchesAddSparePartDialog> {
           color: hintTextColor, fontFamily: 'Mulish', fontSize: 13),
       contentPadding: const EdgeInsets.symmetric(horizontal: 15),
       filled: true,
-      fillColor: lightGreyColor,
+      fillColor: textfieldBg,
       border: OutlineInputBorder(
         borderRadius: BorderRadius.circular(5),
         borderSide: BorderSide.none,
@@ -555,7 +555,7 @@ class _PurchesAddSparePartDialogState extends State<PurchesAddSparePartDialog> {
           color: hintTextColor, fontFamily: 'Mulish', fontSize: 13),
       contentPadding: const EdgeInsets.symmetric(horizontal: 15),
       filled: true,
-      fillColor: lightGreyColor,
+      fillColor: textfieldBg,
       border: OutlineInputBorder(
         borderRadius: BorderRadius.circular(5),
         borderSide: BorderSide.none,
@@ -678,7 +678,7 @@ class _PurchesAddSparePartDialogState extends State<PurchesAddSparePartDialog> {
 //               controller: _sparePartController,
 //               focusNode: focusNode,
 //               decoration: _sparePartInputDecoration(
-//                 hint: 'Enter Spare Part Name',
+//                 hint: 'Enter Item Name',
 //                 suffix: _showAddButton
 //                     ? TextButton(
 //                         onPressed: () async {

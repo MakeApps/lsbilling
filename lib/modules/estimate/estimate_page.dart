@@ -1054,7 +1054,7 @@ class _EstimatePageState extends State<EstimatePage> {
                                             MainAxisAlignment.start,
                                         children: [
                                           Text(
-                                            'Spare Parts:',
+                                            'Items:',
                                             textAlign: TextAlign.start,
                                             style: TextStyle(
                                                 color: blackColor,
@@ -1066,7 +1066,7 @@ class _EstimatePageState extends State<EstimatePage> {
                                             padding: EdgeInsets.only(
                                                 left: 15, top: 4),
                                             child: Text(
-                                              "Spare Parts  .  Qty  .   Rate",
+                                              "Items .  Qty  .   Rate",
                                               style: TextStyle(
                                                   color: hintTextColor,
                                                   fontWeight: FontWeight.w500,
@@ -2044,61 +2044,6 @@ class _EstimatePageState extends State<EstimatePage> {
     }
   }
 
-  Future<void> showEditCustomer(BuildContext context) async {
-    await showDialog(
-      context: context,
-      builder: (context) {
-        return SimpleDialog(
-          title: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              const Text('Edit Customer Details'),
-              IconButton(
-                onPressed: () {
-                  Navigator.of(context).pop();
-                },
-                icon: const Icon(cancelIcon),
-              )
-            ],
-          ),
-          children: [
-            const Padding(
-              padding: EdgeInsets.only(left: 13),
-              child: Text('Full name:'),
-            ),
-            Padding(
-              padding:
-                  const EdgeInsets.only(left: 13, right: 10, bottom: 5, top: 3),
-              child: TextFormField(
-                keyboardType: TextInputType.text,
-                inputFormatters: [
-                  NoLeadingSpaceFormatter(),
-                ],
-                decoration: InputDecoration(
-                  hintStyle: const TextStyle(
-                      color: hintTextColor, fontFamily: 'Mulish', fontSize: 14),
-                  contentPadding: const EdgeInsets.only(
-                    left: 15,
-                    right: 20.0,
-                  ),
-                  filled: true,
-                  fillColor: lightGreyColor,
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(8),
-                    borderSide: const BorderSide(
-                      width: 0,
-                      style: BorderStyle.none,
-                    ),
-                  ),
-                ),
-              ),
-            ),
-          ],
-        );
-      },
-    );
-  }
-
   Future<void> showAddSpareParts(BuildContext context) async {
     await showDialog(
       barrierDismissible: true,
@@ -2152,7 +2097,7 @@ class _EstimatePageState extends State<EstimatePage> {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         const Text(
-                          'Edit Spare Part',
+                          'Edit Item',
                           style: TextStyle(
                               fontSize: 15,
                               fontWeight: FontWeight.bold,
@@ -2170,7 +2115,7 @@ class _EstimatePageState extends State<EstimatePage> {
                     const Align(
                         alignment: Alignment.topLeft,
                         child: Text(
-                          'Spare Part Name:',
+                          'Item Name:',
                           style: TextStyle(fontSize: 14, color: blackColor),
                         )),
                     const SizedBox(height: 5),
@@ -2189,9 +2134,9 @@ class _EstimatePageState extends State<EstimatePage> {
                           ),
                           contentPadding:
                               const EdgeInsets.only(left: 15, right: 20),
-                          hintText: 'Enter Spare Part Name',
+                          hintText: 'Enter Item Name',
                           filled: true,
-                          fillColor: lightGreyColor,
+                          fillColor: textfieldBg,
                           border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(5),
                             borderSide: const BorderSide(
@@ -2244,7 +2189,7 @@ class _EstimatePageState extends State<EstimatePage> {
                                               left: 15, right: 20),
                                           hintText: '0',
                                           filled: true,
-                                          fillColor: lightGreyColor,
+                                          fillColor: textfieldBg,
                                           border: OutlineInputBorder(
                                             borderRadius:
                                                 BorderRadius.circular(5),
@@ -2308,7 +2253,7 @@ class _EstimatePageState extends State<EstimatePage> {
                                   dropdownColor: whiteColor,
                                   decoration: InputDecoration(
                                     filled: true,
-                                    fillColor: lightGreyColor,
+                                    fillColor: textfieldBg,
                                     border: OutlineInputBorder(
                                       borderRadius: BorderRadius.circular(5),
                                       borderSide: const BorderSide(
@@ -2403,7 +2348,7 @@ class _EstimatePageState extends State<EstimatePage> {
                               const EdgeInsets.only(left: 15, right: 20),
                           hintText: '00',
                           filled: true,
-                          fillColor: lightGreyColor,
+                          fillColor: textfieldBg,
                           border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(5),
                             borderSide: const BorderSide(
@@ -2497,7 +2442,7 @@ class _EstimatePageState extends State<EstimatePage> {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         const Text(
-                          'Edit Spare Part',
+                          'Edit Item',
                           style: TextStyle(
                               fontSize: 15,
                               fontWeight: FontWeight.bold,
@@ -2514,7 +2459,7 @@ class _EstimatePageState extends State<EstimatePage> {
                     const Align(
                       alignment: Alignment.topLeft,
                       child: Text(
-                        'Spare Part Name:',
+                        'Item Name:',
                         style: TextStyle(fontSize: 14, color: blackColor),
                       ),
                     ),
@@ -2533,9 +2478,9 @@ class _EstimatePageState extends State<EstimatePage> {
                           ),
                           contentPadding:
                               const EdgeInsets.only(left: 15, right: 20),
-                          hintText: 'Enter Spare Part Name',
+                          hintText: 'Enter Item Name',
                           filled: true,
-                          fillColor: lightGreyColor,
+                          fillColor: textfieldBg,
                           border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(5),
                             borderSide: const BorderSide(
@@ -2587,7 +2532,7 @@ class _EstimatePageState extends State<EstimatePage> {
                                               left: 15, right: 20),
                                           hintText: '',
                                           filled: true,
-                                          fillColor: lightGreyColor,
+                                          fillColor: textfieldBg,
                                           border: OutlineInputBorder(
                                             borderRadius:
                                                 BorderRadius.circular(5),
@@ -2651,7 +2596,7 @@ class _EstimatePageState extends State<EstimatePage> {
                                   dropdownColor: whiteColor,
                                   decoration: InputDecoration(
                                     filled: true,
-                                    fillColor: lightGreyColor,
+                                    fillColor: textfieldBg,
                                     border: OutlineInputBorder(
                                       borderRadius: BorderRadius.circular(5),
                                       borderSide: const BorderSide(
@@ -2745,7 +2690,7 @@ class _EstimatePageState extends State<EstimatePage> {
                               const EdgeInsets.only(left: 15, right: 20),
                           hintText: '',
                           filled: true,
-                          fillColor: lightGreyColor,
+                          fillColor: textfieldBg,
                           border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(5),
                             borderSide: const BorderSide(
@@ -2777,7 +2722,7 @@ class _EstimatePageState extends State<EstimatePage> {
                         dropdownColor: whiteColor,
                         decoration: InputDecoration(
                           filled: true,
-                          fillColor: lightGreyColor,
+                          fillColor: textfieldBg,
                           border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(5),
                             borderSide: const BorderSide(
@@ -2840,7 +2785,7 @@ class _EstimatePageState extends State<EstimatePage> {
                               const EdgeInsets.only(left: 15, right: 20),
                           hintText: 'Enter HSN Code',
                           filled: true,
-                          fillColor: lightGreyColor,
+                          fillColor: textfieldBg,
                           border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(5),
                             borderSide: const BorderSide(
@@ -2940,7 +2885,7 @@ class _EstimatePageState extends State<EstimatePage> {
                     const Align(
                       alignment: Alignment.topLeft,
                       child: Text(
-                        'Spare Part Name:',
+                        'Item Name:',
                         style: TextStyle(fontSize: 14, color: blackColor),
                       ),
                     ),
@@ -2958,9 +2903,9 @@ class _EstimatePageState extends State<EstimatePage> {
                           ),
                           contentPadding:
                               const EdgeInsets.only(left: 15, right: 20),
-                          hintText: 'Enter Spare Part Name',
+                          hintText: 'Enter Item Name',
                           filled: true,
-                          fillColor: lightGreyColor,
+                          fillColor: textfieldBg,
                           border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(5),
                             borderSide: const BorderSide(
@@ -3006,7 +2951,7 @@ class _EstimatePageState extends State<EstimatePage> {
                                               left: 15, right: 20),
                                           hintText: '',
                                           filled: true,
-                                          fillColor: lightGreyColor,
+                                          fillColor: textfieldBg,
                                           border: OutlineInputBorder(
                                             borderRadius:
                                                 BorderRadius.circular(5),
@@ -3068,7 +3013,7 @@ class _EstimatePageState extends State<EstimatePage> {
                                   dropdownColor: whiteColor,
                                   decoration: InputDecoration(
                                     filled: true,
-                                    fillColor: lightGreyColor,
+                                    fillColor: textfieldBg,
                                     border: OutlineInputBorder(
                                       borderRadius: BorderRadius.circular(5),
                                       borderSide: const BorderSide(
@@ -3153,7 +3098,7 @@ class _EstimatePageState extends State<EstimatePage> {
                               const EdgeInsets.only(left: 15, right: 20),
                           hintText: '',
                           filled: true,
-                          fillColor: lightGreyColor,
+                          fillColor: textfieldBg,
                           border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(5),
                             borderSide: const BorderSide(
@@ -3256,7 +3201,7 @@ class _EstimatePageState extends State<EstimatePage> {
                     const Align(
                       alignment: Alignment.topLeft,
                       child: Text(
-                        'Spare Part Name:',
+                        'Item Name:',
                         style: TextStyle(fontSize: 14, color: blackColor),
                       ),
                     ),
@@ -3274,9 +3219,9 @@ class _EstimatePageState extends State<EstimatePage> {
                           ),
                           contentPadding:
                               const EdgeInsets.only(left: 15, right: 20),
-                          hintText: 'Enter Spare Part Name',
+                          hintText: 'Enter Item Name',
                           filled: true,
-                          fillColor: lightGreyColor,
+                          fillColor: textfieldBg,
                           border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(5),
                             borderSide: const BorderSide(
@@ -3323,7 +3268,7 @@ class _EstimatePageState extends State<EstimatePage> {
                                               left: 15, right: 20),
                                           hintText: '',
                                           filled: true,
-                                          fillColor: lightGreyColor,
+                                          fillColor: textfieldBg,
                                           border: OutlineInputBorder(
                                             borderRadius:
                                                 BorderRadius.circular(5),
@@ -3387,7 +3332,7 @@ class _EstimatePageState extends State<EstimatePage> {
                                   dropdownColor: whiteColor,
                                   decoration: InputDecoration(
                                     filled: true,
-                                    fillColor: lightGreyColor,
+                                    fillColor: textfieldBg,
                                     border: OutlineInputBorder(
                                       borderRadius: BorderRadius.circular(5),
                                       borderSide: const BorderSide(
@@ -3470,7 +3415,7 @@ class _EstimatePageState extends State<EstimatePage> {
                               const EdgeInsets.only(left: 15, right: 20),
                           hintText: '',
                           filled: true,
-                          fillColor: lightGreyColor,
+                          fillColor: textfieldBg,
                           border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(5),
                             borderSide: const BorderSide(
@@ -3501,7 +3446,7 @@ class _EstimatePageState extends State<EstimatePage> {
                         dropdownColor: whiteColor,
                         decoration: InputDecoration(
                           filled: true,
-                          fillColor: lightGreyColor,
+                          fillColor: textfieldBg,
                           border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(5),
                             borderSide: const BorderSide(
@@ -3564,7 +3509,7 @@ class _EstimatePageState extends State<EstimatePage> {
                               const EdgeInsets.only(left: 15, right: 20),
                           hintText: 'Enter HSN Code',
                           filled: true,
-                          fillColor: lightGreyColor,
+                          fillColor: textfieldBg,
                           border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(5),
                             borderSide: const BorderSide(

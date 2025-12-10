@@ -205,7 +205,7 @@ class _AddPaymentFormState extends State<AddPaymentForm> {
                               const EdgeInsets.only(left: 15, right: 20),
                           hintText: '0000',
                           filled: true,
-                          fillColor: lightGreyColor,
+                          fillColor: textfieldBg,
                           border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(5),
                             borderSide: const BorderSide(
@@ -292,7 +292,7 @@ class _AddPaymentFormState extends State<AddPaymentForm> {
                                     const EdgeInsets.only(left: 15, right: 20),
                                 hintText: '0000',
                                 filled: true,
-                                fillColor: lightGreyColor,
+                                fillColor: textfieldBg,
                                 border: OutlineInputBorder(
                                   borderRadius: BorderRadius.circular(5),
                                   borderSide: const BorderSide(
@@ -328,7 +328,7 @@ class _AddPaymentFormState extends State<AddPaymentForm> {
                                     const EdgeInsets.only(left: 15, right: 20),
                                 hintText: 'dd/mm/yyyy',
                                 filled: true,
-                                fillColor: lightGreyColor,
+                                fillColor: textfieldBg,
                                 border: OutlineInputBorder(
                                   borderRadius: BorderRadius.circular(5),
                                   borderSide: const BorderSide(
@@ -375,7 +375,7 @@ class _AddPaymentFormState extends State<AddPaymentForm> {
                                     const EdgeInsets.only(left: 15, right: 20),
                                 hintText: '0000',
                                 filled: true,
-                                fillColor: lightGreyColor,
+                                fillColor: textfieldBg,
                                 border: OutlineInputBorder(
                                   borderRadius: BorderRadius.circular(5),
                                   borderSide: const BorderSide(
@@ -410,7 +410,7 @@ class _AddPaymentFormState extends State<AddPaymentForm> {
                                     const EdgeInsets.only(left: 15, right: 15),
                                 hintText: 'Payment Method',
                                 filled: true,
-                                fillColor: lightGreyColor,
+                                fillColor: textfieldBg,
                                 border: OutlineInputBorder(
                                   borderRadius: BorderRadius.circular(5),
                                   borderSide: const BorderSide(
@@ -511,7 +511,7 @@ class _AddPaymentFormState extends State<AddPaymentForm> {
                           left: 15, right: 20, top: 10, bottom: 10),
                       hintText: 'Enter Notes',
                       filled: true,
-                      fillColor: lightGreyColor,
+                      fillColor: textfieldBg,
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(5),
                         borderSide:

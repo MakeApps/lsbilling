@@ -71,7 +71,7 @@ class _EditCategoryDialogState extends State<EditCategoryDialog> {
                   children: <Widget>[
                     const Expanded(
                       child: Text(
-                        'Spare Part Category',
+                        'Item Category',
                         style: TextStyle(
                             fontSize: 18, fontWeight: FontWeight.w600),
                       ),
@@ -115,7 +115,7 @@ class _EditCategoryDialogState extends State<EditCategoryDialog> {
                       decoration: const InputDecoration(
                         hintText: 'Enter category name',
                         filled: true,
-                        fillColor: lightGreyColor,
+                        fillColor: textfieldBg,
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.all(Radius.circular(8)),
                           borderSide:

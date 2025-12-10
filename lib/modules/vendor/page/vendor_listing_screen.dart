@@ -168,8 +168,8 @@ class _VendorListingPageState extends State<VendorListingPage> {
                 Padding(
                   padding: const EdgeInsets.only(bottom: 10),
                   child: Container(
-                    padding:
-                        const EdgeInsets.only(left: 10, bottom: 15, top: 10),
+                    padding: const EdgeInsets.only(
+                        left: 10, bottom: 15, top: 10, right: 10),
                     decoration: const BoxDecoration(
                       color: blackColor,
                       borderRadius: BorderRadiusDirectional.only(
@@ -178,7 +178,6 @@ class _VendorListingPageState extends State<VendorListingPage> {
                       ),
                     ),
                     child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Expanded(
                           flex: 1,
@@ -206,28 +205,28 @@ class _VendorListingPageState extends State<VendorListingPage> {
                                 fontSize: 12,
                               ),
                               focusedBorder: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(8),
+                                borderRadius: BorderRadius.circular(6),
                                 borderSide: const BorderSide(
                                   width: 0,
                                   color: hintTextColor,
                                 ),
                               ),
                               disabledBorder: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(8),
+                                borderRadius: BorderRadius.circular(6),
                                 borderSide: const BorderSide(
                                   width: 0,
                                   color: hintTextColor,
                                 ),
                               ),
                               enabledBorder: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(8),
+                                borderRadius: BorderRadius.circular(6),
                                 borderSide: const BorderSide(
                                   width: 0,
                                   color: hintTextColor,
                                 ),
                               ),
                               border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(8),
+                                borderRadius: BorderRadius.circular(6),
                                 borderSide: const BorderSide(
                                   color: hintTextColor,
                                   width: 0,
@@ -254,15 +253,26 @@ class _VendorListingPageState extends State<VendorListingPage> {
                             ),
                           ),
                         ),
-                        IconButton(
-                          onPressed: () {
+                        const SizedBox(
+                          width: 4,
+                        ),
+                        InkWell(
+                          onTap: () {
                             _fetchInitialVendor();
                             _searchController.clear();
                           },
-                          icon: Icon(
-                            Icons.refresh,
-                            color: whiteColor.withOpacity(0.8),
-                            size: 35,
+                          child: Container(
+                            height: 44,
+                            width: 44,
+                            margin: const EdgeInsets.only(left: 5),
+                            decoration: BoxDecoration(
+                              color: blackColor,
+                              borderRadius: BorderRadius.circular(6),
+                              border:
+                                  Border.all(color: hintTextColor, width: 0),
+                            ),
+                            child: Icon(Icons.refresh_rounded,
+                                color: whiteColor.withOpacity(0.8), size: 28),
                           ),
                         ),
                       ],
@@ -311,7 +321,7 @@ class _VendorListingPageState extends State<VendorListingPage> {
                 shape: const CircleBorder(),
                 heroTag: 'createStockFab',
                 backgroundColor: primaryColor,
-                foregroundColor: blackColor,
+                foregroundColor: whiteColor,
                 onPressed: () {
                   Navigator.push(
                     context,

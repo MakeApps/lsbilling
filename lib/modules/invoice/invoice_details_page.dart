@@ -903,7 +903,7 @@ class _InvoiceDetailsPageState extends State<InvoiceDetailsPage> {
                                             MainAxisAlignment.start,
                                         children: [
                                           Text(
-                                            'Spare Parts:',
+                                            'Items:',
                                             maxLines: 3,
                                             textAlign: TextAlign.start,
                                             style: TextStyle(
@@ -916,7 +916,7 @@ class _InvoiceDetailsPageState extends State<InvoiceDetailsPage> {
                                             padding: EdgeInsets.only(
                                                 left: 15, top: 4),
                                             child: Text(
-                                              "Spare Parts  .  Qty  .   Rate",
+                                              "Items  .  Qty  .   Rate",
                                               style: TextStyle(
                                                 color: hintTextColor,
                                                 fontWeight: FontWeight.w500,
@@ -2675,7 +2675,7 @@ class _InvoiceDetailsPageState extends State<InvoiceDetailsPage> {
                     const Align(
                       alignment: Alignment.topLeft,
                       child: Text(
-                        'Spare Part Name:',
+                        'Item Name:',
                         style: TextStyle(fontSize: 14, color: blackColor),
                       ),
                     ),
@@ -2694,9 +2694,9 @@ class _InvoiceDetailsPageState extends State<InvoiceDetailsPage> {
                           ),
                           contentPadding:
                               const EdgeInsets.only(left: 15, right: 20),
-                          hintText: 'Enter Spare Part Name',
+                          hintText: 'Enter Item Name',
                           filled: true,
-                          fillColor: lightGreyColor,
+                          fillColor: textfieldBg,
                           border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(5),
                             borderSide: const BorderSide(
@@ -2748,7 +2748,7 @@ class _InvoiceDetailsPageState extends State<InvoiceDetailsPage> {
                                               left: 15, right: 20),
                                           hintText: '',
                                           filled: true,
-                                          fillColor: lightGreyColor,
+                                          fillColor: textfieldBg,
                                           border: OutlineInputBorder(
                                             borderRadius:
                                                 BorderRadius.circular(5),
@@ -2812,7 +2812,7 @@ class _InvoiceDetailsPageState extends State<InvoiceDetailsPage> {
                                   dropdownColor: whiteColor,
                                   decoration: InputDecoration(
                                     filled: true,
-                                    fillColor: lightGreyColor,
+                                    fillColor: textfieldBg,
                                     border: OutlineInputBorder(
                                       borderRadius: BorderRadius.circular(5),
                                       borderSide: const BorderSide(
@@ -2900,7 +2900,7 @@ class _InvoiceDetailsPageState extends State<InvoiceDetailsPage> {
                               const EdgeInsets.only(left: 15, right: 20),
                           hintText: '',
                           filled: true,
-                          fillColor: lightGreyColor,
+                          fillColor: textfieldBg,
                           border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(5),
                             borderSide: const BorderSide(

@@ -103,7 +103,7 @@ class _CategoryPickerDialogState extends State<PurchesStockCategoryPicker> {
                       decoration: InputDecoration(
                         hintText: 'Search',
                         filled: true,
-                        fillColor: lightGreyColor,
+                        fillColor: textfieldBg,
                         suffixIcon: IconButton(
                           icon: const Icon(Icons.search,
                               size: 20, color: blackColor),

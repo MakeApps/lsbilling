@@ -173,7 +173,7 @@ class _EditStaffScreen extends State<EditStaffScreen> {
                                               ? 'The first Name field is required'
                                               : null,
                                           filled: true,
-                                          fillColor: lightGreyColor,
+                                          fillColor: textfieldBg,
                                           hintText: "Enter  Name",
                                           hintStyle: const TextStyle(
                                               color: hintTextColor,
@@ -228,7 +228,7 @@ class _EditStaffScreen extends State<EditStaffScreen> {
                                             ),
                                           ),
                                           filled: true,
-                                          fillColor: lightGreyColor,
+                                          fillColor: textfieldBg,
                                           hintText: "Enter middle name",
                                           hintStyle: TextStyle(
                                               color: hintTextColor,
@@ -281,7 +281,7 @@ class _EditStaffScreen extends State<EditStaffScreen> {
                                               ? 'The first Name field is required'
                                               : null,
                                           filled: true,
-                                          fillColor: lightGreyColor,
+                                          fillColor: textfieldBg,
                                           hintText: "Enter last name",
                                           hintStyle: const TextStyle(
                                               color: hintTextColor,
@@ -338,7 +338,7 @@ class _EditStaffScreen extends State<EditStaffScreen> {
                                             ),
                                           ),
                                           filled: true,
-                                          fillColor: lightGreyColor,
+                                          fillColor: textfieldBg,
                                           hintText: "Enter Email",
                                           hintStyle: TextStyle(
                                               color: hintTextColor,
@@ -391,7 +391,7 @@ class _EditStaffScreen extends State<EditStaffScreen> {
                                           ),
                                           errorText: validatePasswor,
                                           filled: true,
-                                          fillColor: lightGreyColor,
+                                          fillColor: textfieldBg,
                                           hintText: "Enter Password",
                                           hintStyle: const TextStyle(
                                               color: hintTextColor,
@@ -451,7 +451,7 @@ class _EditStaffScreen extends State<EditStaffScreen> {
                                           ),
                                           errorText: validateConfirm,
                                           filled: true,
-                                          fillColor: lightGreyColor,
+                                          fillColor: textfieldBg,
                                           hintText: "Enter confirm password",
                                           hintStyle: const TextStyle(
                                               color: hintTextColor,

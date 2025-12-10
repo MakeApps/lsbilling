@@ -193,7 +193,7 @@ class _StockItemRowState extends State<StockItemRow> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         _infoRow(
-                            "Spare Part Code:", widget.product.sparePartCode),
+                            "Item Code:", widget.product.sparePartCode),
                         _infoRow(
                           "Quantity:",
                           "${widget.product.stockQuantity.toInt()} ${widget.product.unitType}",

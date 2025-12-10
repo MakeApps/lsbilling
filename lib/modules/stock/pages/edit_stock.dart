@@ -291,7 +291,7 @@ class _EditStockPageState extends State<EditStockPage> {
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: <Widget>[
-                                  const _FieldLabel('Spare Part Category :',
+                                  const _FieldLabel('Item Category :',
                                       required: true),
                                   TextFormField(
                                     controller: categoryController,
@@ -302,28 +302,28 @@ class _EditStockPageState extends State<EditStockPage> {
                                             ? 'Please select category'
                                             : null,
                                     decoration: _inputDecoration(
-                                        'Select spare part category'),
+                                        'Select Item category'),
                                   ),
                                   const SizedBox(height: 12),
-                                  const _FieldLabel('Spare Part Name:',
+                                  const _FieldLabel('Item Name:',
                                       required: true),
                                   TextFormField(
                                     controller: sparePartNameController,
                                     textInputAction: TextInputAction.next,
                                     decoration: _inputDecoration(
-                                        'Enter spare part name'),
+                                        'Enter Item name'),
                                     validator: (value) =>
                                         (value == null || value.trim().isEmpty)
-                                            ? 'Spare part name is required'
+                                            ? 'Item name is required'
                                             : null,
                                   ),
                                   const SizedBox(height: 12),
-                                  const _FieldLabel('Spare Part Code:'),
+                                  const _FieldLabel('Item Code:'),
                                   TextFormField(
                                     controller: sparePartCodeController,
                                     textInputAction: TextInputAction.next,
                                     decoration: _inputDecoration(
-                                        'Enter spare part code'),
+                                        'Enter Item code'),
                                   ),
                                 ],
                               ),
@@ -363,7 +363,7 @@ class _EditStockPageState extends State<EditStockPage> {
                                       dropdownColor: whiteColor,
                                       decoration: InputDecoration(
                                         filled: true,
-                                        fillColor: lightGreyColor,
+                                        fillColor: textfieldBg,
                                         border: OutlineInputBorder(
                                           borderRadius:
                                               BorderRadius.circular(5),
@@ -404,7 +404,7 @@ class _EditStockPageState extends State<EditStockPage> {
                               ),
                             ),
                             _Section(
-                              title: 'Spare Part Details:',
+                              title: 'Item Details:',
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: <Widget>[
@@ -422,7 +422,7 @@ class _EditStockPageState extends State<EditStockPage> {
                                       dropdownColor: whiteColor,
                                       decoration: InputDecoration(
                                         filled: true,
-                                        fillColor: lightGreyColor,
+                                        fillColor: textfieldBg,
                                         border: OutlineInputBorder(
                                           borderRadius:
                                               BorderRadius.circular(5),
@@ -590,7 +590,7 @@ class _EditStockPageState extends State<EditStockPage> {
       ),
       contentPadding: const EdgeInsets.only(left: 15, right: 20.0),
       filled: true,
-      fillColor: lightGreyColor,
+      fillColor: textfieldBg,
       border: OutlineInputBorder(
         borderRadius: BorderRadius.circular(8),
         borderSide: const BorderSide(width: 0, style: BorderStyle.none),

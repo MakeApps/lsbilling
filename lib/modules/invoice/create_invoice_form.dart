@@ -443,7 +443,7 @@ class _CreateInvoiceFormState extends State<CreateInvoiceForm> {
                                 Icon(
                                   Icons.arrow_forward_ios_outlined,
                                   size: 14,
-                                  color: blackColor,
+                                  color: whiteColor,
                                 ),
                               ],
                             ),
@@ -455,7 +455,8 @@ class _CreateInvoiceFormState extends State<CreateInvoiceForm> {
             ),
             body: Form(
               key: _formKey,
-              child: SingleChildScrollView(
+              child: Card(
+                color: whiteColor,
                 child: Padding(
                   padding: const EdgeInsets.all(25.0),
                   child: Column(
@@ -500,7 +501,7 @@ class _CreateInvoiceFormState extends State<CreateInvoiceForm> {
                             right: 20.0,
                           ),
                           filled: true,
-                          fillColor: whiteColor,
+                          fillColor: textfieldBg,
                           errorText: _nameValidate
                               ? "The customer name field is required"
                               : null,
@@ -546,7 +547,7 @@ class _CreateInvoiceFormState extends State<CreateInvoiceForm> {
                             right: 20.0,
                           ),
                           filled: true,
-                          fillColor: whiteColor,
+                          fillColor: textfieldBg,
                           border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(5),
                             borderSide: const BorderSide(
@@ -591,7 +592,7 @@ class _CreateInvoiceFormState extends State<CreateInvoiceForm> {
                             right: 20.0,
                           ),
                           filled: true,
-                          fillColor: whiteColor,
+                          fillColor: textfieldBg,
                           errorText: _mobileValidate
                               ? "The mobile number field is reqired"
                               : null,
@@ -638,7 +639,7 @@ class _CreateInvoiceFormState extends State<CreateInvoiceForm> {
                             right: 20.0,
                           ),
                           filled: true,
-                          fillColor: whiteColor,
+                          fillColor: textfieldBg,
                           border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(5),
                             borderSide: const BorderSide(
@@ -681,7 +682,7 @@ class _CreateInvoiceFormState extends State<CreateInvoiceForm> {
                             right: 20.0,
                           ),
                           filled: true,
-                          fillColor: whiteColor,
+                          fillColor: textfieldBg,
                           border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(5),
                             borderSide: const BorderSide(

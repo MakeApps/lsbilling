@@ -52,7 +52,7 @@ class _CategoryPickerDialogState extends State<CategoryPickerDialog> {
                           children: <Widget>[
                             const Expanded(
                               child: Text(
-                                'Spare Part Category',
+                                'Item Category',
                                 style: TextStyle(
                                     fontSize: 13, fontWeight: FontWeight.bold),
                               ),
@@ -106,7 +106,7 @@ class _CategoryPickerDialogState extends State<CategoryPickerDialog> {
                                 fontSize: 13, color: hintTextColor),
                             hintText: 'Search',
                             filled: true,
-                            fillColor: lightGreyColor,
+                            fillColor: textfieldBg,
                             suffixIcon: IconButton(
                               icon: const Icon(Icons.search,
                                   size: 18, color: hintTextColor),

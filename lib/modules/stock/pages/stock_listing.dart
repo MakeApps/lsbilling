@@ -276,8 +276,8 @@ class _StockListingState extends State<StockListing> {
                                 const SizedBox(width: 8),
                                 PopupMenuButton<String>(
                                   icon: Container(
-                                    height: 35,
-                                    width: 35,
+                                    height: 40,
+                                    width: 40,
                                     padding: const EdgeInsets.all(8),
                                     decoration: BoxDecoration(
                                       color: isFilterApplied
@@ -288,7 +288,7 @@ class _StockListingState extends State<StockListing> {
                                       ),
                                       border: Border.all(
                                         color: hintTextColor,
-                                        width: 1,
+                                        width: 0,
                                       ),
                                     ),
                                     child: Image.asset(
@@ -325,8 +325,8 @@ class _StockListingState extends State<StockListing> {
                                   offset: const Offset(0, 60),
                                   color: whiteColor,
                                 ),
-                                IconButton(
-                                  onPressed: () {
+                                InkWell(
+                                  onTap: () {
                                     setState(() {
                                       isFilterApplied = false;
                                     });
@@ -336,10 +336,19 @@ class _StockListingState extends State<StockListing> {
                                           FilterItems(StockParams.empty()),
                                         );
                                   },
-                                  icon: Icon(
-                                    Icons.refresh,
-                                    color: whiteColor.withOpacity(0.7),
-                                    size: 28,
+                                  child: Container(
+                                    height: 44,
+                                    width: 44,
+                                    margin: const EdgeInsets.only(left: 5),
+                                    decoration: BoxDecoration(
+                                      color: blackColor,
+                                      borderRadius: BorderRadius.circular(12),
+                                      border: Border.all(
+                                          color: hintTextColor, width: 0),
+                                    ),
+                                    child: Icon(Icons.refresh_rounded,
+                                        color: whiteColor.withOpacity(0.8),
+                                        size: 22),
                                   ),
                                 ),
                               ],
@@ -463,7 +472,7 @@ class _StockListingState extends State<StockListing> {
                 shape: const CircleBorder(),
                 heroTag: 'createStockFab',
                 backgroundColor: primaryColor,
-                foregroundColor: blackColor,
+                foregroundColor: whiteColor,
                 onPressed: () {
                   Navigator.push(
                     context,

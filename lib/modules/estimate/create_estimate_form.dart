@@ -491,7 +491,8 @@ class _CreateEstimateFormState extends State<CreateEstimateForm> {
             ),
             body: Form(
               key: _formKey,
-              child: SingleChildScrollView(
+              child: Card(
+                color: whiteColor,
                 child: Padding(
                   padding: const EdgeInsets.all(25.0),
                   child: Column(
@@ -576,7 +577,7 @@ class _CreateEstimateFormState extends State<CreateEstimateForm> {
                                   errorText: _nameValidate
                                       ? "The full name field is required"
                                       : null,
-                                  fillColor: whiteColor,
+                                  fillColor: textfieldBg,
                                   border: OutlineInputBorder(
                                     borderRadius: BorderRadius.circular(8),
                                     borderSide: const BorderSide(
@@ -591,7 +592,7 @@ class _CreateEstimateFormState extends State<CreateEstimateForm> {
                                       _nameValidate = text.trim().isEmpty;
                                     },
                                   );
-
+                
                                   if (text.trim().length >= 3) {
                                     context.read<SearchBloc>().add(
                                           SearchCustomerDetails(
@@ -638,11 +639,11 @@ class _CreateEstimateFormState extends State<CreateEstimateForm> {
                                 () {
                                   fullNameController.text =
                                       suggestion.fullName!;
-
+                
                                   adressController.text = suggestion.address!;
-
+                
                                   emailController.text = suggestion.email!;
-
+                
                                   phoneNumberController.text =
                                       suggestion.mobileNumber!;
                                   fullNameController.selection =
@@ -686,7 +687,7 @@ class _CreateEstimateFormState extends State<CreateEstimateForm> {
                               right: 20.0,
                             ),
                             filled: true,
-                            fillColor: whiteColor,
+                            fillColor: textfieldBg,
                             border: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(5),
                               borderSide: const BorderSide(
@@ -731,7 +732,7 @@ class _CreateEstimateFormState extends State<CreateEstimateForm> {
                             right: 20.0,
                           ),
                           filled: true,
-                          fillColor: whiteColor,
+                          fillColor: textfieldBg,
                           errorText: _mobileValidate
                               ? "The mobile number field is reqired"
                               : null,
@@ -778,7 +779,7 @@ class _CreateEstimateFormState extends State<CreateEstimateForm> {
                             right: 20.0,
                           ),
                           filled: true,
-                          fillColor: whiteColor,
+                          fillColor: textfieldBg,
                           border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(5),
                             borderSide: const BorderSide(
@@ -821,7 +822,7 @@ class _CreateEstimateFormState extends State<CreateEstimateForm> {
                             right: 20.0,
                           ),
                           filled: true,
-                          fillColor: whiteColor,
+                          fillColor: textfieldBg,
                           border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(5),
                             borderSide: const BorderSide(

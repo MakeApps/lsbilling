@@ -109,7 +109,7 @@ class _EditInvoiceExistingSparePartState
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 const Text(
-                  'Edit Spare Part',
+                  'Edit Item',
                   style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                 ),
                 IconButton(
@@ -120,12 +120,12 @@ class _EditInvoiceExistingSparePartState
             ),
             const SizedBox(height: 10),
 
-            /// Spare Part Name
-            const Text("Spare Part Name:", style: TextStyle(fontSize: 14)),
+            /// Item Name
+            const Text("Item Name:", style: TextStyle(fontSize: 14)),
             const SizedBox(height: 5),
             TextFormField(
               controller: productNameController,
-              decoration: _fieldDecoration("Enter Spare Part Name"),
+              decoration: _fieldDecoration("Enter Item Name"),
             ),
             const SizedBox(height: 15),
 
@@ -167,7 +167,7 @@ class _EditInvoiceExistingSparePartState
                                       left: 15, right: 20),
                                   hintText: '',
                                   filled: true,
-                                  fillColor: lightGreyColor,
+                                  fillColor: textfieldBg,
                                   border: OutlineInputBorder(
                                     borderRadius: BorderRadius.circular(5),
                                     borderSide: const BorderSide(
@@ -284,7 +284,7 @@ class _EditInvoiceExistingSparePartState
               dropdownColor: whiteColor,
               decoration: InputDecoration(
                 filled: true,
-                fillColor: lightGreyColor,
+                fillColor: textfieldBg,
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(5),
                   borderSide: const BorderSide(
@@ -382,7 +382,7 @@ class _EditInvoiceExistingSparePartState
       contentPadding: const EdgeInsets.only(left: 15, right: 20),
       hintText: hint,
       filled: true,
-      fillColor: lightGreyColor,
+      fillColor: textfieldBg,
       border: OutlineInputBorder(
         borderRadius: BorderRadius.circular(5),
         borderSide: const BorderSide(

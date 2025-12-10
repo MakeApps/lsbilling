@@ -26,7 +26,7 @@ class InvoiceSkeleton extends StatelessWidget {
               ),
               const SizedBox(height: 16),
 
-              // Spare Parts Title and Add Button
+              // Items Title and Add Button
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
@@ -44,7 +44,7 @@ class InvoiceSkeleton extends StatelessWidget {
               ),
               const SizedBox(height: 16),
 
-              // Spare Part Item 1
+              // Item 1
               Container(
                 width: double.infinity,
                 height: 80,
@@ -55,7 +55,7 @@ class InvoiceSkeleton extends StatelessWidget {
               ),
               const SizedBox(height: 16),
 
-              // Spare Part Item 2
+              //  Item 2
               Container(
                 width: double.infinity,
                 height: 80,

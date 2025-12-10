@@ -136,7 +136,7 @@ class _InvoiceEditCustomerState extends State<InvoiceEditCustomer> {
                               ? "Please enter correct full name"
                               : null,
                           filled: true,
-                          fillColor: lightGreyColor,
+                          fillColor: textfieldBg,
                           border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(5),
                             borderSide: const BorderSide(
@@ -179,7 +179,7 @@ class _InvoiceEditCustomerState extends State<InvoiceEditCustomer> {
                             right: 20.0,
                           ),
                           filled: true,
-                          fillColor: lightGreyColor,
+                          fillColor: textfieldBg,
                           border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(5),
                             borderSide: const BorderSide(
@@ -221,7 +221,7 @@ class _InvoiceEditCustomerState extends State<InvoiceEditCustomer> {
                             right: 20.0,
                           ),
                           filled: true,
-                          fillColor: lightGreyColor,
+                          fillColor: textfieldBg,
                           border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(5),
                             borderSide: const BorderSide(
@@ -274,7 +274,7 @@ class _InvoiceEditCustomerState extends State<InvoiceEditCustomer> {
                               ? "The mobile Number field is reqired"
                               : null,
                           filled: true,
-                          fillColor: lightGreyColor,
+                          fillColor: textfieldBg,
                           border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(5),
                             borderSide: const BorderSide(
