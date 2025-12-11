@@ -728,113 +728,115 @@ class _EstimatePageState extends State<EstimatePage> {
                                                   return Align(
                                                     alignment:
                                                         Alignment.bottomCenter,
-                                                    child: Container(
-                                                      height: 75,
-                                                      margin:
-                                                          const EdgeInsets.only(
-                                                              bottom: 20,
-                                                              left: 20,
-                                                              right: 20),
-                                                      decoration: BoxDecoration(
-                                                        color: whiteColor,
-                                                        borderRadius:
-                                                            BorderRadius
-                                                                .circular(5),
-                                                      ),
-                                                      child: Padding(
-                                                        padding:
-                                                            const EdgeInsets
-                                                                .all(20.0),
-                                                        child: Material(
+                                                    child: SafeArea(
+                                                      child: Container(
+                                                        height: 75,
+                                                        margin:
+                                                            const EdgeInsets.only(
+                                                                bottom: 20,
+                                                                left: 20,
+                                                                right: 20),
+                                                        decoration: BoxDecoration(
                                                           color: whiteColor,
-                                                          child: Column(
-                                                            children: [
-                                                              const SizedBox(
-                                                                height: 10,
-                                                              ),
-                                                              GestureDetector(
-                                                                onTap:
-                                                                    () async {
-                                                                  Navigator.of(
-                                                                          context)
-                                                                      .pop();
-                                                                  await showDialog(
-                                                                    context:
-                                                                        context,
-                                                                    builder:
-                                                                        (BuildContext
-                                                                            context) {
-                                                                      return EditCustomerByEstimate(
-                                                                        id: state
-                                                                            .estimateModel!
-                                                                            .estimateId,
-                                                                        fullname: state
-                                                                            .estimateModel!
-                                                                            .fullName
-                                                                            .toString(),
-                                                                        address: state
-                                                                            .estimateModel!
-                                                                            .address
-                                                                            .toString(),
-                                                                        email: state
-                                                                            .estimateModel!
-                                                                            .email
-                                                                            .toString(),
-                                                                        phoneno: state
-                                                                            .estimateModel!
-                                                                            .mobileNumber
-                                                                            .toString(),
-                                                                      );
-                                                                    },
-                                                                  );
-                                                                  if (!mounted)
-                                                                    return;
-                                                                  // Safe setState after async gap
-                                                                  setState(() {
-                                                                    sparePartsList
-                                                                        .clear();
-                                                                    sparePartsListNew
-                                                                        .clear();
-                                                                  });
-
-                                                                  if (!mounted)
-                                                                    return;
-                                                                  context
-                                                                      .read<
-                                                                          JobSheetDetailsBloc>()
-                                                                      .add(
-                                                                        GetEstimateDetailsByEstimate(
+                                                          borderRadius:
+                                                              BorderRadius
+                                                                  .circular(5),
+                                                        ),
+                                                        child: Padding(
+                                                          padding:
+                                                              const EdgeInsets
+                                                                  .all(20.0),
+                                                          child: Material(
+                                                            color: whiteColor,
+                                                            child: Column(
+                                                              children: [
+                                                                const SizedBox(
+                                                                  height: 10,
+                                                                ),
+                                                                GestureDetector(
+                                                                  onTap:
+                                                                      () async {
+                                                                    Navigator.of(
+                                                                            context)
+                                                                        .pop();
+                                                                    await showDialog(
+                                                                      context:
+                                                                          context,
+                                                                      builder:
+                                                                          (BuildContext
+                                                                              context) {
+                                                                        return EditCustomerByEstimate(
                                                                           id: state
                                                                               .estimateModel!
-                                                                              .estimateId
+                                                                              .estimateId,
+                                                                          fullname: state
+                                                                              .estimateModel!
+                                                                              .fullName
                                                                               .toString(),
-                                                                        ),
-                                                                      );
-                                                                },
-                                                                child: Row(
-                                                                  children: [
-                                                                    Icon(
-                                                                      Icons
-                                                                          .edit_outlined,
-                                                                      color: Colors
-                                                                          .grey
-                                                                          .shade600,
-                                                                    ),
-                                                                    const SizedBox(
-                                                                      width: 20,
-                                                                    ),
-                                                                    const Text(
-                                                                      'Edit Customer',
-                                                                      style: TextStyle(
-                                                                          fontSize:
-                                                                              14,
-                                                                          fontWeight:
-                                                                              FontWeight.w500),
-                                                                    )
-                                                                  ],
+                                                                          address: state
+                                                                              .estimateModel!
+                                                                              .address
+                                                                              .toString(),
+                                                                          email: state
+                                                                              .estimateModel!
+                                                                              .email
+                                                                              .toString(),
+                                                                          phoneno: state
+                                                                              .estimateModel!
+                                                                              .mobileNumber
+                                                                              .toString(),
+                                                                        );
+                                                                      },
+                                                                    );
+                                                                    if (!mounted)
+                                                                      return;
+                                                                    // Safe setState after async gap
+                                                                    setState(() {
+                                                                      sparePartsList
+                                                                          .clear();
+                                                                      sparePartsListNew
+                                                                          .clear();
+                                                                    });
+                                                      
+                                                                    if (!mounted)
+                                                                      return;
+                                                                    context
+                                                                        .read<
+                                                                            JobSheetDetailsBloc>()
+                                                                        .add(
+                                                                          GetEstimateDetailsByEstimate(
+                                                                            id: state
+                                                                                .estimateModel!
+                                                                                .estimateId
+                                                                                .toString(),
+                                                                          ),
+                                                                        );
+                                                                  },
+                                                                  child: Row(
+                                                                    children: [
+                                                                      Icon(
+                                                                        Icons
+                                                                            .edit_outlined,
+                                                                        color: Colors
+                                                                            .grey
+                                                                            .shade600,
+                                                                      ),
+                                                                      const SizedBox(
+                                                                        width: 20,
+                                                                      ),
+                                                                      const Text(
+                                                                        'Edit Customer',
+                                                                        style: TextStyle(
+                                                                            fontSize:
+                                                                                14,
+                                                                            fontWeight:
+                                                                                FontWeight.w500),
+                                                                      )
+                                                                    ],
+                                                                  ),
                                                                 ),
-                                                              ),
-                                                            ],
+                                                              ],
+                                                            ),
                                                           ),
                                                         ),
                                                       ),

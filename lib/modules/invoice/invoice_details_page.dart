@@ -615,72 +615,74 @@ class _InvoiceDetailsPageState extends State<InvoiceDetailsPage> {
                                                   return Align(
                                                     alignment:
                                                         Alignment.bottomCenter,
-                                                    child: Container(
-                                                      height: 75,
-                                                      margin:
-                                                          const EdgeInsets.only(
-                                                              bottom: 20,
-                                                              left: 20,
-                                                              right: 20),
-                                                      decoration: BoxDecoration(
-                                                        color: whiteColor,
-                                                        borderRadius:
-                                                            BorderRadius
-                                                                .circular(5),
-                                                      ),
-                                                      child: Padding(
-                                                        padding:
-                                                            const EdgeInsets
-                                                                .all(20.0),
-                                                        child: Material(
+                                                    child: SafeArea(
+                                                      child: Container(
+                                                        height: 75,
+                                                        margin:
+                                                            const EdgeInsets.only(
+                                                                bottom: 20,
+                                                                left: 20,
+                                                                right: 20),
+                                                        decoration: BoxDecoration(
                                                           color: whiteColor,
-                                                          child: Column(
-                                                            children: [
-                                                              const SizedBox(
-                                                                height: 10,
-                                                              ),
-                                                              GestureDetector(
-                                                                onTap: () {
-                                                                  setState(
-                                                                    () {
-                                                                      Navigator.of(
-                                                                              context)
-                                                                          .pop();
-                                                                      showDialog(
-                                                                          context:
-                                                                              context,
-                                                                          builder:
-                                                                              (BuildContext context) {
-                                                                            return InvoiceEditCustomer(
-                                                                              id: state.invoiceModel!.invoiceId,
-                                                                              customerModel: CustomerModel(id: state.invoiceModel!.customerId, fullName: _fullNameController.text, address: _adressController.text, email: _emailController.text, mobileNumber: _phoneNumberController.text),
-                                                                            );
-                                                                          });
-                                                                    },
-                                                                  );
-                                                                },
-                                                                child: Row(
-                                                                  children: [
-                                                                    Icon(
-                                                                      Icons
-                                                                          .edit_outlined,
-                                                                      color: Colors
-                                                                          .grey
-                                                                          .shade500,
-                                                                    ),
-                                                                    const SizedBox(
-                                                                      width: 20,
-                                                                    ),
-                                                                    const Text(
-                                                                      'Edit Customer',
-                                                                      style: TextStyle(
-                                                                          fontSize:
-                                                                              14),
-                                                                    )
-                                                                  ],
+                                                          borderRadius:
+                                                              BorderRadius
+                                                                  .circular(5),
+                                                        ),
+                                                        child: Padding(
+                                                          padding:
+                                                              const EdgeInsets
+                                                                  .all(20.0),
+                                                          child: Material(
+                                                            color: whiteColor,
+                                                            child: Column(
+                                                              children: [
+                                                                const SizedBox(
+                                                                  height: 10,
                                                                 ),
-                                                              ),
-                                                            ],
+                                                                GestureDetector(
+                                                                  onTap: () {
+                                                                    setState(
+                                                                      () {
+                                                                        Navigator.of(
+                                                                                context)
+                                                                            .pop();
+                                                                        showDialog(
+                                                                            context:
+                                                                                context,
+                                                                            builder:
+                                                                                (BuildContext context) {
+                                                                              return InvoiceEditCustomer(
+                                                                                id: state.invoiceModel!.invoiceId,
+                                                                                customerModel: CustomerModel(id: state.invoiceModel!.customerId, fullName: _fullNameController.text, address: _adressController.text, email: _emailController.text, mobileNumber: _phoneNumberController.text),
+                                                                              );
+                                                                            });
+                                                                      },
+                                                                    );
+                                                                  },
+                                                                  child: Row(
+                                                                    children: [
+                                                                      Icon(
+                                                                        Icons
+                                                                            .edit_outlined,
+                                                                        color: Colors
+                                                                            .grey
+                                                                            .shade500,
+                                                                      ),
+                                                                      const SizedBox(
+                                                                        width: 20,
+                                                                      ),
+                                                                      const Text(
+                                                                        'Edit Customer',
+                                                                        style: TextStyle(
+                                                                            fontSize:
+                                                                                14),
+                                                                      )
+                                                                    ],
+                                                                  ),
+                                                                ),
+                                                              ],
+                                                            ),
                                                           ),
                                                         ),
                                                       ),

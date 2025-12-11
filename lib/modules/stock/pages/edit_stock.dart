@@ -155,124 +155,126 @@ class _EditStockPageState extends State<EditStockPage> {
                 },
               ),
               showDefaultBottom: false,
-              bottomNavigationBar: Container(
-                decoration: const BoxDecoration(color: whiteColor),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.all(15.0),
-                      child: ElevatedButton(
-                        style: ButtonStyle(
-                          foregroundColor:
-                              WidgetStateProperty.all<Color>(blackColor),
-                          backgroundColor:
-                              WidgetStateProperty.all<Color>(lightGreyColor),
-                          shape:
-                              WidgetStateProperty.all<RoundedRectangleBorder>(
-                            RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(5),
+              bottomNavigationBar: SafeArea(
+                child: Container(
+                  decoration: const BoxDecoration(color: whiteColor),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.all(15.0),
+                        child: ElevatedButton(
+                          style: ButtonStyle(
+                            foregroundColor:
+                                WidgetStateProperty.all<Color>(blackColor),
+                            backgroundColor:
+                                WidgetStateProperty.all<Color>(lightGreyColor),
+                            shape:
+                                WidgetStateProperty.all<RoundedRectangleBorder>(
+                              RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(5),
+                              ),
                             ),
                           ),
-                        ),
-                        onPressed: () {
-                          clearScreen();
-                        },
-                        child: const Text(
-                          "Clear All",
-                          style: TextStyle(color: blackColor, fontSize: 15),
-                        ),
-                      ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.all(15.0),
-                      child: ElevatedButton(
-                        style: ButtonStyle(
-                          foregroundColor:
-                              WidgetStateProperty.all<Color>(whiteColor),
-                          backgroundColor:
-                              WidgetStateProperty.all<Color>(primaryColor),
-                          shape:
-                              WidgetStateProperty.all<RoundedRectangleBorder>(
-                            RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(5),
-                              side: const BorderSide(color: primaryColor),
-                            ),
+                          onPressed: () {
+                            clearScreen();
+                          },
+                          child: const Text(
+                            "Clear All",
+                            style: TextStyle(color: blackColor, fontSize: 15),
                           ),
                         ),
-                        onPressed: () {
-                          final bool isValid =
-                              _formKey.currentState?.validate() ?? false;
-                          // if (!isValid) return;
-                          if (isValid == true) {
-                            Map<String, dynamic> formData = {
-                              "id": state.stockDetails!.id,
-                              "spare_part_cat": categoryController.text.trim(),
-                              "created_at_date":
-                                  state.stockDetails!.createdAtDate,
-                              "created_at_time":
-                                  state.stockDetails!.createdAtTime,
-                              "deleted_at": state.stockDetails!.deletedAt,
-                              "category_id": selectedCategoryId,
-                              "spare_part_name":
-                                  sparePartNameController.text.trim(),
-                              "spare_part_code":
-                                  sparePartCodeController.text.trim(),
-                              "purchase_price":
-                                  purchasePriceController.text.trim(),
-                              "sales_price": salesPriceController.text.trim(),
-                              "tax": selectedGst ?? 'None',
-                              "unit_type": selectedUnitType ?? 'PCS',
-                              "stock_quantity":
-                                  stockQuantityController.text.trim(),
-                              "hsn_code": hsnCodeController.text.trim(),
-                              "storage_location":
-                                  storageLocationController.text.trim(),
-                              "location_id": state.stockDetails!.locationId,
-                              "description": descriptionController.text.trim(),
-                              "manufactured":
-                                  manufacturerController.text.trim(),
-                              "timelines": jsonEncode(
-                                (state.stockDetails!.timelines ?? [])
-                                    .map((timeline) => {
-                                          'created_at': timeline.createdAt,
-                                          'deleted_at': timeline.deletedAt,
-                                          'product_id': timeline.productId,
-                                          'product_qty': timeline.productQty,
-                                          'remark': timeline.remark,
-                                          'timeline_id': timeline.timelineId,
-                                          'stock_status': timeline.stockStatus,
-                                          'updated_at': timeline.updatedAt,
-                                        })
-                                    .toList(),
-                              ),
-                              "tag": jsonEncode(
-                                vehicleTags
-                                    .map((String tagValue) => {"tag": tagValue})
-                                    .toList(),
-                              ),
-                              "updated_at_date": state.stockDetails!.updatedAt,
-                            };
-                            context.read<StockDetailsBloc>().add(
-                                  UpdateEditStock(
-                                    id: state.stockDetails!.id.toString(),
-                                    formData: formData,
-                                  ),
-                                );
-                          }
-                        },
-                        child: const Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: <Widget>[
-                            Text(
-                              "Update",
-                              style: TextStyle(color: blackColor, fontSize: 15),
-                            ),
-                          ],
-                        ),
                       ),
-                    )
-                  ],
+                      Padding(
+                        padding: const EdgeInsets.all(15.0),
+                        child: ElevatedButton(
+                          style: ButtonStyle(
+                            foregroundColor:
+                                WidgetStateProperty.all<Color>(whiteColor),
+                            backgroundColor:
+                                WidgetStateProperty.all<Color>(primaryColor),
+                            shape:
+                                WidgetStateProperty.all<RoundedRectangleBorder>(
+                              RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(5),
+                                side: const BorderSide(color: primaryColor),
+                              ),
+                            ),
+                          ),
+                          onPressed: () {
+                            final bool isValid =
+                                _formKey.currentState?.validate() ?? false;
+                            // if (!isValid) return;
+                            if (isValid == true) {
+                              Map<String, dynamic> formData = {
+                                "id": state.stockDetails!.id,
+                                "spare_part_cat": categoryController.text.trim(),
+                                "created_at_date":
+                                    state.stockDetails!.createdAtDate,
+                                "created_at_time":
+                                    state.stockDetails!.createdAtTime,
+                                "deleted_at": state.stockDetails!.deletedAt,
+                                "category_id": selectedCategoryId,
+                                "spare_part_name":
+                                    sparePartNameController.text.trim(),
+                                "spare_part_code":
+                                    sparePartCodeController.text.trim(),
+                                "purchase_price":
+                                    purchasePriceController.text.trim(),
+                                "sales_price": salesPriceController.text.trim(),
+                                "tax": selectedGst ?? 'None',
+                                "unit_type": selectedUnitType ?? 'PCS',
+                                "stock_quantity":
+                                    stockQuantityController.text.trim(),
+                                "hsn_code": hsnCodeController.text.trim(),
+                                "storage_location":
+                                    storageLocationController.text.trim(),
+                                "location_id": state.stockDetails!.locationId,
+                                "description": descriptionController.text.trim(),
+                                "manufactured":
+                                    manufacturerController.text.trim(),
+                                "timelines": jsonEncode(
+                                  (state.stockDetails!.timelines ?? [])
+                                      .map((timeline) => {
+                                            'created_at': timeline.createdAt,
+                                            'deleted_at': timeline.deletedAt,
+                                            'product_id': timeline.productId,
+                                            'product_qty': timeline.productQty,
+                                            'remark': timeline.remark,
+                                            'timeline_id': timeline.timelineId,
+                                            'stock_status': timeline.stockStatus,
+                                            'updated_at': timeline.updatedAt,
+                                          })
+                                      .toList(),
+                                ),
+                                "tag": jsonEncode(
+                                  vehicleTags
+                                      .map((String tagValue) => {"tag": tagValue})
+                                      .toList(),
+                                ),
+                                "updated_at_date": state.stockDetails!.updatedAt,
+                              };
+                              context.read<StockDetailsBloc>().add(
+                                    UpdateEditStock(
+                                      id: state.stockDetails!.id.toString(),
+                                      formData: formData,
+                                    ),
+                                  );
+                            }
+                          },
+                          child: const Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: <Widget>[
+                              Text(
+                                "Update",
+                                style: TextStyle(color: blackColor, fontSize: 15),
+                              ),
+                            ],
+                          ),
+                        ),
+                      )
+                    ],
+                  ),
                 ),
               ),
               body: (state.stockDetailsStatus ==

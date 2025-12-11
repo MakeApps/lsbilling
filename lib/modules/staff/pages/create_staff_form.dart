@@ -98,44 +98,46 @@ class _CreateStaffScreenState extends State<CreateStaffScreen> {
               },
             ),
           ],
-          bottomNavigationBar: Container(
-            decoration: const BoxDecoration(color: whiteColor),
-            padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
-            child: SizedBox(
-              width: double.infinity,
-              height: 45,
-              child: ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: primaryColor,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(5),
+          bottomNavigationBar: SafeArea(
+            child: Container(
+              decoration: const BoxDecoration(color: whiteColor),
+              padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
+              child: SizedBox(
+                width: double.infinity,
+                height: 45,
+                child: ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: primaryColor,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(5),
+                    ),
                   ),
-                ),
-                onPressed: () {
-                  if (_formKey.currentState!.validate()) {
-                    Map<String, dynamic> formData = {
-                      "phoneNo": '',
-                      "gender": '',
-                      "birthDate": '',
-                      "email": emailController.text.toString(),
-                      "first_name": firstNameController.text.toString(),
-                      "last_name": lastNameController.text.toString(),
-                      "middle_name": middleNameController.text.toString(),
-                      "confirmPassword": confirmPasswordController.text,
-                      "password": passwordController.text,
-                      "role_id": 4,
-                    };
-                    context.read<StaffBloc>().add(
-                          CreateStaff(formData: formData),
-                        );
-                  }
-                },
-                child: const Text(
-                  "SUBMIT",
-                  style: TextStyle(
-                      color: Colors.black,
-                      fontWeight: FontWeight.bold,
-                      fontSize: 15),
+                  onPressed: () {
+                    if (_formKey.currentState!.validate()) {
+                      Map<String, dynamic> formData = {
+                        "phoneNo": '',
+                        "gender": '',
+                        "birthDate": '',
+                        "email": emailController.text.toString(),
+                        "first_name": firstNameController.text.toString(),
+                        "last_name": lastNameController.text.toString(),
+                        "middle_name": middleNameController.text.toString(),
+                        "confirmPassword": confirmPasswordController.text,
+                        "password": passwordController.text,
+                        "role_id": 4,
+                      };
+                      context.read<StaffBloc>().add(
+                            CreateStaff(formData: formData),
+                          );
+                    }
+                  },
+                  child: const Text(
+                    "SUBMIT",
+                    style: TextStyle(
+                        color: Colors.black,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 15),
+                  ),
                 ),
               ),
             ),

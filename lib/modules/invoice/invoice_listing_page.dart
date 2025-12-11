@@ -294,8 +294,20 @@ class _InvoiceListingPageState extends State<InvoiceListingPage> {
                                 decoration: InputDecoration(
                                   contentPadding: const EdgeInsets.symmetric(
                                       horizontal: 10, vertical: 8),
-                                  border: OutlineInputBorder(
+                                  enabledBorder: OutlineInputBorder(
                                     borderRadius: BorderRadius.circular(6),
+                                    borderSide: const BorderSide(
+                                      color: hintTextColor,
+                                    ),
+                                  ),
+                                  focusedBorder: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(6),
+                                    borderSide: BorderSide(
+                                      color: _selectedPaymentStatus == null
+                                          ? hintTextColor
+                                          : primaryColor,
+                                      width: 1.2,
+                                    ),
                                   ),
                                   filled: true,
                                   fillColor: blackColor,

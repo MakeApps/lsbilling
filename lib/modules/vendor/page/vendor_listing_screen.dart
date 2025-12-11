@@ -160,180 +160,182 @@ class _VendorListingPageState extends State<VendorListingPage> {
             color: whiteColor,
           ),
         ),
-        body: Stack(
-          children: [
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                Padding(
-                  padding: const EdgeInsets.only(bottom: 10),
-                  child: Container(
-                    padding: const EdgeInsets.only(
-                        left: 10, bottom: 15, top: 10, right: 10),
-                    decoration: const BoxDecoration(
-                      color: blackColor,
-                      borderRadius: BorderRadiusDirectional.only(
-                        bottomStart: Radius.circular(25),
-                        bottomEnd: Radius.circular(25),
+        body: SafeArea(
+          child: Stack(
+            children: [
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.only(bottom: 10),
+                    child: Container(
+                      padding: const EdgeInsets.only(
+                          left: 10, bottom: 15, top: 10, right: 10),
+                      decoration: const BoxDecoration(
+                        color: blackColor,
+                        borderRadius: BorderRadiusDirectional.only(
+                          bottomStart: Radius.circular(25),
+                          bottomEnd: Radius.circular(25),
+                        ),
+                      ),
+                      child: Row(
+                        children: [
+                          Expanded(
+                            flex: 1,
+                            child: TextField(
+                              style: const TextStyle(
+                                  color: whiteColor, fontSize: 14),
+                              controller: _searchController,
+                              onChanged: (value) {
+                                if (value.length > 2) {
+                                  context.read<VendorBloc>().add(
+                                        FetchVendorList(
+                                          searchKeyword: _searchController.text,
+                                          status: VendorStatus.loading,
+                                        ),
+                                      );
+                                } else if (value.isEmpty) {
+                                  _fetchInitialVendor();
+                                }
+                              },
+                              decoration: InputDecoration(
+                                hintStyle: TextStyle(
+                                  fontWeight: FontWeight.w600,
+                                  color: whiteColor.withOpacity(0.5),
+                                  fontFamily: 'Mulish',
+                                  fontSize: 12,
+                                ),
+                                focusedBorder: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(6),
+                                  borderSide: const BorderSide(
+                                    width: 0,
+                                    color: hintTextColor,
+                                  ),
+                                ),
+                                disabledBorder: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(6),
+                                  borderSide: const BorderSide(
+                                    width: 0,
+                                    color: hintTextColor,
+                                  ),
+                                ),
+                                enabledBorder: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(6),
+                                  borderSide: const BorderSide(
+                                    width: 0,
+                                    color: hintTextColor,
+                                  ),
+                                ),
+                                border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(6),
+                                  borderSide: const BorderSide(
+                                    color: hintTextColor,
+                                    width: 0,
+                                  ),
+                                ),
+                                contentPadding: const EdgeInsets.only(
+                                  left: 10,
+                                  right: 15.0,
+                                ),
+                                filled: true,
+                                fillColor: blackColor,
+                                suffixIcon: Container(
+                                  height: 40,
+                                  width: 40,
+                                  padding: const EdgeInsets.all(15),
+                                  child: Image.asset(
+                                    "assets/icons/search.png",
+                                    height: 30,
+                                    width: 30,
+                                    color: primaryColor,
+                                  ),
+                                ),
+                                hintText: 'Search by vendor name',
+                              ),
+                            ),
+                          ),
+                          const SizedBox(
+                            width: 4,
+                          ),
+                          InkWell(
+                            onTap: () {
+                              _fetchInitialVendor();
+                              _searchController.clear();
+                            },
+                            child: Container(
+                              height: 44,
+                              width: 44,
+                              margin: const EdgeInsets.only(left: 5),
+                              decoration: BoxDecoration(
+                                color: blackColor,
+                                borderRadius: BorderRadius.circular(6),
+                                border:
+                                    Border.all(color: hintTextColor, width: 0),
+                              ),
+                              child: Icon(Icons.refresh_rounded,
+                                  color: whiteColor.withOpacity(0.8), size: 28),
+                            ),
+                          ),
+                        ],
                       ),
                     ),
-                    child: Row(
-                      children: [
-                        Expanded(
-                          flex: 1,
-                          child: TextField(
-                            style: const TextStyle(
-                                color: whiteColor, fontSize: 14),
-                            controller: _searchController,
-                            onChanged: (value) {
-                              if (value.length > 2) {
-                                context.read<VendorBloc>().add(
-                                      FetchVendorList(
-                                        searchKeyword: _searchController.text,
-                                        status: VendorStatus.loading,
-                                      ),
-                                    );
-                              } else if (value.isEmpty) {
-                                _fetchInitialVendor();
-                              }
-                            },
-                            decoration: InputDecoration(
-                              hintStyle: TextStyle(
-                                fontWeight: FontWeight.w600,
-                                color: whiteColor.withOpacity(0.5),
-                                fontFamily: 'Mulish',
-                                fontSize: 12,
-                              ),
-                              focusedBorder: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(6),
-                                borderSide: const BorderSide(
-                                  width: 0,
-                                  color: hintTextColor,
-                                ),
-                              ),
-                              disabledBorder: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(6),
-                                borderSide: const BorderSide(
-                                  width: 0,
-                                  color: hintTextColor,
-                                ),
-                              ),
-                              enabledBorder: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(6),
-                                borderSide: const BorderSide(
-                                  width: 0,
-                                  color: hintTextColor,
-                                ),
-                              ),
-                              border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(6),
-                                borderSide: const BorderSide(
-                                  color: hintTextColor,
-                                  width: 0,
-                                ),
-                              ),
-                              contentPadding: const EdgeInsets.only(
-                                left: 10,
-                                right: 15.0,
-                              ),
-                              filled: true,
-                              fillColor: blackColor,
-                              suffixIcon: Container(
-                                height: 40,
-                                width: 40,
-                                padding: const EdgeInsets.all(15),
-                                child: Image.asset(
-                                  "assets/icons/search.png",
-                                  height: 30,
-                                  width: 30,
-                                  color: primaryColor,
-                                ),
-                              ),
-                              hintText: 'Search by vendor name',
-                            ),
-                          ),
-                        ),
-                        const SizedBox(
-                          width: 4,
-                        ),
-                        InkWell(
-                          onTap: () {
-                            _fetchInitialVendor();
-                            _searchController.clear();
-                          },
-                          child: Container(
-                            height: 44,
-                            width: 44,
-                            margin: const EdgeInsets.only(left: 5),
-                            decoration: BoxDecoration(
-                              color: blackColor,
-                              borderRadius: BorderRadius.circular(6),
-                              border:
-                                  Border.all(color: hintTextColor, width: 0),
-                            ),
-                            child: Icon(Icons.refresh_rounded,
-                                color: whiteColor.withOpacity(0.8), size: 28),
-                          ),
-                        ),
-                      ],
+                  ),
+                  const SizedBox(
+                    height: 10,
+                  ),
+                  Expanded(
+                    child: BlocConsumer<VendorBloc, VendorState>(
+                      listener: (context, state) {},
+                      builder: (context, state) {
+                        if (state.vendorStatus == VendorStatus.initial ||
+                            state.vendorStatus == VendorStatus.loading) {
+                          return const Padding(
+                            padding: EdgeInsets.all(8),
+                            child: Skeleton(),
+                          );
+                        }
+          
+                        return (state.vendorStatus == VendorStatus.failure ||
+                                state.vendorList.isEmpty)
+                            ? const NoDataFoundWidget()
+                            : ListView.builder(
+                                itemBuilder: (context, index) {
+                                  return (index >= state.vendorList.length)
+                                      ? const Skeleton()
+                                      : VendorListRow(
+                                          vendorRowDetails:
+                                              state.vendorList[index],
+                                        );
+                                },
+                                controller: _scrollController,
+                                itemCount: state.vendorList.length,
+                              );
+                      },
                     ),
                   ),
-                ),
-                const SizedBox(
-                  height: 10,
-                ),
-                Expanded(
-                  child: BlocConsumer<VendorBloc, VendorState>(
-                    listener: (context, state) {},
-                    builder: (context, state) {
-                      if (state.vendorStatus == VendorStatus.initial ||
-                          state.vendorStatus == VendorStatus.loading) {
-                        return const Padding(
-                          padding: EdgeInsets.all(8),
-                          child: Skeleton(),
-                        );
-                      }
-
-                      return (state.vendorStatus == VendorStatus.failure ||
-                              state.vendorList.isEmpty)
-                          ? const NoDataFoundWidget()
-                          : ListView.builder(
-                              itemBuilder: (context, index) {
-                                return (index >= state.vendorList.length)
-                                    ? const Skeleton()
-                                    : VendorListRow(
-                                        vendorRowDetails:
-                                            state.vendorList[index],
-                                      );
-                              },
-                              controller: _scrollController,
-                              itemCount: state.vendorList.length,
-                            );
-                    },
-                  ),
-                ),
-              ],
-            ),
-            Positioned(
-              right: 16,
-              bottom: 20,
-              child: FloatingActionButton(
-                shape: const CircleBorder(),
-                heroTag: 'createStockFab',
-                backgroundColor: primaryColor,
-                foregroundColor: whiteColor,
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => const CreateVendorScreen(),
-                    ),
-                  );
-                },
-                child: const Icon(Icons.add),
+                ],
               ),
-            ),
-          ],
+              Positioned(
+                right: 16,
+                bottom: 20,
+                child: FloatingActionButton(
+                  shape: const CircleBorder(),
+                  heroTag: 'createStockFab',
+                  backgroundColor: primaryColor,
+                  foregroundColor: whiteColor,
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const CreateVendorScreen(),
+                      ),
+                    );
+                  },
+                  child: const Icon(Icons.add),
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );

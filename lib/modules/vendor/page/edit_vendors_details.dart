@@ -92,64 +92,66 @@ class _EditVendorsDetailsState extends State<EditVendorsDetails> {
               ),
             ),
             showDefaultBottom: false,
-            bottomNavigationBar: Container(
-              decoration: const BoxDecoration(color: whiteColor),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.end,
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.all(15.0),
-                    child: ElevatedButton(
-                      style: ButtonStyle(
-                        foregroundColor:
-                            WidgetStateProperty.all<Color>(whiteColor),
-                        backgroundColor:
-                            WidgetStateProperty.all<Color>(primaryColor),
-                        shape: WidgetStateProperty.all<RoundedRectangleBorder>(
-                          RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(5),
-                            side: const BorderSide(color: primaryColor),
+            bottomNavigationBar: SafeArea(
+              child: Container(
+                decoration: const BoxDecoration(color: whiteColor),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.all(15.0),
+                      child: ElevatedButton(
+                        style: ButtonStyle(
+                          foregroundColor:
+                              WidgetStateProperty.all<Color>(whiteColor),
+                          backgroundColor:
+                              WidgetStateProperty.all<Color>(primaryColor),
+                          shape: WidgetStateProperty.all<RoundedRectangleBorder>(
+                            RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(5),
+                              side: const BorderSide(color: primaryColor),
+                            ),
                           ),
                         ),
+                        onPressed: () {
+                          if (_formKey.currentState!.validate()) {
+                            Map<String, dynamic> formData = {
+                              "id": state.vendorDetailsList!.id,
+                              "created_at":
+                                  state.vendorDetailsList!.createdAt.toString(),
+                              "deleted_at":
+                                  state.vendorDetailsList!.deletedAt.toString(),
+                              "updated_at":
+                                  state.vendorDetailsList!.updatedAt.toString(),
+                              "vendor_name": vendorNameController.text.trim(),
+                              "address": adressController.text.trim(),
+                              "email": emailController.text.trim(),
+                              "phone_number": phoneNumberController.text.trim(),
+                              "total_balance_vendor":
+                                  totalBalanceController.text.trim(),
+                              "gst_number": gstNumberController.text.trim(),
+                            };
+                            context.read<VendorDetailsBloc>().add(
+                                  UpdateEditVendor(
+                                    formData: formData,
+                                    id: state.vendorDetailsList!.id.toString(),
+                                  ),
+                                );
+                          }
+                        },
+                        child: const Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: <Widget>[
+                            Text(
+                              "Update",
+                              style: TextStyle(color: whiteColor, fontSize: 15),
+                            ),
+                          ],
+                        ),
                       ),
-                      onPressed: () {
-                        if (_formKey.currentState!.validate()) {
-                          Map<String, dynamic> formData = {
-                            "id": state.vendorDetailsList!.id,
-                            "created_at":
-                                state.vendorDetailsList!.createdAt.toString(),
-                            "deleted_at":
-                                state.vendorDetailsList!.deletedAt.toString(),
-                            "updated_at":
-                                state.vendorDetailsList!.updatedAt.toString(),
-                            "vendor_name": vendorNameController.text.trim(),
-                            "address": adressController.text.trim(),
-                            "email": emailController.text.trim(),
-                            "phone_number": phoneNumberController.text.trim(),
-                            "total_balance_vendor":
-                                totalBalanceController.text.trim(),
-                            "gst_number": gstNumberController.text.trim(),
-                          };
-                          context.read<VendorDetailsBloc>().add(
-                                UpdateEditVendor(
-                                  formData: formData,
-                                  id: state.vendorDetailsList!.id.toString(),
-                                ),
-                              );
-                        }
-                      },
-                      child: const Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: <Widget>[
-                          Text(
-                            "Update",
-                            style: TextStyle(color: whiteColor, fontSize: 15),
-                          ),
-                        ],
-                      ),
-                    ),
-                  )
-                ],
+                    )
+                  ],
+                ),
               ),
             ),
             actions: [

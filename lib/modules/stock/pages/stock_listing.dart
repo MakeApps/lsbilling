@@ -154,337 +154,339 @@ class _StockListingState extends State<StockListing> {
             color: whiteColor,
           ),
         ),
-        body: Stack(
-          children: [
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                //  Wrap the whole Padding in BlocBuilder
-                BlocBuilder<StockBloc, StockState>(
-                  builder: (context, state) {
-                    final int inStock = state.stockItems?.totalInStock ?? 0;
-                    final int outOfStock =
-                        state.stockItems?.totalOutOfStock ?? 0;
-                    final int bestSeller =
-                        state.stockItems?.totalMaxSellCount ?? 0;
-
-                    // If you also want dynamic filter options from state
-                    final List<String> filterOptions =
-                        state.stockItems?.stockLocation ?? [];
-
-                    return Padding(
-                      padding: const EdgeInsets.only(bottom: 10),
-                      child: Container(
-                        padding: const EdgeInsets.only(
-                            left: 10, bottom: 15, top: 10, right: 10),
-                        decoration: const BoxDecoration(
-                          color: blackColor,
-                          borderRadius: BorderRadiusDirectional.only(
-                            bottomStart: Radius.circular(25),
-                            bottomEnd: Radius.circular(25),
+        body: SafeArea(
+          child: Stack(
+            children: [
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  //  Wrap the whole Padding in BlocBuilder
+                  BlocBuilder<StockBloc, StockState>(
+                    builder: (context, state) {
+                      final int inStock = state.stockItems?.totalInStock ?? 0;
+                      final int outOfStock =
+                          state.stockItems?.totalOutOfStock ?? 0;
+                      final int bestSeller =
+                          state.stockItems?.totalMaxSellCount ?? 0;
+          
+                      // If you also want dynamic filter options from state
+                      final List<String> filterOptions =
+                          state.stockItems?.stockLocation ?? [];
+          
+                      return Padding(
+                        padding: const EdgeInsets.only(bottom: 10),
+                        child: Container(
+                          padding: const EdgeInsets.only(
+                              left: 10, bottom: 15, top: 10, right: 10),
+                          decoration: const BoxDecoration(
+                            color: blackColor,
+                            borderRadius: BorderRadiusDirectional.only(
+                              bottomStart: Radius.circular(25),
+                              bottomEnd: Radius.circular(25),
+                            ),
                           ),
-                        ),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Row(
-                              children: [
-                                Expanded(
-                                  flex: 1,
-                                  child: TextField(
-                                    style: const TextStyle(color: whiteColor),
-                                    controller: _searchController,
-                                    onChanged: (value) {
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Row(
+                                children: [
+                                  Expanded(
+                                    flex: 1,
+                                    child: TextField(
+                                      style: const TextStyle(color: whiteColor),
+                                      controller: _searchController,
+                                      onChanged: (value) {
+                                        context.read<StockBloc>().add(
+                                              FilterItems(
+                                                state.stockParams!.copyWith(
+                                                  search: _searchController.text
+                                                      .trim(),
+                                                  filter:
+                                                      state.filter ?? "in_stock",
+                                                ),
+                                              ),
+                                            );
+                                      },
+                                      decoration: InputDecoration(
+                                        hintStyle: TextStyle(
+                                          fontWeight: FontWeight.w600,
+                                          color: whiteColor.withOpacity(0.7),
+                                          fontFamily: 'Mulish',
+                                          fontSize: 13,
+                                        ),
+                                        focusedBorder: OutlineInputBorder(
+                                          borderRadius: BorderRadius.circular(8),
+                                          borderSide: const BorderSide(
+                                            width: 0,
+                                            color: hintTextColor,
+                                          ),
+                                        ),
+                                        disabledBorder: OutlineInputBorder(
+                                          borderRadius: BorderRadius.circular(8),
+                                          borderSide: const BorderSide(
+                                            width: 0,
+                                            color: hintTextColor,
+                                          ),
+                                        ),
+                                        enabledBorder: OutlineInputBorder(
+                                          borderRadius: BorderRadius.circular(8),
+                                          borderSide: const BorderSide(
+                                            width: 0,
+                                            color: hintTextColor,
+                                          ),
+                                        ),
+                                        border: OutlineInputBorder(
+                                          borderRadius: BorderRadius.circular(8),
+                                          borderSide: const BorderSide(
+                                            color: hintTextColor,
+                                            width: 0,
+                                          ),
+                                        ),
+                                        contentPadding: const EdgeInsets.only(
+                                          left: 10,
+                                          right: 15.0,
+                                        ),
+                                        filled: true,
+                                        fillColor: blackColor,
+                                        suffixIcon: IconButton(
+                                          icon: Image.asset(
+                                            "assets/icons/search.png",
+                                            height: 16,
+                                            width: 16,
+                                            color: whiteColor,
+                                          ),
+                                          onPressed: () {
+                                            context.read<StockBloc>().add(
+                                                  FilterItems(
+                                                    state.stockParams!.copyWith(
+                                                      search: _searchController
+                                                          .text
+                                                          .trim(),
+                                                      // Maintain current filter when searching
+                                                      filter: state.filter ??
+                                                          "in_stock",
+                                                    ),
+                                                  ),
+                                                );
+                                          },
+                                        ),
+                                        hintText: 'Search by stock name....',
+                                      ),
+                                    ),
+                                  ),
+                                  const SizedBox(width: 8),
+                                  PopupMenuButton<String>(
+                                    icon: Container(
+                                      height: 40,
+                                      width: 40,
+                                      padding: const EdgeInsets.all(8),
+                                      decoration: BoxDecoration(
+                                        color: isFilterApplied
+                                            ? successColor
+                                            : blackColor,
+                                        borderRadius: const BorderRadius.all(
+                                          Radius.circular(5),
+                                        ),
+                                        border: Border.all(
+                                          color: hintTextColor,
+                                          width: 0,
+                                        ),
+                                      ),
+                                      child: Image.asset(
+                                          "assets/icons/filter.png",
+                                          height: 24,
+                                          width: 24,
+                                          color: whiteColor),
+                                    ),
+                                    itemBuilder: (BuildContext context) {
+                                      return filterOptions.map((String option) {
+                                        return PopupMenuItem<String>(
+                                          textStyle: const TextStyle(
+                                              backgroundColor: whiteColor),
+                                          value: option,
+                                          child: Text(option),
+                                        );
+                                      }).toList();
+                                    },
+                                    onSelected: (String value) {
+                                      setState(() {
+                                        isFilterApplied = true;
+                                      });
                                       context.read<StockBloc>().add(
                                             FilterItems(
                                               state.stockParams!.copyWith(
-                                                search: _searchController.text
-                                                    .trim(),
+                                                storageLocation: value,
+                                                // Maintain current filter when changing storage location
                                                 filter:
                                                     state.filter ?? "in_stock",
                                               ),
                                             ),
                                           );
                                     },
-                                    decoration: InputDecoration(
-                                      hintStyle: TextStyle(
-                                        fontWeight: FontWeight.w600,
-                                        color: whiteColor.withOpacity(0.7),
-                                        fontFamily: 'Mulish',
-                                        fontSize: 13,
-                                      ),
-                                      focusedBorder: OutlineInputBorder(
-                                        borderRadius: BorderRadius.circular(8),
-                                        borderSide: const BorderSide(
-                                          width: 0,
-                                          color: hintTextColor,
-                                        ),
-                                      ),
-                                      disabledBorder: OutlineInputBorder(
-                                        borderRadius: BorderRadius.circular(8),
-                                        borderSide: const BorderSide(
-                                          width: 0,
-                                          color: hintTextColor,
-                                        ),
-                                      ),
-                                      enabledBorder: OutlineInputBorder(
-                                        borderRadius: BorderRadius.circular(8),
-                                        borderSide: const BorderSide(
-                                          width: 0,
-                                          color: hintTextColor,
-                                        ),
-                                      ),
-                                      border: OutlineInputBorder(
-                                        borderRadius: BorderRadius.circular(8),
-                                        borderSide: const BorderSide(
-                                          color: hintTextColor,
-                                          width: 0,
-                                        ),
-                                      ),
-                                      contentPadding: const EdgeInsets.only(
-                                        left: 10,
-                                        right: 15.0,
-                                      ),
-                                      filled: true,
-                                      fillColor: blackColor,
-                                      suffixIcon: IconButton(
-                                        icon: Image.asset(
-                                          "assets/icons/search.png",
-                                          height: 16,
-                                          width: 16,
-                                          color: whiteColor,
-                                        ),
-                                        onPressed: () {
-                                          context.read<StockBloc>().add(
-                                                FilterItems(
-                                                  state.stockParams!.copyWith(
-                                                    search: _searchController
-                                                        .text
-                                                        .trim(),
-                                                    // Maintain current filter when searching
-                                                    filter: state.filter ??
-                                                        "in_stock",
-                                                  ),
-                                                ),
-                                              );
-                                        },
-                                      ),
-                                      hintText: 'Search by stock name....',
-                                    ),
+                                    offset: const Offset(0, 60),
+                                    color: whiteColor,
                                   ),
-                                ),
-                                const SizedBox(width: 8),
-                                PopupMenuButton<String>(
-                                  icon: Container(
-                                    height: 40,
-                                    width: 40,
-                                    padding: const EdgeInsets.all(8),
-                                    decoration: BoxDecoration(
-                                      color: isFilterApplied
-                                          ? successColor
-                                          : blackColor,
-                                      borderRadius: const BorderRadius.all(
-                                        Radius.circular(5),
-                                      ),
-                                      border: Border.all(
-                                        color: hintTextColor,
-                                        width: 0,
-                                      ),
-                                    ),
-                                    child: Image.asset(
-                                        "assets/icons/filter.png",
-                                        height: 24,
-                                        width: 24,
-                                        color: whiteColor),
-                                  ),
-                                  itemBuilder: (BuildContext context) {
-                                    return filterOptions.map((String option) {
-                                      return PopupMenuItem<String>(
-                                        textStyle: const TextStyle(
-                                            backgroundColor: whiteColor),
-                                        value: option,
-                                        child: Text(option),
-                                      );
-                                    }).toList();
-                                  },
-                                  onSelected: (String value) {
-                                    setState(() {
-                                      isFilterApplied = true;
-                                    });
-                                    context.read<StockBloc>().add(
-                                          FilterItems(
-                                            state.stockParams!.copyWith(
-                                              storageLocation: value,
-                                              // Maintain current filter when changing storage location
-                                              filter:
-                                                  state.filter ?? "in_stock",
-                                            ),
-                                          ),
-                                        );
-                                  },
-                                  offset: const Offset(0, 60),
-                                  color: whiteColor,
-                                ),
-                                InkWell(
-                                  onTap: () {
-                                    setState(() {
-                                      isFilterApplied = false;
-                                    });
-                                    _searchController.clear();
-                                    _selectedTabIndex = 0;
-                                    context.read<StockBloc>().add(
-                                          FilterItems(StockParams.empty()),
-                                        );
-                                  },
-                                  child: Container(
-                                    height: 44,
-                                    width: 44,
-                                    margin: const EdgeInsets.only(left: 5),
-                                    decoration: BoxDecoration(
-                                      color: blackColor,
-                                      borderRadius: BorderRadius.circular(12),
-                                      border: Border.all(
-                                          color: hintTextColor, width: 0),
-                                    ),
-                                    child: Icon(Icons.refresh_rounded,
-                                        color: whiteColor.withOpacity(0.8),
-                                        size: 22),
-                                  ),
-                                ),
-                              ],
-                            ),
-                            const SizedBox(height: 12),
-
-                            //  Tab Pills
-                            SingleChildScrollView(
-                              scrollDirection: Axis.horizontal,
-                              child: Row(
-                                children: [
-                                  _TabPill(
-                                    label: 'In Stock',
-                                    count: inStock,
-                                    selected: _selectedTabIndex == 0,
+                                  InkWell(
                                     onTap: () {
-                                      setState(() => _selectedTabIndex = 0);
+                                      setState(() {
+                                        isFilterApplied = false;
+                                      });
+                                      _searchController.clear();
+                                      _selectedTabIndex = 0;
                                       context.read<StockBloc>().add(
-                                            FilterItems(
-                                              state.stockParams!.copyWith(
-                                                filter: "in_stock",
-                                                search: _searchController.text
-                                                    .trim(),
-                                              ),
-                                            ),
+                                            FilterItems(StockParams.empty()),
                                           );
                                     },
-                                  ),
-                                  const SizedBox(width: 10),
-                                  _TabPill(
-                                    label: 'Out of Stock',
-                                    count: outOfStock,
-                                    selected: _selectedTabIndex == 1,
-                                    onTap: () {
-                                      setState(() => _selectedTabIndex = 1);
-                                      context.read<StockBloc>().add(
-                                            FilterItems(
-                                              state.stockParams!.copyWith(
-                                                search: _searchController.text
-                                                    .trim(),
-                                                filter: "out_of_stock",
-                                              ),
-                                            ),
-                                          );
-                                    },
-                                  ),
-                                  const SizedBox(width: 10),
-                                  _TabPill(
-                                    label: 'Best Seller',
-                                    count: bestSeller,
-                                    selected: _selectedTabIndex == 2,
-                                    onTap: () {
-                                      setState(() => _selectedTabIndex = 2);
-                                      context.read<StockBloc>().add(
-                                            FilterItems(
-                                              state.stockParams!.copyWith(
-                                                search: _searchController.text
-                                                    .trim(),
-                                                filter: "max_sell",
-                                              ),
-                                            ),
-                                          );
-                                    },
+                                    child: Container(
+                                      height: 44,
+                                      width: 44,
+                                      margin: const EdgeInsets.only(left: 5),
+                                      decoration: BoxDecoration(
+                                        color: blackColor,
+                                        borderRadius: BorderRadius.circular(12),
+                                        border: Border.all(
+                                            color: hintTextColor, width: 0),
+                                      ),
+                                      child: Icon(Icons.refresh_rounded,
+                                          color: whiteColor.withOpacity(0.8),
+                                          size: 22),
+                                    ),
                                   ),
                                 ],
                               ),
-                            ),
-                          ],
+                              const SizedBox(height: 12),
+          
+                              //  Tab Pills
+                              SingleChildScrollView(
+                                scrollDirection: Axis.horizontal,
+                                child: Row(
+                                  children: [
+                                    _TabPill(
+                                      label: 'In Stock',
+                                      count: inStock,
+                                      selected: _selectedTabIndex == 0,
+                                      onTap: () {
+                                        setState(() => _selectedTabIndex = 0);
+                                        context.read<StockBloc>().add(
+                                              FilterItems(
+                                                state.stockParams!.copyWith(
+                                                  filter: "in_stock",
+                                                  search: _searchController.text
+                                                      .trim(),
+                                                ),
+                                              ),
+                                            );
+                                      },
+                                    ),
+                                    const SizedBox(width: 10),
+                                    _TabPill(
+                                      label: 'Out of Stock',
+                                      count: outOfStock,
+                                      selected: _selectedTabIndex == 1,
+                                      onTap: () {
+                                        setState(() => _selectedTabIndex = 1);
+                                        context.read<StockBloc>().add(
+                                              FilterItems(
+                                                state.stockParams!.copyWith(
+                                                  search: _searchController.text
+                                                      .trim(),
+                                                  filter: "out_of_stock",
+                                                ),
+                                              ),
+                                            );
+                                      },
+                                    ),
+                                    const SizedBox(width: 10),
+                                    _TabPill(
+                                      label: 'Best Seller',
+                                      count: bestSeller,
+                                      selected: _selectedTabIndex == 2,
+                                      onTap: () {
+                                        setState(() => _selectedTabIndex = 2);
+                                        context.read<StockBloc>().add(
+                                              FilterItems(
+                                                state.stockParams!.copyWith(
+                                                  search: _searchController.text
+                                                      .trim(),
+                                                  filter: "max_sell",
+                                                ),
+                                              ),
+                                            );
+                                      },
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ],
+                          ),
                         ),
+                      );
+                    },
+                  ),
+                  Expanded(
+                    child: BlocConsumer<StockBloc, StockState>(
+                      listener: (context, state) {},
+                      builder: (context, state) {
+                        if (state.stockStatus == StockStatus.initial ||
+                            state.stockStatus == StockStatus.loading ||
+                            state.stockStatus == StockStatus.searching) {
+                          return const Padding(
+                            padding: EdgeInsets.all(8),
+                            child: Skeleton(),
+                          );
+                        }
+          
+                        return (state.stockStatus == StockStatus.failure ||
+                                state.stockItems!.products.isEmpty)
+                            ? const NoDataFoundWidget()
+                            : ListView.builder(
+                                itemBuilder: (context, index) {
+                                  return (index >=
+                                          state.stockItems!.products.length)
+                                      ? const Padding(
+                                          padding:
+                                              EdgeInsets.symmetric(vertical: 10),
+                                          child: Center(
+                                            child: CircularProgressIndicator(
+                                                color: primaryColor,
+                                                strokeWidth: 2),
+                                          ),
+                                        )
+                                      : StockItemRow(
+                                          product:
+                                              state.stockItems!.products[index],
+                                        );
+                                },
+                                controller: _scrollController,
+                                itemCount: state.stockItems!.products.length +
+                                    (state.hasReachedMax! ? 0 : 1),
+                              );
+                      },
+                    ),
+                  ),
+                ],
+              ),
+              Positioned(
+                right: 16,
+                bottom: 20,
+                child: FloatingActionButton(
+                  shape: const CircleBorder(),
+                  heroTag: 'createStockFab',
+                  backgroundColor: primaryColor,
+                  foregroundColor: whiteColor,
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const CreateStockPage(),
                       ),
                     );
                   },
+                  child: const Icon(Icons.add),
                 ),
-                Expanded(
-                  child: BlocConsumer<StockBloc, StockState>(
-                    listener: (context, state) {},
-                    builder: (context, state) {
-                      if (state.stockStatus == StockStatus.initial ||
-                          state.stockStatus == StockStatus.loading ||
-                          state.stockStatus == StockStatus.searching) {
-                        return const Padding(
-                          padding: EdgeInsets.all(8),
-                          child: Skeleton(),
-                        );
-                      }
-
-                      return (state.stockStatus == StockStatus.failure ||
-                              state.stockItems!.products.isEmpty)
-                          ? const NoDataFoundWidget()
-                          : ListView.builder(
-                              itemBuilder: (context, index) {
-                                return (index >=
-                                        state.stockItems!.products.length)
-                                    ? const Padding(
-                                        padding:
-                                            EdgeInsets.symmetric(vertical: 10),
-                                        child: Center(
-                                          child: CircularProgressIndicator(
-                                              color: primaryColor,
-                                              strokeWidth: 2),
-                                        ),
-                                      )
-                                    : StockItemRow(
-                                        product:
-                                            state.stockItems!.products[index],
-                                      );
-                              },
-                              controller: _scrollController,
-                              itemCount: state.stockItems!.products.length +
-                                  (state.hasReachedMax! ? 0 : 1),
-                            );
-                    },
-                  ),
-                ),
-              ],
-            ),
-            Positioned(
-              right: 16,
-              bottom: 20,
-              child: FloatingActionButton(
-                shape: const CircleBorder(),
-                heroTag: 'createStockFab',
-                backgroundColor: primaryColor,
-                foregroundColor: whiteColor,
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => const CreateStockPage(),
-                    ),
-                  );
-                },
-                child: const Icon(Icons.add),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );
@@ -539,7 +541,7 @@ class _TabPill extends StatelessWidget {
               style: TextStyle(
                 fontWeight: FontWeight.w700,
                 fontSize: 12,
-                color: selected ? blackColorDark : Colors.black87,
+                color: selected ? whiteColor : Colors.black87,
               ),
             ),
           ],
