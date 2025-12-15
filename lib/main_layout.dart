@@ -48,24 +48,6 @@ class MainLayout extends StatefulWidget {
 
 class _MainLayoutState extends State<MainLayout>
     with SingleTickerProviderStateMixin {
-  // bool isMenuOpen = false;
-  // late AnimationController _animationController;
-
-  // @override
-  // void initState() {
-  //   super.initState();
-  //   _animationController = AnimationController(
-  //     vsync: this,
-  //     duration: const Duration(milliseconds: 300),
-  //   );
-  // }
-
-  // @override
-  // void dispose() {
-  //   _animationController.dispose();
-  //   super.dispose();
-  // }
-
   @override
   Widget build(BuildContext context) {
     final bottomPadding = MediaQuery.of(context).padding.bottom;
@@ -95,7 +77,7 @@ class _MainLayoutState extends State<MainLayout>
       drawer: widget.drawer,
       body: widget.body,
 
-// ------------ FLOATING ACTION BUTTON -------------
+      // ------------ FLOATING ACTION BUTTON -------------
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       floatingActionButton: (widget.showDefaultBottom != true ||
               widget.ctx == 0)

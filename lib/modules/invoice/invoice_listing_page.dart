@@ -297,16 +297,17 @@ class _InvoiceListingPageState extends State<InvoiceListingPage> {
                                   enabledBorder: OutlineInputBorder(
                                     borderRadius: BorderRadius.circular(6),
                                     borderSide: const BorderSide(
+                                        width: 0,
                                       color: hintTextColor,
                                     ),
                                   ),
                                   focusedBorder: OutlineInputBorder(
                                     borderRadius: BorderRadius.circular(6),
                                     borderSide: BorderSide(
+                                      width: 0,
                                       color: _selectedPaymentStatus == null
                                           ? hintTextColor
                                           : primaryColor,
-                                      width: 1.2,
                                     ),
                                   ),
                                   filled: true,
@@ -379,7 +380,7 @@ class _InvoiceListingPageState extends State<InvoiceListingPage> {
                           ],
                         ),
 
-// --------------------------- ROW 3 : GST FILTER TABS ---------------------------
+                        // -------- ROW 3 : GST FILTER TABS ---------------------------
 
                         const SizedBox(height: 12),
                         Row(
@@ -730,8 +731,8 @@ class _TabPill extends StatelessWidget {
           borderRadius: BorderRadius.circular(25),
         ),
         child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            const SizedBox(width: 8),
             Text(
               label,
               style: TextStyle(

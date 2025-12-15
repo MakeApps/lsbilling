@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:shimmer/shimmer.dart';
-
 import '../../config/colors.dart';
 
 class DashboardSkeleton extends StatelessWidget {
@@ -8,186 +7,103 @@ class DashboardSkeleton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      child: Shimmer.fromColors(
-        baseColor: greyColor.withOpacity(0.1),
-        highlightColor: lightColor,
-        child: ListView.builder(
-          itemCount: 1,
-          shrinkWrap: true,
-          physics: const NeverScrollableScrollPhysics(),
-          itemBuilder: (context, index) {
-            return ClipRRect(
-              borderRadius: BorderRadius.circular(10),
-              child: Column(
-                children: [
-                  Container(
-                    decoration: BoxDecoration(
-                      border: Border.all(color: blackColor),
-                    ),
-                    margin: const EdgeInsets.all(5),
-                    child: Column(
-                      children: [
-                        Container(
-                          color: hintTextColor,
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Row(
-                                children: [
-                                  Card(
-                                    margin: const EdgeInsets.only(
-                                        left: 5, right: 5, top: 5),
-                                    child: Container(
-                                      width: 140,
-                                      padding: const EdgeInsets.all(8),
-                                      decoration: BoxDecoration(
-                                        border: Border.all(color: blueColor),
-                                        color: lightColor,
-                                        borderRadius: BorderRadius.circular(5),
-                                      ),
-                                      child: Column(
-                                        children: [
-                                          Container(
-                                            height: 70,
-                                            color: lightColor,
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                  )
-                                ],
-                              ),
-                              Row(
-                                children: [
-                                  Card(
-                                    margin: const EdgeInsets.only(
-                                        left: 5, right: 5, top: 5),
-                                    child: Container(
-                                      width: 140,
-                                      padding: const EdgeInsets.only(
-                                          left: 23,
-                                          right: 23,
-                                          top: 8,
-                                          bottom: 8),
-                                      decoration: BoxDecoration(
-                                        border: Border.all(color: successColor),
-                                        color: lightColor,
-                                        borderRadius: BorderRadius.circular(5),
-                                      ),
-                                      child: Column(
-                                        children: [
-                                          Container(
-                                            height: 70,
-                                            color: lightColor,
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                  )
-                                ],
-                              ),
-                            ],
-                          ),
-                        )
-                      ],
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.only(top: 15),
-                    child: SizedBox(
-                      height: 100,
-                      child: ListView.builder(
-                        scrollDirection: Axis.horizontal,
-                        itemCount: 4,
-                        padding: const EdgeInsets.symmetric(horizontal: 6),
-                        itemBuilder: (context, index) {
-                          return Card(
-                            color: greyColor.withOpacity(0.3),
-                            margin: const EdgeInsets.symmetric(horizontal: 5),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(6),
-                            ),
-                            child: Container(
-                              width: 160,
-                              height: 60,
-                              decoration: BoxDecoration(
-                                color: greyColor,
-                                borderRadius: BorderRadius.circular(5),
-                              ),
-                            ),
-                          );
-                        },
-                      ),
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.only(top: 15),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceAround,
-                      children: [
-                        Card(
-                          color: pinkColor,
-                          child: Container(
-                            margin: const EdgeInsets.only(top: 16, bottom: 16),
-                            child: Column(
-                              children: [
-                                Container(
-                                  height: 150,
-                                  width: 100,
-                                  decoration: BoxDecoration(
-                                    color: greyColor,
-                                    borderRadius: BorderRadius.circular(5),
-                                  ),
-                                )
-                              ],
-                            ),
-                          ),
-                        ),
-                        Card(
-                          color: primaryYellowColor,
-                          child: Container(
-                            margin: const EdgeInsets.only(top: 16, bottom: 16),
-                            child: Column(
-                              children: [
-                                Container(
-                                  height: 150,
-                                  width: 100,
-                                  decoration: BoxDecoration(
-                                    color: greyColor,
-                                    borderRadius: BorderRadius.circular(5),
-                                  ),
-                                )
-                              ],
-                            ),
-                          ),
-                        ),
-                        Card(
-                          color: purpleColor,
-                          child: Container(
-                            margin: const EdgeInsets.only(top: 16, bottom: 16),
-                            child: Column(
-                              children: [
-                                Container(
-                                  height: 150,
-                                  width: 100,
-                                  decoration: BoxDecoration(
-                                    color: greyColor,
-                                    borderRadius: BorderRadius.circular(5),
-                                  ),
-                                )
-                              ],
-                            ),
-                          ),
-                        )
-                      ],
-                    ),
-                  )
-                ],
-              ),
-            );
-          },
+    return Shimmer.fromColors(
+      baseColor: greyColor.withOpacity(0.3),
+      highlightColor: lightColor,
+      child: Padding(
+        padding: const EdgeInsets.all(12),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            // Top two cards
+            Row(
+              children: [
+                Expanded(child: _topCard()),
+                const SizedBox(width: 12),
+                Expanded(child: _topCard()),
+              ],
+            ),
+            const SizedBox(height: 16),
+
+            /// Full width cards
+            _fullWidthCard(),
+            const SizedBox(height: 12),
+            _fullWidthCard(),
+            const SizedBox(height: 12),
+            _fullWidthCard(),
+          ],
         ),
+      ),
+    );
+  }
+
+  Widget _topCard() {
+    return Container(
+      height: 90,
+      padding: const EdgeInsets.all(12),
+      decoration: BoxDecoration(
+        color: greyColor,
+        borderRadius: BorderRadius.circular(8),
+      ),
+      child: Row(
+        children: [
+          Container(
+            height: 40,
+            width: 40,
+            decoration: BoxDecoration(
+              color: lightColor,
+              borderRadius: BorderRadius.circular(6),
+            ),
+          ),
+          const SizedBox(width: 10),
+          Expanded(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Container(height: 10, width: 80, color: lightColor),
+                const SizedBox(height: 8),
+                Container(height: 12, width: 50, color: lightColor),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _fullWidthCard() {
+    return Container(
+      height: 70,
+      padding: const EdgeInsets.all(12),
+      decoration: BoxDecoration(
+        color: greyColor,
+        borderRadius: BorderRadius.circular(8),
+      ),
+      child: Row(
+        children: [
+          Container(
+            height: 36,
+            width: 36,
+            decoration: BoxDecoration(
+              color: lightColor,
+              borderRadius: BorderRadius.circular(6),
+            ),
+          ),
+          const SizedBox(width: 12),
+          Expanded(
+            child: Container(
+              height: 12,
+              color: lightColor,
+            ),
+          ),
+          const SizedBox(width: 30),
+          Container(
+            height: 12,
+            width: 20,
+            color: lightColor,
+          ),
+        ],
       ),
     );
   }

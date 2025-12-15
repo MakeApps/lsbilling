@@ -85,10 +85,25 @@ class _EditStockPageState extends State<EditStockPage> {
       manufacturerController.text = state.stockDetails!.manufactured.toString();
       selectedCategoryId = state.stockDetails!.categoryId;
       categoryController.text = state.stockDetails!.sparePartCat.toString();
-      selectedGst = state.stockDetails!.tax.toString();
+    
       selectedUnitType = state.stockDetails!.unitType.toString();
       // Other assignments...
       vehicleTags = state.stockDetails!.tag!;
+
+        String value =  state.stockDetails!.tax.toString();
+
+      // If value starts with IGST → don't show anything
+      if (value.startsWith("IGST")) {
+        selectedGst = null;
+        return;
+      }
+
+      // If value exists in gstList → set it, else set empty
+      if (gstList.contains(value)) {
+        selectedGst = value;
+      } else {
+        selectedGst = null;
+      }
     });
   }
 
