@@ -48,31 +48,16 @@ class MainLayout extends StatefulWidget {
 
 class _MainLayoutState extends State<MainLayout>
     with SingleTickerProviderStateMixin {
-  bool isMenuOpen = false;
-  late AnimationController _animationController;
-
-  @override
-  void initState() {
-    super.initState();
-    _animationController = AnimationController(
-      vsync: this,
-      duration: const Duration(milliseconds: 300),
-    );
-  }
-
-  @override
-  void dispose() {
-    _animationController.dispose();
-    super.dispose();
-  }
-
   @override
   Widget build(BuildContext context) {
+    final bottomPadding = MediaQuery.of(context).padding.bottom;
+
     return Scaffold(
       backgroundColor: backgroundColor,
       resizeToAvoidBottomInset: widget.resizeToAvoidBottomInset ?? true,
+
+      // ------------ APPBAR -------------
       appBar: AppBar(
-        //centerTitle: true,
         title: widget.title,
         centerTitle: false,
         titleSpacing: 0,
@@ -87,11 +72,12 @@ class _MainLayoutState extends State<MainLayout>
               )
             : null,
         leading: (!widget.showLeading!) ? null : widget.leading,
-
         actions: const [HumbergerIconButton()],
       ),
       drawer: widget.drawer,
       body: widget.body,
+
+      // ------------ FLOATING ACTION BUTTON -------------
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       floatingActionButton: (widget.showDefaultBottom != true ||
               widget.ctx == 0)
@@ -143,85 +129,86 @@ class _MainLayoutState extends State<MainLayout>
             ),
       bottomNavigationBar: (widget.showDefaultBottom != true)
           ? widget.bottomNavigationBar
-          : Container(
-              height: 70, // ← set desired height
-              decoration: BoxDecoration(
-                color: whiteColor,
-                borderRadius: const BorderRadius.only(
-                  topLeft: Radius.circular(15),
-                  topRight: Radius.circular(15),
+          : SafeArea(
+              top: false,
+              child: Container(
+                padding: EdgeInsets.only(bottom: bottomPadding),
+                decoration: BoxDecoration(
+                  color: whiteColor,
+                  borderRadius: const BorderRadius.only(
+                    topLeft: Radius.circular(15),
+                    topRight: Radius.circular(15),
+                  ),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black.withOpacity(0.08),
+                      blurRadius: 10,
+                      offset: const Offset(0, -2),
+                    ),
+                  ],
                 ),
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.black.withOpacity(0.08),
-                    blurRadius: 10,
-                    offset: const Offset(0, -2),
-                  ),
-                ],
-              ),
-              padding: const EdgeInsets.symmetric(
-                  vertical: 0), // ← remove extra space
-              child: BottomNavigationBar(
-                type: BottomNavigationBarType.fixed,
-                backgroundColor: Colors.transparent,
-                elevation: 0,
-                selectedItemColor: blackColor,
-                unselectedItemColor: hintTextColor,
-                showSelectedLabels: true,
-                showUnselectedLabels: true,
-                currentIndex: widget.ctx,
-                selectedFontSize: 13, // ← Smaller title
-                unselectedFontSize: 11,
-                iconSize: 20, // ← Smaller icon size
-                onTap: (value) async {
-                  if (widget.ctx != value) {
-                    setState(() => widget.ctx = value);
-                  }
-                  Future.microtask(
-                    () {
-                      switch (value) {
-                        case 0:
-                          Navigator.pushReplacementNamed(
-                              context, '/dashboard_page');
-                          break;
-                        case 1:
-                          Navigator.pushReplacementNamed(
-                              context, '/estimate_listing');
-                          break;
-                        case 2:
-                          Navigator.pushReplacementNamed(
-                              context, '/invoice_page_listing');
-                          break;
-                      }
-                    },
-                  );
-                },
-                items: [
-                  BottomNavigationBarItem(
-                    label: "Dashboard",
-                    icon: navItemModern(
-                      "assets/icons/dashboard.png",
-                      widget.ctx == 0,
-                      size: 30,
+                child: BottomNavigationBar(
+                  type: BottomNavigationBarType.fixed,
+                  backgroundColor: Colors.transparent,
+                  elevation: 0,
+                  selectedItemColor: blackColor,
+                  unselectedItemColor: hintTextColor,
+                  showSelectedLabels: true,
+                  showUnselectedLabels: true,
+                  currentIndex: widget.ctx,
+                  selectedFontSize: 13, // ← Smaller title
+                  unselectedFontSize: 11,
+                  iconSize: 23, // ← Smaller icon size
+                  onTap: (value) async {
+                    if (widget.ctx != value) {
+                      setState(() => widget.ctx = value);
+                    }
+                    Future.microtask(
+                      () {
+                        switch (value) {
+                          case 0:
+                            Navigator.pushReplacementNamed(
+                                context, '/dashboard_page');
+                            break;
+                          case 1:
+                            Navigator.pushReplacementNamed(
+                                context, '/estimate_listing');
+                            break;
+                          case 2:
+                            Navigator.pushReplacementNamed(
+                                context, '/invoice_page_listing');
+                            break;
+                        }
+                      },
+                    );
+                  },
+                  items: [
+                    BottomNavigationBarItem(
+                      label: "Dashboard",
+                      icon: navItemModern(
+                        "assets/icons/dashboard.png",
+                        widget.ctx == 0,
+                        size: 30,
+                      ),
                     ),
-                  ),
-                  BottomNavigationBarItem(
-                    label: "Estimate",
-                    icon: navItemModern(
-                      "assets/icons/estimate.png",
-                      widget.ctx == 1,
-                      size: 30,
+                    BottomNavigationBarItem(
+                      label: "Estimate",
+                      icon: navItemModern(
+                        "assets/icons/estimate.png",
+                        widget.ctx == 1,
+                        size: 30,
+                      ),
                     ),
-                  ),
-                  BottomNavigationBarItem(
-                    label: "Invoice",
-                    icon: navItemModern(
-                      "assets/icons/invoice.png",
-                      widget.ctx == 2,
-                      size: 30,
+                    BottomNavigationBarItem(
+                      label: "Invoice",
+                      icon: navItemModern(
+                        "assets/icons/invoice.png",
+                        widget.ctx == 2,
+                        size: 30,
+                      ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
             ),
     );

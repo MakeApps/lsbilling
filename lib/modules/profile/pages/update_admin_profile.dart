@@ -181,89 +181,91 @@ class _UpdateProfileState extends State<UpdateProfile> {
             ),
             showCurvedAppBar: true,
             showDefaultBottom: false,
-            bottomNavigationBar: Container(
-              height: 50,
-              decoration: const BoxDecoration(
-                color: primaryColor,
-                borderRadius: BorderRadius.only(
-                  topLeft: Radius.circular(7),
-                  topRight: Radius.circular(7),
-                ),
-              ),
+            bottomNavigationBar: SafeArea(
               child: Container(
                 height: 50,
                 decoration: const BoxDecoration(
                   color: primaryColor,
-                  borderRadius: BorderRadius.all(
-                    Radius.circular(10),
+                  borderRadius: BorderRadius.only(
+                    topLeft: Radius.circular(7),
+                    topRight: Radius.circular(7),
                   ),
                 ),
-                child: ElevatedButton(
-                  style: ButtonStyle(
-                    shape: WidgetStateProperty.all<RoundedRectangleBorder>(
-                      RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(5.0),
-                      ),
+                child: Container(
+                  height: 50,
+                  decoration: const BoxDecoration(
+                    color: primaryColor,
+                    borderRadius: BorderRadius.all(
+                      Radius.circular(10),
                     ),
-                    backgroundColor: const WidgetStatePropertyAll(primaryColor),
                   ),
-                  onPressed: () {
-                    setState(
-                      () {
-                        validateWorkshopName =
-                            workshopnameController.text.isEmpty;
-                      },
-                    );
-                    Map<String, String> addressMap = {
-                      "street": streetAddressController.text.toString(),
-                      "city": cityController.text.toString(),
-                      "state": stateController.toString(),
-                      "pincode": pincodeController.text.toString(),
-                    };
-                    Map<String, dynamic> formData = {
-                      "id": id,
-                      "company_name": workshopnameController.text.toString(),
-                      "username": usernameController.text.toString(),
-                      "email": emailController.text.toString(),
-                      "mobile_number": mobileNumberController.text.toString(),
-                      "address": jsonEncode(addressMap),
-                      "bank_name": bankNameController.text.toString(),
-                      "act_no": accountNoController.text.toString(),
-                      "ifsc": ifscController.text.toString(),
-                      "brach_name": branchNameController.text.toString(),
-                      "vpa": vpaController.text.toString(),
-                      "gst_flag": gstFlag.toString(),
-                      "gst_number": gstNumberController.text.toString(),
-                      "currency": currencyController.text.toString(),
-                      "company_logo": state.updateProfileModel!.companyLogo,
-                      "company_logo_thumb":
-                          state.updateProfileModel!.companyLogoThumb,
-                      "created_at_date":
-                          state.updateProfileModel!.createdAtDate,
-                      "created_at_time":
-                          state.updateProfileModel!.createdAtTime,
-                      "company_type": state.updateProfileModel!.companyType,
-                      "deleted_at": state.updateProfileModel!.deletedAt,
-                      "sub_end": state.updateProfileModel!.subscriptionEnd,
-                      "sub_start": state.updateProfileModel!.subscriptionStart,
-                      "updated_at": state.updateProfileModel!.updatedAt,
-                    };
-                    if (workshopnameController.text.isNotEmpty) {
-                      CenterLoader.show(context);
-                    }
-                    context.read<EditBloc>().add(
-                          UpdateProfileFormEvent(
-                              id: state.updateProfileModel!.id.toString(),
-                              profileImage: profileImage,
-                              formData: formData),
-                        );
-                    context.read<ProfileSectionBloc>().add(
-                          const FetchProfileInfo(),
-                        );
-                  },
-                  child: const Text(
-                    "Update",
-                    style: TextStyle(color: whiteColor, fontSize: 15),
+                  child: ElevatedButton(
+                    style: ButtonStyle(
+                      shape: WidgetStateProperty.all<RoundedRectangleBorder>(
+                        RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(5.0),
+                        ),
+                      ),
+                      backgroundColor: const WidgetStatePropertyAll(primaryColor),
+                    ),
+                    onPressed: () {
+                      setState(
+                        () {
+                          validateWorkshopName =
+                              workshopnameController.text.isEmpty;
+                        },
+                      );
+                      Map<String, String> addressMap = {
+                        "street": streetAddressController.text.toString(),
+                        "city": cityController.text.toString(),
+                        "state": stateController.toString(),
+                        "pincode": pincodeController.text.toString(),
+                      };
+                      Map<String, dynamic> formData = {
+                        "id": id,
+                        "company_name": workshopnameController.text.toString(),
+                        "username": usernameController.text.toString(),
+                        "email": emailController.text.toString(),
+                        "mobile_number": mobileNumberController.text.toString(),
+                        "address": jsonEncode(addressMap),
+                        "bank_name": bankNameController.text.toString(),
+                        "act_no": accountNoController.text.toString(),
+                        "ifsc": ifscController.text.toString(),
+                        "brach_name": branchNameController.text.toString(),
+                        "vpa": vpaController.text.toString(),
+                        "gst_flag": gstFlag.toString(),
+                        "gst_number": gstNumberController.text.toString(),
+                        "currency": currencyController.text.toString(),
+                        "company_logo": state.updateProfileModel!.companyLogo,
+                        "company_logo_thumb":
+                            state.updateProfileModel!.companyLogoThumb,
+                        "created_at_date":
+                            state.updateProfileModel!.createdAtDate,
+                        "created_at_time":
+                            state.updateProfileModel!.createdAtTime,
+                        "company_type": state.updateProfileModel!.companyType,
+                        "deleted_at": state.updateProfileModel!.deletedAt,
+                        "sub_end": state.updateProfileModel!.subscriptionEnd,
+                        "sub_start": state.updateProfileModel!.subscriptionStart,
+                        "updated_at": state.updateProfileModel!.updatedAt,
+                      };
+                      if (workshopnameController.text.isNotEmpty) {
+                        CenterLoader.show(context);
+                      }
+                      context.read<EditBloc>().add(
+                            UpdateProfileFormEvent(
+                                id: state.updateProfileModel!.id.toString(),
+                                profileImage: profileImage,
+                                formData: formData),
+                          );
+                      context.read<ProfileSectionBloc>().add(
+                            const FetchProfileInfo(),
+                          );
+                    },
+                    child: const Text(
+                      "Update",
+                      style: TextStyle(color: whiteColor, fontSize: 15),
+                    ),
                   ),
                 ),
               ),

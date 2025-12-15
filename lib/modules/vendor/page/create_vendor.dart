@@ -97,77 +97,79 @@ class _CreateVendorScreenState extends State<CreateVendorScreen> {
             ),
           ),
           showDefaultBottom: false,
-          bottomNavigationBar: Container(
-            decoration: const BoxDecoration(color: whiteColor),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Padding(
-                  padding: const EdgeInsets.all(15.0),
-                  child: ElevatedButton(
-                    style: ButtonStyle(
-                      foregroundColor:
-                          WidgetStateProperty.all<Color>(blackColor),
-                      backgroundColor:
-                          WidgetStateProperty.all<Color>(lightGreyColor),
-                      shape: WidgetStateProperty.all<RoundedRectangleBorder>(
-                        RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(5),
+          bottomNavigationBar: SafeArea(
+            child: Container(
+              decoration: const BoxDecoration(color: whiteColor),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.all(15.0),
+                    child: ElevatedButton(
+                      style: ButtonStyle(
+                        foregroundColor:
+                            WidgetStateProperty.all<Color>(blackColor),
+                        backgroundColor:
+                            WidgetStateProperty.all<Color>(lightGreyColor),
+                        shape: WidgetStateProperty.all<RoundedRectangleBorder>(
+                          RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(5),
+                          ),
                         ),
                       ),
-                    ),
-                    onPressed: () {
-                      clearScreen();
-                    },
-                    child: const Text(
-                      "Clear All",
-                      style: TextStyle(color: blackColor, fontSize: 15),
-                    ),
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.all(15.0),
-                  child: ElevatedButton(
-                    style: ButtonStyle(
-                      foregroundColor:
-                          WidgetStateProperty.all<Color>(whiteColor),
-                      backgroundColor:
-                          WidgetStateProperty.all<Color>(primaryColor),
-                      shape: WidgetStateProperty.all<RoundedRectangleBorder>(
-                        RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(5),
-                          side: const BorderSide(color: primaryColor),
-                        ),
+                      onPressed: () {
+                        clearScreen();
+                      },
+                      child: const Text(
+                        "Clear All",
+                        style: TextStyle(color: blackColor, fontSize: 15),
                       ),
                     ),
-                    onPressed: () {
-                      if (_formKey.currentState!.validate()) {
-                        Map<String, dynamic> formData = {
-                          "vendor_name": vendorNameController.text.trim(),
-                          "address": adressController.text.trim(),
-                          "email": emailController.text.trim(),
-                          "phone_number": phoneNumberController.text.trim(),
-                          "total_balance_vendor":
-                              totalBalanceController.text.trim(),
-                          "gst_number": gstNumberController.text.trim(),
-                        };
-                        context.read<VendorBloc>().add(
-                              AddVendor(formData: formData),
-                            );
-                      }
-                    },
-                    child: const Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: <Widget>[
-                        Text(
-                          "Create",
-                          style: TextStyle(color: whiteColor, fontSize: 15),
-                        ),
-                      ],
-                    ),
                   ),
-                )
-              ],
+                  Padding(
+                    padding: const EdgeInsets.all(15.0),
+                    child: ElevatedButton(
+                      style: ButtonStyle(
+                        foregroundColor:
+                            WidgetStateProperty.all<Color>(whiteColor),
+                        backgroundColor:
+                            WidgetStateProperty.all<Color>(primaryColor),
+                        shape: WidgetStateProperty.all<RoundedRectangleBorder>(
+                          RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(5),
+                            side: const BorderSide(color: primaryColor),
+                          ),
+                        ),
+                      ),
+                      onPressed: () {
+                        if (_formKey.currentState!.validate()) {
+                          Map<String, dynamic> formData = {
+                            "vendor_name": vendorNameController.text.trim(),
+                            "address": adressController.text.trim(),
+                            "email": emailController.text.trim(),
+                            "phone_number": phoneNumberController.text.trim(),
+                            "total_balance_vendor":
+                                totalBalanceController.text.trim(),
+                            "gst_number": gstNumberController.text.trim(),
+                          };
+                          context.read<VendorBloc>().add(
+                                AddVendor(formData: formData),
+                              );
+                        }
+                      },
+                      child: const Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: <Widget>[
+                          Text(
+                            "Create",
+                            style: TextStyle(color: whiteColor, fontSize: 15),
+                          ),
+                        ],
+                      ),
+                    ),
+                  )
+                ],
+              ),
             ),
           ),
           actions: [

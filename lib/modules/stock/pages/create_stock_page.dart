@@ -140,99 +140,101 @@ class _CreateStockPageState extends State<CreateStockPage> {
               },
             ),
             showDefaultBottom: false,
-            bottomNavigationBar: Container(
-              decoration: const BoxDecoration(color: whiteColor),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.all(15.0),
-                    child: ElevatedButton(
-                      style: ButtonStyle(
-                        foregroundColor:
-                            WidgetStateProperty.all<Color>(blackColor),
-                        backgroundColor:
-                            WidgetStateProperty.all<Color>(lightGreyColor),
-                        shape: WidgetStateProperty.all<RoundedRectangleBorder>(
-                          RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(5),
-                          ),
-                        ),
-                      ),
-                      onPressed: () {
-                        clearScreen();
-                      },
-                      child: const Text(
-                        "Clear All",
-                        style: TextStyle(color: blackColor, fontSize: 15),
-                      ),
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.all(15.0),
-                    child: ElevatedButton(
-                      style: ButtonStyle(
-                        foregroundColor:
-                            WidgetStateProperty.all<Color>(whiteColor),
-                        backgroundColor:
-                            WidgetStateProperty.all<Color>(primaryColor),
-                        shape: WidgetStateProperty.all<RoundedRectangleBorder>(
-                          RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(5),
-                            side: const BorderSide(color: primaryColor),
-                          ),
-                        ),
-                      ),
-                      onPressed: () {
-                        final bool isValid =
-                            _formKey.currentState?.validate() ?? false;
-                        // if (!isValid) return;
-                        if (isValid == true) {
-                          Map<String, dynamic> formData = {
-                            "id": "",
-                            "spare_part_cat": categoryController.text.trim(),
-                            "category_id": selectedCategoryId,
-                            "spare_part_name":
-                                sparePartNameController.text.trim(),
-                            "spare_part_code":
-                                sparePartCodeController.text.trim(),
-                            "purchase_price":
-                                purchasePriceController.text.trim(),
-                            "sales_price": salesPriceController.text.trim(),
-                            "tax": selectedGst ?? 'None',
-                            "unit_type": selectedUnitType ?? 'PCS',
-                            "stock_quantity":
-                                stockQuantityController.text.trim(),
-                            "hsn_code": hsnCodeController.text.trim(),
-                            "storage_location":
-                                storageLocationController.text.trim(),
-                            "description": descriptionController.text.trim(),
-                            "manufactured": manufacturerController.text.trim(),
-                            "tag": jsonEncode(
-                              vehicleTags
-                                  .map((String tagValue) => {"tag": tagValue})
-                                  .toList(),
+            bottomNavigationBar: SafeArea(
+              child: Container(
+                decoration: const BoxDecoration(color: whiteColor),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.all(15.0),
+                      child: ElevatedButton(
+                        style: ButtonStyle(
+                          foregroundColor:
+                              WidgetStateProperty.all<Color>(blackColor),
+                          backgroundColor:
+                              WidgetStateProperty.all<Color>(lightGreyColor),
+                          shape: WidgetStateProperty.all<RoundedRectangleBorder>(
+                            RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(5),
                             ),
-                          };
-                          context.read<StockBloc>().add(
-                                CreateAddNewStock(
-                                  formData: formData,
-                                ),
-                              );
-                        }
-                      },
-                      child: const Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: <Widget>[
-                          Text(
-                            "Submit",
-                            style: TextStyle(color: whiteColor, fontSize: 15),
                           ),
-                        ],
+                        ),
+                        onPressed: () {
+                          clearScreen();
+                        },
+                        child: const Text(
+                          "Clear All",
+                          style: TextStyle(color: blackColor, fontSize: 15),
+                        ),
                       ),
                     ),
-                  )
-                ],
+                    Padding(
+                      padding: const EdgeInsets.all(15.0),
+                      child: ElevatedButton(
+                        style: ButtonStyle(
+                          foregroundColor:
+                              WidgetStateProperty.all<Color>(whiteColor),
+                          backgroundColor:
+                              WidgetStateProperty.all<Color>(primaryColor),
+                          shape: WidgetStateProperty.all<RoundedRectangleBorder>(
+                            RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(5),
+                              side: const BorderSide(color: primaryColor),
+                            ),
+                          ),
+                        ),
+                        onPressed: () {
+                          final bool isValid =
+                              _formKey.currentState?.validate() ?? false;
+                          // if (!isValid) return;
+                          if (isValid == true) {
+                            Map<String, dynamic> formData = {
+                              "id": "",
+                              "spare_part_cat": categoryController.text.trim(),
+                              "category_id": selectedCategoryId,
+                              "spare_part_name":
+                                  sparePartNameController.text.trim(),
+                              "spare_part_code":
+                                  sparePartCodeController.text.trim(),
+                              "purchase_price":
+                                  purchasePriceController.text.trim(),
+                              "sales_price": salesPriceController.text.trim(),
+                              "tax": selectedGst ?? 'None',
+                              "unit_type": selectedUnitType ?? 'PCS',
+                              "stock_quantity":
+                                  stockQuantityController.text.trim(),
+                              "hsn_code": hsnCodeController.text.trim(),
+                              "storage_location":
+                                  storageLocationController.text.trim(),
+                              "description": descriptionController.text.trim(),
+                              "manufactured": manufacturerController.text.trim(),
+                              "tag": jsonEncode(
+                                vehicleTags
+                                    .map((String tagValue) => {"tag": tagValue})
+                                    .toList(),
+                              ),
+                            };
+                            context.read<StockBloc>().add(
+                                  CreateAddNewStock(
+                                    formData: formData,
+                                  ),
+                                );
+                          }
+                        },
+                        child: const Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: <Widget>[
+                            Text(
+                              "Submit",
+                              style: TextStyle(color: whiteColor, fontSize: 15),
+                            ),
+                          ],
+                        ),
+                      ),
+                    )
+                  ],
+                ),
               ),
             ),
             body: Form(

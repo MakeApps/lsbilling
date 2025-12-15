@@ -401,8 +401,8 @@ class _TabPill extends StatelessWidget {
           borderRadius: BorderRadius.circular(25),
         ),
         child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            const SizedBox(width: 10),
             Text(
               label,
               style: TextStyle(

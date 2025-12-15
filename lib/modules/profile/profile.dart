@@ -25,11 +25,13 @@ class _ProfilePageState extends State<ProfilePage> {
   @override
   void initState() {
     super.initState();
+
     _loadRoleId();
   }
 
   Future<void> _loadRoleId() async {
     final id = await app_instance.appConfig.secureStorage.read(key: 'roleId');
+
     setState(() {
       roleId = id;
     });
@@ -74,98 +76,100 @@ class _ProfilePageState extends State<ProfilePage> {
         ),
         showDefaultBottom: false,
         showCurvedAppBar: true,
-        bottomNavigationBar: SizedBox(
-          height: 90,
-          child: Card(
-            shape: const RoundedRectangleBorder(
-              borderRadius: BorderRadius.all(
-                Radius.circular(30),
-              ),
-            ),
-            margin: EdgeInsets.symmetric(
-              horizontal: screenWidth * 0.04,
-              vertical: screenHeight * 0.02,
-            ),
-            color: greyColor,
-            child: ListTile(
-              leading: const Icon(
-                Icons.logout_outlined,
-                color: whiteColor,
-              ),
-              title: const Text(
-                'Logout',
-                style: TextStyle(
-                  color: whiteColor,
-                  fontSize: 15,
-                  fontWeight: FontWeight.w600,
+        bottomNavigationBar: SafeArea(
+          child: SizedBox(
+            height: 90,
+            child: Card(
+              shape: const RoundedRectangleBorder(
+                borderRadius: BorderRadius.all(
+                  Radius.circular(30),
                 ),
               ),
-              onTap: () async {
-                bool? shouldLogout = await showDialog<bool>(
-                  context: context,
-                  builder: (BuildContext context) {
-                    return AlertDialog(
-                      backgroundColor: whiteColor,
-                      shape: const RoundedRectangleBorder(),
-                      content: const Text(
-                        'Are you sure you want to logout?',
-                        style: TextStyle(
-                          fontSize: 15,
-                          color: blackColorDark,
-                          fontWeight: FontWeight.w500,
+              margin: EdgeInsets.symmetric(
+                horizontal: screenWidth * 0.04,
+                vertical: screenHeight * 0.02,
+              ),
+              color: greyColor,
+              child: ListTile(
+                leading: const Icon(
+                  Icons.logout_outlined,
+                  color: whiteColor,
+                ),
+                title: const Text(
+                  'Logout',
+                  style: TextStyle(
+                    color: whiteColor,
+                    fontSize: 15,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+                onTap: () async {
+                  bool? shouldLogout = await showDialog<bool>(
+                    context: context,
+                    builder: (BuildContext context) {
+                      return AlertDialog(
+                        backgroundColor: whiteColor,
+                        shape: const RoundedRectangleBorder(),
+                        content: const Text(
+                          'Are you sure you want to logout?',
+                          style: TextStyle(
+                            fontSize: 15,
+                            color: blackColorDark,
+                            fontWeight: FontWeight.w500,
+                          ),
                         ),
-                      ),
-                      actions: [
-                        TextButton(
-                          style: ElevatedButton.styleFrom(
-                            side: const BorderSide(color: primaryColor),
-                            backgroundColor: whiteColor,
-                            foregroundColor: blackColor,
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(5),
+                        actions: [
+                          TextButton(
+                            style: ElevatedButton.styleFrom(
+                              side: const BorderSide(color: primaryColor),
+                              backgroundColor: whiteColor,
+                              foregroundColor: blackColor,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(5),
+                              ),
+                            ),
+                            onPressed: () {
+                              Navigator.of(context).pop(false);
+                            },
+                            child: const Text(
+                              'Cancel',
+                              style: TextStyle(
+                                  fontSize: 14,
+                                  color: blackColor,
+                                  fontWeight: FontWeight.w500),
                             ),
                           ),
-                          onPressed: () {
-                            Navigator.of(context).pop(false);
-                          },
-                          child: const Text(
-                            'Cancel',
-                            style: TextStyle(
+                          ElevatedButton(
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: primaryColor,
+                              foregroundColor: whiteColor,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(5),
+                              ),
+                            ),
+                            onPressed: () {
+                              Navigator.of(context).pop(true);
+                            },
+                            child: const Text(
+                              'Logout',
+                              style: TextStyle(
+                                fontWeight: FontWeight.w500,
                                 fontSize: 14,
-                                color: blackColor,
-                                fontWeight: FontWeight.w500),
-                          ),
-                        ),
-                        ElevatedButton(
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: primaryColor,
-                            foregroundColor: whiteColor,
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(5),
+                              ),
                             ),
                           ),
-                          onPressed: () {
-                            Navigator.of(context).pop(true);
-                          },
-                          child: const Text(
-                            'Logout',
-                            style: TextStyle(
-                              fontWeight: FontWeight.w500,
-                              fontSize: 14,
-                            ),
-                          ),
-                        ),
-                      ],
-                    );
-                  },
-                );
-                if (shouldLogout == true) {
-                  //FIRE EVENT
-                  context.read<ProfileSectionBloc>().add(
-                        const LogoutUser(),
+                        ],
                       );
-                }
-              },
+                    },
+                  );
+                  if (shouldLogout == true) {
+                    //FIRE EVENT
+                    context.read<ProfileSectionBloc>().add(
+                          const LogoutUser(),
+                        );
+                  }
+                },
+              ),
             ),
           ),
         ),

@@ -162,286 +162,288 @@ class _PurchesInvoiceListingPageState extends State<PurchesInvoiceListingPage> {
             color: whiteColor,
           ),
         ),
-        body: Stack(
-          children: [
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                BlocBuilder<PurchesInvoiceBloc, PurchesInvoiceState>(
-                  builder: (context, state) {
-                    int? allCount = state.allPurchaseCount;
-                    int? gstCount = state.gstPurchaseInvoiceCount;
-                    int? nonGstCount = state.nonGstPurchaseInvoiceCount;
-                    return Padding(
-                      padding: const EdgeInsets.only(bottom: 10),
-                      child: Container(
-                        padding: const EdgeInsets.only(
-                            left: 18, right: 18, top: 12, bottom: 12),
-                        decoration: const BoxDecoration(
-                          color: blackColor,
-                          borderRadius: BorderRadiusDirectional.only(
-                            bottomStart: Radius.circular(25),
-                            bottomEnd: Radius.circular(25),
+        body: SafeArea(
+          child: Stack(
+            children: [
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  BlocBuilder<PurchesInvoiceBloc, PurchesInvoiceState>(
+                    builder: (context, state) {
+                      int? allCount = state.allPurchaseCount;
+                      int? gstCount = state.gstPurchaseInvoiceCount;
+                      int? nonGstCount = state.nonGstPurchaseInvoiceCount;
+                      return Padding(
+                        padding: const EdgeInsets.only(bottom: 10),
+                        child: Container(
+                          padding: const EdgeInsets.only(
+                              left: 18, right: 18, top: 12, bottom: 12),
+                          decoration: const BoxDecoration(
+                            color: blackColor,
+                            borderRadius: BorderRadiusDirectional.only(
+                              bottomStart: Radius.circular(25),
+                              bottomEnd: Radius.circular(25),
+                            ),
                           ),
-                        ),
-                        child: Column(
-                          children: [
-                            Container(
-                              height: 46,
-                              decoration: BoxDecoration(
-                                color: blackColor,
-                                borderRadius: BorderRadius.circular(6),
-                                border:
-                                    Border.all(color: hintTextColor, width: 0),
-                              ),
-                              child: TextField(
-                                controller: _searchController,
-                                onChanged: (value) {
-                                  if (value.length > 2) {
-                                    context.read<PurchesInvoiceBloc>().add(
-                                          FetchPurchesInvoiceList(
-                                            searchKeyword:
-                                                _searchController.text,
-                                            fromDate: appliedFromDate,
-                                            toDate: appliedToDate,
-                                            paymentStatus:
-                                                _selectedPaymentStatus,
-                                            status:
-                                                PurchesInvoiceStatus.loading,
-                                          ),
-                                        );
-                                  } else if (value.isEmpty) {
-                                    _fetchPurchaseInvoice();
-                                  }
-                                },
-                                style: const TextStyle(color: whiteColor),
-                                decoration: InputDecoration(
-                                  isCollapsed: true, //
-                                  contentPadding: const EdgeInsets.symmetric(
-                                    horizontal: 14,
-                                    vertical: 14,
-                                  ),
-                                  hintText: "Search by customer name..",
-                                  hintStyle: TextStyle(
-                                    color: whiteColor.withOpacity(0.5),
-                                    fontSize: 13,
-                                    fontWeight: FontWeight.w600,
-                                  ),
-                                  border: InputBorder.none,
-                                  fillColor: blackColor,
-                                  suffixIcon: Padding(
-                                    padding: const EdgeInsets.all(12),
-                                    child: Image.asset(
-                                      "assets/icons/search.png",
-                                      color: primaryColor,
+                          child: Column(
+                            children: [
+                              Container(
+                                height: 46,
+                                decoration: BoxDecoration(
+                                  color: blackColor,
+                                  borderRadius: BorderRadius.circular(6),
+                                  border:
+                                      Border.all(color: hintTextColor, width: 0),
+                                ),
+                                child: TextField(
+                                  controller: _searchController,
+                                  onChanged: (value) {
+                                    if (value.length > 2) {
+                                      context.read<PurchesInvoiceBloc>().add(
+                                            FetchPurchesInvoiceList(
+                                              searchKeyword:
+                                                  _searchController.text,
+                                              fromDate: appliedFromDate,
+                                              toDate: appliedToDate,
+                                              paymentStatus:
+                                                  _selectedPaymentStatus,
+                                              status:
+                                                  PurchesInvoiceStatus.loading,
+                                            ),
+                                          );
+                                    } else if (value.isEmpty) {
+                                      _fetchPurchaseInvoice();
+                                    }
+                                  },
+                                  style: const TextStyle(color: whiteColor),
+                                  decoration: InputDecoration(
+                                    isCollapsed: true, //
+                                    contentPadding: const EdgeInsets.symmetric(
+                                      horizontal: 14,
+                                      vertical: 14,
+                                    ),
+                                    hintText: "Search by customer name..",
+                                    hintStyle: TextStyle(
+                                      color: whiteColor.withOpacity(0.5),
+                                      fontSize: 13,
+                                      fontWeight: FontWeight.w600,
+                                    ),
+                                    border: InputBorder.none,
+                                    fillColor: blackColor,
+                                    suffixIcon: Padding(
+                                      padding: const EdgeInsets.all(12),
+                                      child: Image.asset(
+                                        "assets/icons/search.png",
+                                        color: primaryColor,
+                                      ),
                                     ),
                                   ),
                                 ),
                               ),
-                            ),
-
-                            const SizedBox(height: 12),
-
-                            /// FILTER + REFRESH
-                            Row(
-                              children: [
-                                Expanded(
-                                  child: Container(
-                                    padding: const EdgeInsets.symmetric(
-                                        horizontal: 12),
+          
+                              const SizedBox(height: 12),
+          
+                              /// FILTER + REFRESH
+                              Row(
+                                children: [
+                                  Expanded(
+                                    child: Container(
+                                      padding: const EdgeInsets.symmetric(
+                                          horizontal: 12),
+                                      decoration: BoxDecoration(
+                                        color: blackColor,
+                                        borderRadius: BorderRadius.circular(10),
+                                        border: Border.all(
+                                            color: whiteColor.withOpacity(0.2)),
+                                      ),
+                                      child: DropdownButton<String>(
+                                        value: _selectedPaymentStatus,
+                                        underline: const SizedBox(),
+                                        dropdownColor: blackColor,
+                                        isExpanded: true,
+                                        hint: const Text(
+                                          "Filter By",
+                                          style: TextStyle(
+                                              color: whiteColor, fontSize: 13),
+                                        ),
+                                        iconEnabledColor: whiteColor,
+                                        style: const TextStyle(
+                                            color: whiteColor, fontSize: 13),
+                                        items: stockFilter.map((String option) {
+                                          return DropdownMenuItem<String>(
+                                            value: option,
+                                            child: Text(option),
+                                          );
+                                        }).toList(),
+                                        onChanged: (value) {
+                                          if (value != null) {
+                                            setState(() {
+                                              selectedFilter = value;
+                                              _selectedPaymentStatus = value;
+                                            });
+                                            performFilterOperation(
+                                                filterOption: value);
+                                          }
+                                        },
+                                      ),
+                                    ),
+                                  ),
+                                  const SizedBox(width: 10),
+                                  Container(
+                                    height: 45,
+                                    width: 45,
                                     decoration: BoxDecoration(
                                       color: blackColor,
-                                      borderRadius: BorderRadius.circular(10),
                                       border: Border.all(
-                                          color: whiteColor.withOpacity(0.2)),
+                                          color: hintTextColor, width: 0),
+                                      borderRadius: BorderRadius.circular(10),
                                     ),
-                                    child: DropdownButton<String>(
-                                      value: _selectedPaymentStatus,
-                                      underline: const SizedBox(),
-                                      dropdownColor: blackColor,
-                                      isExpanded: true,
-                                      hint: const Text(
-                                        "Filter By",
-                                        style: TextStyle(
-                                            color: whiteColor, fontSize: 13),
-                                      ),
-                                      iconEnabledColor: whiteColor,
-                                      style: const TextStyle(
-                                          color: whiteColor, fontSize: 13),
-                                      items: stockFilter.map((String option) {
-                                        return DropdownMenuItem<String>(
-                                          value: option,
-                                          child: Text(option),
-                                        );
-                                      }).toList(),
-                                      onChanged: (value) {
-                                        if (value != null) {
-                                          setState(() {
-                                            selectedFilter = value;
-                                            _selectedPaymentStatus = value;
-                                          });
-                                          performFilterOperation(
-                                              filterOption: value);
-                                        }
+                                    child: IconButton(
+                                      icon: Icon(Icons.refresh,
+                                          color: whiteColor.withOpacity(0.8),
+                                          size: 26),
+                                      onPressed: () {
+                                        _searchController.clear();
+                                        setState(() {
+                                          selectedFilter = null;
+                                          _selectedPaymentStatus = null;
+                                        });
+                                        _fetchPurchaseInvoice();
                                       },
                                     ),
                                   ),
-                                ),
-                                const SizedBox(width: 10),
-                                Container(
-                                  height: 45,
-                                  width: 45,
-                                  decoration: BoxDecoration(
-                                    color: blackColor,
-                                    border: Border.all(
-                                        color: hintTextColor, width: 0),
-                                    borderRadius: BorderRadius.circular(10),
+                                ],
+                              ),
+          
+                              const SizedBox(height: 12),
+                              //  Tab Pills
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Expanded(
+                                    child: _TabPill(
+                                      label: "All",
+                                      count: allCount,
+                                      selected: state.selectedGstFilter == null,
+                                      onTap: () {
+                                        context.read<PurchesInvoiceBloc>().add(
+                                              FetchPurchesInvoiceList(
+                                                status:
+                                                    PurchesInvoiceStatus.loading,
+                                                gstBill: null,
+                                                searchKeyword:
+                                                    _searchController.text,
+                                              ),
+                                            );
+                                      },
+                                    ),
                                   ),
-                                  child: IconButton(
-                                    icon: Icon(Icons.refresh,
-                                        color: whiteColor.withOpacity(0.8),
-                                        size: 26),
-                                    onPressed: () {
-                                      _searchController.clear();
-                                      setState(() {
-                                        selectedFilter = null;
-                                        _selectedPaymentStatus = null;
-                                      });
-                                      _fetchPurchaseInvoice();
-                                    },
+                                  const SizedBox(width: 6),
+                                  Expanded(
+                                    child: _TabPill(
+                                      label: "GST",
+                                      count: gstCount,
+                                      selected: state.selectedGstFilter == "1",
+                                      onTap: () {
+                                        context.read<PurchesInvoiceBloc>().add(
+                                              FetchPurchesInvoiceList(
+                                                status:
+                                                    PurchesInvoiceStatus.loading,
+                                                gstBill: "1", // GST
+                                                searchKeyword:
+                                                    _searchController.text,
+                                              ),
+                                            );
+                                      },
+                                    ),
                                   ),
-                                ),
-                              ],
-                            ),
-
-                            const SizedBox(height: 12),
-                            //  Tab Pills
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Expanded(
-                                  child: _TabPill(
-                                    label: "All",
-                                    count: allCount,
-                                    selected: state.selectedGstFilter == null,
-                                    onTap: () {
-                                      context.read<PurchesInvoiceBloc>().add(
-                                            FetchPurchesInvoiceList(
-                                              status:
-                                                  PurchesInvoiceStatus.loading,
-                                              gstBill: null,
-                                              searchKeyword:
-                                                  _searchController.text,
-                                            ),
-                                          );
-                                    },
+                                  const SizedBox(width: 6),
+                                  Expanded(
+                                    child: _TabPill(
+                                      label: "Non-GST",
+                                      count: nonGstCount,
+                                      selected: state.selectedGstFilter == "0",
+                                      onTap: () {
+                                        context.read<PurchesInvoiceBloc>().add(
+                                              FetchPurchesInvoiceList(
+                                                status:
+                                                    PurchesInvoiceStatus.loading,
+                                                gstBill: "0", // GST
+                                                searchKeyword:
+                                                    _searchController.text,
+                                              ),
+                                            );
+                                      },
+                                    ),
                                   ),
-                                ),
-                                const SizedBox(width: 6),
-                                Expanded(
-                                  child: _TabPill(
-                                    label: "GST",
-                                    count: gstCount,
-                                    selected: state.selectedGstFilter == "1",
-                                    onTap: () {
-                                      context.read<PurchesInvoiceBloc>().add(
-                                            FetchPurchesInvoiceList(
-                                              status:
-                                                  PurchesInvoiceStatus.loading,
-                                              gstBill: "1", // GST
-                                              searchKeyword:
-                                                  _searchController.text,
-                                            ),
-                                          );
-                                    },
-                                  ),
-                                ),
-                                const SizedBox(width: 6),
-                                Expanded(
-                                  child: _TabPill(
-                                    label: "Non-GST",
-                                    count: nonGstCount,
-                                    selected: state.selectedGstFilter == "0",
-                                    onTap: () {
-                                      context.read<PurchesInvoiceBloc>().add(
-                                            FetchPurchesInvoiceList(
-                                              status:
-                                                  PurchesInvoiceStatus.loading,
-                                              gstBill: "0", // GST
-                                              searchKeyword:
-                                                  _searchController.text,
-                                            ),
-                                          );
-                                    },
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ],
+                                ],
+                              ),
+                            ],
+                          ),
                         ),
+                      );
+                    },
+                  ),
+                  Expanded(
+                    child: BlocConsumer<PurchesInvoiceBloc, PurchesInvoiceState>(
+                      listener: (context, state) {},
+                      builder: (context, state) {
+                        if (state.purchesStatus == PurchesInvoiceStatus.initial ||
+                            state.purchesStatus == PurchesInvoiceStatus.loading) {
+                          return const Padding(
+                            padding: EdgeInsets.all(8),
+                            child: Skeleton(),
+                          );
+                        }
+                        return (state.purchesStatus ==
+                                    PurchesInvoiceStatus.failure ||
+                                state.purchesModel.isEmpty)
+                            ? const NoDataFoundWidget()
+                            : ListView.builder(
+                                itemBuilder: (context, index) {
+                                  return (index >= state.purchesModel.length)
+                                      ? const Padding(
+                                          padding:
+                                              EdgeInsets.symmetric(vertical: 10),
+                                          child: Center(
+                                            child: CircularProgressIndicator(
+                                                color: primaryColor,
+                                                strokeWidth: 2),
+                                          ),
+                                        )
+                                      : PurchesItemRow(
+                                          purchesItemData:
+                                              state.purchesModel[index],
+                                        );
+                                },
+                                controller: _scrollController,
+                                itemCount: state.purchesModel.length);
+                      },
+                    ),
+                  )
+                ],
+              ),
+              Positioned(
+                right: 16,
+                bottom: 20,
+                child: FloatingActionButton(
+                  shape: const CircleBorder(),
+                  heroTag: 'createStockFab',
+                  backgroundColor: primaryColor,
+                  foregroundColor: whiteColor,
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const CreatePurchesInvoicePage(),
                       ),
                     );
                   },
+                  child: const Icon(Icons.add),
                 ),
-                Expanded(
-                  child: BlocConsumer<PurchesInvoiceBloc, PurchesInvoiceState>(
-                    listener: (context, state) {},
-                    builder: (context, state) {
-                      if (state.purchesStatus == PurchesInvoiceStatus.initial ||
-                          state.purchesStatus == PurchesInvoiceStatus.loading) {
-                        return const Padding(
-                          padding: EdgeInsets.all(8),
-                          child: Skeleton(),
-                        );
-                      }
-                      return (state.purchesStatus ==
-                                  PurchesInvoiceStatus.failure ||
-                              state.purchesModel.isEmpty)
-                          ? const NoDataFoundWidget()
-                          : ListView.builder(
-                              itemBuilder: (context, index) {
-                                return (index >= state.purchesModel.length)
-                                    ? const Padding(
-                                        padding:
-                                            EdgeInsets.symmetric(vertical: 10),
-                                        child: Center(
-                                          child: CircularProgressIndicator(
-                                              color: primaryColor,
-                                              strokeWidth: 2),
-                                        ),
-                                      )
-                                    : PurchesItemRow(
-                                        purchesItemData:
-                                            state.purchesModel[index],
-                                      );
-                              },
-                              controller: _scrollController,
-                              itemCount: state.purchesModel.length);
-                    },
-                  ),
-                )
-              ],
-            ),
-            Positioned(
-              right: 16,
-              bottom: 20,
-              child: FloatingActionButton(
-                shape: const CircleBorder(),
-                heroTag: 'createStockFab',
-                backgroundColor: primaryColor,
-                foregroundColor: whiteColor,
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => const CreatePurchesInvoicePage(),
-                    ),
-                  );
-                },
-                child: const Icon(Icons.add),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );
