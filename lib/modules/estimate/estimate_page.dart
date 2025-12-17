@@ -12,10 +12,10 @@ import 'package:local_shout_billing/config/colors.dart';
 import 'package:local_shout_billing/config/data.dart';
 import 'package:local_shout_billing/main_layout.dart';
 import 'package:local_shout_billing/modules/Estimate/edit_customer_jobsheet.dart';
+import 'package:local_shout_billing/modules/invoices/invoice_details_page.dart';
 import 'package:local_shout_billing/modules/job_sheet/bloc/job_sheet_bloc/job_sheet_bloc.dart';
 import 'package:local_shout_billing/modules/job_sheet/bloc/job_sheet_details_bloc/job_sheet_details_bloc.dart';
 import 'package:local_shout_billing/config.dart' as app_instance;
-import '../invoice/invoice_details_page.dart';
 import 'component/add_spare_part.dart';
 
 class EstimatePage extends StatefulWidget {

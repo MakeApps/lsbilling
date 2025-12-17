@@ -3,6 +3,7 @@ import 'package:ionicons/ionicons.dart';
 
 const IconData mailIcon = Ionicons.mail;
 const IconData call = Icons.call;
+const IconData address = Icons.location_city;
 const IconData passwordLock = Ionicons.lock_closed_outline;
 const IconData obscureText = Ionicons.eye_outline;
 const IconData menuIcon = Icons.more_vert;

@@ -19,8 +19,6 @@ class SearchBloc extends Bloc<SearchBlocEvent, SearchBlocState> {
     on<SearchVendor>(_onSearchVendor);
   }
 
-
-
   _onSearchCustomerComplent(
       SearchCustomerComplent event, Emitter<SearchBlocState> emit) async {
     dynamic token = await app_instance.storage.read(key: "token");
@@ -28,8 +26,8 @@ class SearchBloc extends Bloc<SearchBlocEvent, SearchBlocState> {
       "token": token.toString(),
       "search": event.searchKeyword.toString()
     };
-    final result =
-        await app_instance.jobSheetRepository.searchCustomerComplaints(jsonData);
+    final result = await app_instance.jobSheetRepository
+        .searchCustomerComplaints(jsonData);
     if (result != null && result.isNotEmpty) {
       return emit(
         state.copyWith(
@@ -52,7 +50,7 @@ class SearchBloc extends Bloc<SearchBlocEvent, SearchBlocState> {
       "search": event.searchKeyword.toString()
     };
     final result =
-        await app_instance.jobSheetRepository.searchCustomerDetails(jsonData);
+        await app_instance.jobSheetRepository.getCustomerList(jsonData);
     if (result != null && result.isNotEmpty) {
       return emit(
         state.copyWith(
@@ -75,8 +73,8 @@ class SearchBloc extends Bloc<SearchBlocEvent, SearchBlocState> {
       "search": event.searchKeyword.toString(),
     };
 
-    final result = await app_instance.jobSheetRepository.getVendorList(jsonData);
-   
+    final result =
+        await app_instance.jobSheetRepository.getVendorList(jsonData);
 
     if (result != null && result.isNotEmpty) {
       List<StockVendorModel> vendorList = result

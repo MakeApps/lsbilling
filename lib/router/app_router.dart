@@ -4,9 +4,12 @@ import 'package:local_shout_billing/modules/Dashboard/dashboard_page.dart';
 import 'package:local_shout_billing/modules/Estimate/estimate_page.dart';
 import 'package:local_shout_billing/modules/Profile/pages/update_admin_profile.dart';
 import 'package:local_shout_billing/modules/Profile/profile.dart';
+import 'package:local_shout_billing/modules/customers/bloc/customer_bloc/customer_bloc.dart';
+import 'package:local_shout_billing/modules/customers/customer_listing.dart';
+import 'package:local_shout_billing/modules/customers/pages/edit_customer.dart';
 import 'package:local_shout_billing/modules/estimate/estimate_listing.dart';
-import 'package:local_shout_billing/modules/invoice/invoice_details_page.dart';
-import 'package:local_shout_billing/modules/invoice/invoice_listing_page.dart';
+import 'package:local_shout_billing/modules/invoices/invoice_details_page.dart';
+import 'package:local_shout_billing/modules/invoices/invoice_listing_page.dart';
 import 'package:local_shout_billing/modules/job_sheet/bloc/job_sheet_bloc/job_sheet_bloc.dart';
 import 'package:local_shout_billing/modules/job_sheet/bloc/profile_bloc/profile_section_bloc.dart';
 import 'package:local_shout_billing/modules/job_sheet/bloc/profile_bloc/profile_section_event.dart';
@@ -16,11 +19,11 @@ import 'package:local_shout_billing/modules/purches_invoice/pages/purches_invoic
 import 'package:local_shout_billing/modules/staff/bloc/staff_bloc/staff_bloc.dart';
 import 'package:local_shout_billing/modules/staff/pages/edit_staff_screen.dart';
 import 'package:local_shout_billing/modules/staff/pages/staff_listing.dart';
-import 'package:local_shout_billing/modules/stock/bloc/stock_bloc/stock_bloc.dart';
-import 'package:local_shout_billing/modules/stock/pages/stock_listing.dart';
-import 'package:local_shout_billing/modules/vendor/bloc/vendor_bloc/vendor_bloc.dart';
-import 'package:local_shout_billing/modules/vendor/page/edit_vendors_details.dart';
-import 'package:local_shout_billing/modules/vendor/page/vendor_listing_screen.dart';
+import 'package:local_shout_billing/modules/stocks/bloc/stock_bloc/stock_bloc.dart';
+import 'package:local_shout_billing/modules/stocks/pages/stock_listing.dart';
+import 'package:local_shout_billing/modules/vendors/bloc/vendor_bloc/vendor_bloc.dart';
+import 'package:local_shout_billing/modules/vendors/page/edit_vendors_details.dart';
+import 'package:local_shout_billing/modules/vendors/page/vendor_listing_screen.dart';
 import 'package:local_shout_billing/splash_screen.dart';
 import '../modules/login/login_screen.dart';
 
@@ -91,6 +94,22 @@ class AppRouter {
               ),
             child: const VendorListingPage(),
           ),
+        );
+        
+      case '/customer_page':
+        return MaterialPageRoute(
+          builder: (_) => BlocProvider<CustomerBloc>(
+            create: (context) => CustomerBloc()
+              ..add(
+                const FetchCustomerList(status: CustomerStatus.initial),
+              ),
+            child: const CustomerListing(),
+          ),
+        );
+
+      case '/edit_customer_info':
+        return MaterialPageRoute(
+          builder: (_) => const EditCustomerForm(),
         );
 
       case '/profile_info_page':

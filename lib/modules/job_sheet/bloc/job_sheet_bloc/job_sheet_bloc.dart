@@ -30,11 +30,9 @@ class JobSheetBloc extends Bloc<JobSheetEvent, JobSheetState> {
     on<FetchDashboard>(_onFetchDashboard);
     on<FetchInvoiceList>(_onFetchInvoiceList);
     on<CreateAddInvoice>(_onCreateAddInvoice);
-    on<SearchInvoiceRecord>(_onSearchInvoiceRecord);
     on<DeleteInvoice>(_onDeleteInvoice);
     on<FetchEstimateList>(_onFetchEstimateList);
     on<AddEstimate>(_onAddEstimate);
-    on<SearchEstimateRecord>(_onSearchEstimateRecord);
     on<GenerateEstimateJobSheet>(_onGenerateEstimateJobSheet);
     on<DeleteEstimate>(_onDeleteEstimate);
     on<ClearListingData>(_onClearListingData);
@@ -515,62 +513,6 @@ class JobSheetBloc extends Bloc<JobSheetEvent, JobSheetState> {
         state.copyWith(
             status: JobSheetStatus.success,
             invoiceListing: state.invoiceListing),
-      );
-    }
-  }
-
-//search invocie
-  _onSearchInvoiceRecord(
-      SearchInvoiceRecord event, Emitter<JobSheetState> emit) async {
-    emit(
-      state.copyWith(status: JobSheetStatus.updating),
-    );
-    final result = await app_instance.jobSheetRepository
-        .searchInvoiceList(event.searchKeyword);
-    if (result != null && result.isNotEmpty) {
-      return emit(
-        state.copyWith(
-          status: JobSheetStatus.success,
-          invoiceListing: result
-              .map<InvoiceListingModel>(
-                (jsonData) => InvoiceListingModel.fromJson(jsonData),
-              )
-              .toList(),
-        ),
-      );
-    } else {
-      return emit(
-        state.copyWith(
-          status: JobSheetStatus.failure,
-        ),
-      );
-    }
-  }
-
-//search estimate
-  _onSearchEstimateRecord(
-      SearchEstimateRecord event, Emitter<JobSheetState> emit) async {
-    emit(
-      state.copyWith(status: JobSheetStatus.updating),
-    );
-    final result = await app_instance.jobSheetRepository
-        .searchEstimateDetails(event.searchKeyword);
-    if (result != null && result.isNotEmpty) {
-      return emit(
-        state.copyWith(
-          status: JobSheetStatus.success,
-          estimateListing: result
-              .map<EstimateListingModel>(
-                (jsonData) => EstimateListingModel.fromJson(jsonData),
-              )
-              .toList(),
-        ),
-      );
-    } else {
-      return emit(
-        state.copyWith(
-          status: JobSheetStatus.failure,
-        ),
       );
     }
   }

@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:local_shout_billing/isar/isar_services.dart';
+import 'package:local_shout_billing/modules/customers/bloc/customer_bloc/customer_bloc.dart';
+import 'package:local_shout_billing/modules/customers/bloc/customer_details_bloc/customer_details_bloc.dart';
 import 'package:local_shout_billing/modules/internet_bloc/internet_bloc.dart';
 import 'package:local_shout_billing/modules/job_sheet/bloc/job_sheet_bloc/job_sheet_bloc.dart';
 import 'package:local_shout_billing/modules/job_sheet/bloc/job_sheet_details_bloc/job_sheet_details_bloc.dart';
@@ -15,15 +17,15 @@ import 'package:local_shout_billing/modules/purches_invoice/bloc/purches_invoice
 import 'package:local_shout_billing/modules/purches_invoice/bloc/purches_invoice_details_bloc/purches_invoice_details_bloc.dart';
 import 'package:local_shout_billing/modules/staff/bloc/staff_bloc/staff_bloc.dart';
 import 'package:local_shout_billing/modules/staff/bloc/staff_details_bloc/edit_staff_details_bloc.dart';
-import 'package:local_shout_billing/modules/stock/bloc/category_bloc/category_list_bloc.dart';
-import 'package:local_shout_billing/modules/stock/bloc/stock_bloc/stock_bloc.dart';
-import 'package:local_shout_billing/modules/stock/bloc/update_category_bloc/category_name_update_bloc.dart';
-import 'package:local_shout_billing/modules/vendor/bloc/vendor_bloc/vendor_bloc.dart';
-import 'package:local_shout_billing/modules/vendor/bloc/vendor_details_bloc/vendor_details_bloc.dart';
+import 'package:local_shout_billing/modules/stocks/bloc/category_bloc/category_list_bloc.dart';
+import 'package:local_shout_billing/modules/stocks/bloc/stock_bloc/stock_bloc.dart';
+import 'package:local_shout_billing/modules/stocks/bloc/update_category_bloc/category_name_update_bloc.dart';
+import 'package:local_shout_billing/modules/vendors/bloc/vendor_bloc/vendor_bloc.dart';
+import 'package:local_shout_billing/modules/vendors/bloc/vendor_details_bloc/vendor_details_bloc.dart';
 import 'package:local_shout_billing/network/controllers/authentication_controller.dart';
 import 'package:local_shout_billing/router/app_router.dart';
 import 'modules/job_sheet/bloc/profile_update_bloc/profile_update_bloc_bloc.dart';
-import 'modules/stock/bloc/stock_details_bloc/stock_details_bloc.dart';
+import 'modules/stocks/bloc/stock_details_bloc/stock_details_bloc.dart';
 
 late IsarServices isarServices;
 void main() async {
@@ -90,6 +92,7 @@ class MyApp extends StatelessWidget {
           BlocProvider<SearchBloc>(
             create: (context) => SearchBloc(),
           ),
+
           BlocProvider<EditBloc>(
             create: (context) => EditBloc(),
           ),
@@ -113,6 +116,15 @@ class MyApp extends StatelessWidget {
                 const FetchStockList(status: StockStatus.initial),
               ),
           ),
+          BlocProvider<CustomerBloc>(
+            create: (context) => CustomerBloc()
+              ..add(
+                const FetchCustomerList(status: CustomerStatus.initial),
+              ),
+          ),
+          BlocProvider<CustomerDetailsBloc>(
+            create: (context) => CustomerDetailsBloc(),
+          ),
           BlocProvider<StockDetailsBloc>(
             create: (context) => StockDetailsBloc(),
           ),
@@ -130,6 +142,14 @@ class MyApp extends StatelessWidget {
                 const FetchVendorList(status: VendorStatus.initial),
               ),
           ),
+          //get customer
+          BlocProvider<CustomerBloc>(
+            create: (context) => CustomerBloc()
+              ..add(
+                const FetchCustomerList(status: CustomerStatus.initial),
+              ),
+          ),
+
           BlocProvider<VendorDetailsBloc>(
             create: (context) => VendorDetailsBloc(),
           ),

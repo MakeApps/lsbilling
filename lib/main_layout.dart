@@ -1,6 +1,6 @@
 import 'package:local_shout_billing/modules/Profile/profile.dart';
 import 'package:local_shout_billing/modules/estimate/create_estimate_form.dart';
-import 'package:local_shout_billing/modules/invoice/create_invoice_form.dart';
+import 'package:local_shout_billing/modules/invoices/create_invoice_form.dart';
 import 'package:local_shout_billing/modules/job_sheet/bloc/profile_bloc/profile_section_bloc.dart';
 import 'package:local_shout_billing/modules/job_sheet/bloc/profile_bloc/profile_section_event.dart';
 import 'package:local_shout_billing/modules/job_sheet/pages/job_sheet.dart';
