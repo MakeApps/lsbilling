@@ -84,18 +84,19 @@ class _DrawerWidgetState extends State<DrawerWidget> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-             // ---------------- HEADER (BIG LOGO + ZERO EXTRA SPACE) ----------------
-            Padding(
-              padding: const EdgeInsets.only(top: 18),
-              child: SizedBox(
+          // ---------------- HEADER (BIG LOGO + ZERO EXTRA SPACE) ----------------
+          Padding(
+            padding: const EdgeInsets.only(top: 18),
+            child: SizedBox(
               height: 160,
               width: double.infinity,
               child: Image.asset(
                 "assets/icons/ls-logo.png",
                 fit: BoxFit.cover,
               ),
-                        ),
             ),
+          ),
+
           /// Very Thin Divider
           Container(
             width: double.infinity,
@@ -108,7 +109,7 @@ class _DrawerWidgetState extends State<DrawerWidget> {
             child: ListView(
               padding: const EdgeInsets.fromLTRB(20, 12, 20, 10),
               children: [
-               _buildDrawerItem(
+                _buildDrawerItem(
                   title: "Dashboard",
                   iconPath: "assets/icons/dashboard.png",
                   onTap: () => Navigator.pushNamed(context, '/dashboard_page'),
@@ -148,6 +149,12 @@ class _DrawerWidgetState extends State<DrawerWidget> {
                     iconPath: "assets/icons/staff.png",
                     onTap: () => Navigator.pushNamed(context, '/staff_listing'),
                   ),
+                _buildDrawerItem(
+                  title: "Customer",
+                  iconPath: "assets/icons/user.png",
+                  onTap: () =>
+                      Navigator.pushNamed(context, '/customer_page'),
+                ),
                 _buildDrawerItem(
                   title: "Settings",
                   iconPath: "assets/icons/setting.png",

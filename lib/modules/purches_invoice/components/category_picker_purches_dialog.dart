@@ -3,7 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:local_shout_billing/components/no_data_found.dart';
 import 'package:local_shout_billing/components/skeleton/listing_skeleton.dart';
 import 'package:local_shout_billing/config/colors.dart';
-import 'package:local_shout_billing/modules/stock/bloc/category_bloc/category_list_bloc.dart';
+import 'package:local_shout_billing/modules/stocks/bloc/category_bloc/category_list_bloc.dart';
 
 class PurchesStockCategoryPicker extends StatefulWidget {
   final void Function(int id, String name) onSelected;

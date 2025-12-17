@@ -8,6 +8,8 @@ class CustomerModel extends Equatable {
   final String? email;
   final String? fullName;
   final String? mobileNumber;
+  final String? gstNumber;
+  final int? timestamp;
   final String? updatedAt;
 
   const CustomerModel(
@@ -18,6 +20,8 @@ class CustomerModel extends Equatable {
       this.email,
       this.fullName,
       this.mobileNumber,
+      this.gstNumber,
+      this.timestamp,
       this.updatedAt});
 
   @override
@@ -29,6 +33,8 @@ class CustomerModel extends Equatable {
         email!,
         fullName!,
         mobileNumber!,
+        gstNumber!,
+        timestamp!,
         updatedAt!
       ];
 
@@ -40,6 +46,8 @@ class CustomerModel extends Equatable {
       String? email,
       String? fullName,
       String? mobileNumber,
+      String? gstNumber,
+      int? timestamp,
       String? updatedAt}) {
     CustomerModel customerModel = CustomerModel(
       id: id ?? this.id,
@@ -49,6 +57,8 @@ class CustomerModel extends Equatable {
       email: email ?? this.email,
       fullName: fullName ?? this.fullName,
       mobileNumber: mobileNumber ?? this.mobileNumber,
+      gstNumber: gstNumber ?? this.gstNumber,
+      timestamp: timestamp ?? this.timestamp,
       updatedAt: updatedAt ?? this.updatedAt,
     );
     return customerModel;
@@ -63,6 +73,8 @@ class CustomerModel extends Equatable {
       email: json['email'] ?? "",
       fullName: json['full_name'] ?? "",
       mobileNumber: json['mobile_number'] ?? "",
+      gstNumber: json['gst_number'] ?? "",
+     timestamp: int.parse(json['timestamp'].toString()),
       updatedAt: json['updated_at'] ?? "",
     );
   }
@@ -75,10 +87,12 @@ class CustomerModel extends Equatable {
     email: "",
     fullName: "",
     mobileNumber: "",
+    gstNumber: "",
+    timestamp: 0,
     updatedAt: "",
   );
 
   @override
   String toString() =>
-      '{id: $id, address: $address,  createdAt: $createdAt, deletedAt: $deletedAt, email: $email, fullName: $fullName, mobileNumber: $mobileNumber  updatedAt: $updatedAt}';
+      '{id: $id, address: $address,  createdAt: $createdAt, deletedAt: $deletedAt, email: $email, fullName: $fullName, mobileNumber: $mobileNumber,gstNumber:$gstNumber,timestamp:$timestamp, updatedAt: $updatedAt}';
 }

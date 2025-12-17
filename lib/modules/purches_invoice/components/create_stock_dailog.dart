@@ -9,10 +9,10 @@ import 'package:local_shout_billing/config/data.dart';
 import 'package:local_shout_billing/models/storage_location.dart';
 import 'package:local_shout_billing/modules/purches_invoice/bloc/purches_invoice_details_bloc/purches_invoice_details_bloc.dart';
 import 'package:local_shout_billing/modules/purches_invoice/components/category_picker_purches_dialog.dart';
-import 'package:local_shout_billing/modules/stock/bloc/category_bloc/category_list_bloc.dart';
-import 'package:local_shout_billing/modules/stock/bloc/stock_bloc/stock_bloc.dart';
-import 'package:local_shout_billing/modules/stock/bloc/update_category_bloc/category_name_update_bloc.dart';
-import 'package:local_shout_billing/modules/stock/components/create_category_dialog.dart';
+import 'package:local_shout_billing/modules/stocks/bloc/category_bloc/category_list_bloc.dart';
+import 'package:local_shout_billing/modules/stocks/bloc/stock_bloc/stock_bloc.dart';
+import 'package:local_shout_billing/modules/stocks/bloc/update_category_bloc/category_name_update_bloc.dart';
+import 'package:local_shout_billing/modules/stocks/components/create_category_dialog.dart';
 
 class PurchesCreateSparePartPrompt extends StatefulWidget {
   final String typedName;

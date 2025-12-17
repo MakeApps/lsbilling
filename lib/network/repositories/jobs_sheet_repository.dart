@@ -67,8 +67,8 @@ class JobSheetRepository extends Repository {
   }
 
   // search customer details
-  Future<dynamic> searchCustomerDetails(jsonData) async {
-    return jobSheetApi.searchCustomerDetails(jsonData);
+  Future<dynamic> getCustomerList(jsonData) async {
+    return jobSheetApi.getCustomerList(jsonData);
   }
 
 //update profile
@@ -131,26 +131,6 @@ class JobSheetRepository extends Repository {
       "toDate": toDate
     };
     return jobSheetApi.searchJobSheet(jsonData);
-  }
-
-  // search invocie record details
-  Future<dynamic> searchInvoiceList(String searchKeyword) async {
-    dynamic token = await app_instance.storage.read(key: "token");
-    Map<String, Object> jsonData = {
-      "token": token.toString(),
-      "search": searchKeyword
-    };
-    return jobSheetApi.searchInvoiceList(jsonData);
-  }
-
-  // search Estimate details
-  Future<dynamic> searchEstimateDetails(String searchKeyword) async {
-    dynamic token = await app_instance.storage.read(key: "token");
-    Map<String, Object> jsonData = {
-      "token": token.toString(),
-      "search": searchKeyword
-    };
-    return jobSheetApi.searchEstimateDetails(jsonData);
   }
 
   Future<String> getEstimatePdf(String token, String id) async {
@@ -369,6 +349,18 @@ class JobSheetRepository extends Repository {
 
   Future<dynamic> getStorageLocation(jsonData) async {
     return jobSheetApi.getStorageLocation(jsonData);
+  }
+
+  //create Customer
+  Future<dynamic> createCustomer(jsonData) async {
+    return jobSheetApi.createCustomer(jsonData);
+  }
+    // get single customer details
+  Future<dynamic> getCustomerInfo(jsonData) {
+    return jobSheetApi.getCustomerInfo(jsonData);
+  }
+ Future<dynamic> updateCustomerInfo(jsonData, String id) {
+    return jobSheetApi.updateCustomerInfo(jsonData, id);
   }
 
   Future<void> logoutUser(String token) async {

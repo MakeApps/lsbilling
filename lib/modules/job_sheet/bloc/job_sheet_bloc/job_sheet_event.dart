@@ -40,11 +40,7 @@ class FetchDashboard extends JobSheetEvent {
   });
 }
 
-class FormPageChanged extends JobSheetEvent {
-  final int pageIndex;
 
-  const FormPageChanged(this.pageIndex);
-}
 
 class ChangeJobSheetStatus extends JobSheetEvent {
   final int jobSheetId;
@@ -52,15 +48,7 @@ class ChangeJobSheetStatus extends JobSheetEvent {
   const ChangeJobSheetStatus({required this.jobSheetId, required this.status});
 }
 
-class SearchInvoiceRecord extends JobSheetEvent {
-  final String searchKeyword;
-  const SearchInvoiceRecord({required this.searchKeyword});
-}
 
-class SearchEstimateRecord extends JobSheetEvent {
-  final String searchKeyword;
-  const SearchEstimateRecord({required this.searchKeyword});
-}
 
 class FetchEstimateList extends JobSheetEvent {
   final int? timestamp;

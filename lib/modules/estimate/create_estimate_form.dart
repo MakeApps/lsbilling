@@ -190,10 +190,10 @@ class _CreateEstimateFormState extends State<CreateEstimateForm> {
                             style: ButtonStyle(
                               foregroundColor:
                                   WidgetStateProperty.all<Color>(blackColor),
-                              backgroundColor:
-                                  WidgetStateProperty.all<Color>(lightGreyColor),
-                              shape:
-                                  WidgetStateProperty.all<RoundedRectangleBorder>(
+                              backgroundColor: WidgetStateProperty.all<Color>(
+                                  lightGreyColor),
+                              shape: WidgetStateProperty.all<
+                                  RoundedRectangleBorder>(
                                 RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(5),
                                 ),
@@ -205,7 +205,8 @@ class _CreateEstimateFormState extends State<CreateEstimateForm> {
                             child: const Center(
                               child: Text(
                                 'Cancel',
-                                style: TextStyle(color: blackColor, fontSize: 14),
+                                style:
+                                    TextStyle(color: blackColor, fontSize: 14),
                               ),
                             ),
                           ),
@@ -221,8 +222,8 @@ class _CreateEstimateFormState extends State<CreateEstimateForm> {
                                   WidgetStateProperty.all<Color>(whiteColor),
                               backgroundColor:
                                   WidgetStateProperty.all<Color>(primaryColor),
-                              shape:
-                                  WidgetStateProperty.all<RoundedRectangleBorder>(
+                              shape: WidgetStateProperty.all<
+                                  RoundedRectangleBorder>(
                                 RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(5),
                                   side: const BorderSide(color: primaryColor),
@@ -235,7 +236,7 @@ class _CreateEstimateFormState extends State<CreateEstimateForm> {
                                 _mobileValidate =
                                     phoneNumberController.text.isEmpty;
                               });
-              
+
                               if (fullNameController.text.isNotEmpty &&
                                   phoneNumberController.text.isNotEmpty) {
                                 // GST confirmation dialog
@@ -247,7 +248,7 @@ class _CreateEstimateFormState extends State<CreateEstimateForm> {
                                         "gst"; // DEFAULT: GST Invoice
                                     String gstOption =
                                         "CGST/SGST"; // DEFAULT: CGST/SGST
-              
+
                                     return StatefulBuilder(
                                       builder: (context, setState) {
                                         return AlertDialog(
@@ -265,13 +266,15 @@ class _CreateEstimateFormState extends State<CreateEstimateForm> {
                                                 style: TextStyle(
                                                     fontSize: 15,
                                                     color: blackColor,
-                                                    fontWeight: FontWeight.w600),
+                                                    fontWeight:
+                                                        FontWeight.w600),
                                               ),
                                               InkWell(
                                                 onTap: () =>
                                                     Navigator.pop(context),
                                                 child: const Icon(Icons.close,
-                                                    size: 20, color: blackColor),
+                                                    size: 20,
+                                                    color: blackColor),
                                               )
                                             ],
                                           ),
@@ -294,7 +297,7 @@ class _CreateEstimateFormState extends State<CreateEstimateForm> {
                                                     () => billingType =
                                                         value.toString()),
                                               ),
-              
+
                                               /// GST Invoice
                                               RadioListTile(
                                                 title: const Text(
@@ -311,13 +314,14 @@ class _CreateEstimateFormState extends State<CreateEstimateForm> {
                                                     () => billingType =
                                                         value.toString()),
                                               ),
-              
+
                                               const SizedBox(height: 10),
-              
+
                                               /// Dropdown only when GST Invoice selected
                                               if (billingType == "gst") ...[
                                                 const Align(
-                                                  alignment: Alignment.centerLeft,
+                                                  alignment:
+                                                      Alignment.centerLeft,
                                                   child: Text(
                                                     "Select:",
                                                     style: TextStyle(
@@ -330,14 +334,15 @@ class _CreateEstimateFormState extends State<CreateEstimateForm> {
                                                 const SizedBox(height: 5),
                                                 Container(
                                                   width: double.infinity,
-                                                  padding:
-                                                      const EdgeInsets.symmetric(
-                                                          horizontal: 12),
+                                                  padding: const EdgeInsets
+                                                      .symmetric(
+                                                      horizontal: 12),
                                                   decoration: BoxDecoration(
                                                     border: Border.all(
                                                         color: Colors.grey),
                                                     borderRadius:
-                                                        BorderRadius.circular(6),
+                                                        BorderRadius.circular(
+                                                            6),
                                                   ),
                                                   child:
                                                       DropdownButtonHideUnderline(
@@ -350,7 +355,8 @@ class _CreateEstimateFormState extends State<CreateEstimateForm> {
                                                             "CGST/SGST",
                                                             style: TextStyle(
                                                                 fontSize: 12,
-                                                                color: blackColor,
+                                                                color:
+                                                                    blackColor,
                                                                 fontWeight:
                                                                     FontWeight
                                                                         .w500),
@@ -362,7 +368,8 @@ class _CreateEstimateFormState extends State<CreateEstimateForm> {
                                                             "IGST",
                                                             style: TextStyle(
                                                                 fontSize: 12,
-                                                                color: blackColor,
+                                                                color:
+                                                                    blackColor,
                                                                 fontWeight:
                                                                     FontWeight
                                                                         .w500),
@@ -371,15 +378,15 @@ class _CreateEstimateFormState extends State<CreateEstimateForm> {
                                                       ],
                                                       onChanged: (val) =>
                                                           setState(() =>
-                                                              gstOption =
-                                                                  val.toString()),
+                                                              gstOption = val
+                                                                  .toString()),
                                                     ),
                                                   ),
                                                 ),
                                               ],
-              
+
                                               const SizedBox(height: 20),
-              
+
                                               Row(
                                                 mainAxisAlignment:
                                                     MainAxisAlignment.end,
@@ -389,7 +396,8 @@ class _CreateEstimateFormState extends State<CreateEstimateForm> {
                                                       "Cancel",
                                                       style: TextStyle(
                                                           fontSize: 13,
-                                                          color: bluecolorprimary,
+                                                          color:
+                                                              bluecolorprimary,
                                                           fontWeight:
                                                               FontWeight.w500),
                                                     ),
@@ -399,10 +407,12 @@ class _CreateEstimateFormState extends State<CreateEstimateForm> {
                                                   ElevatedButton(
                                                     style: ButtonStyle(
                                                       backgroundColor:
-                                                          WidgetStateProperty.all<
-                                                              Color>(primaryColor),
-                                                      shape: WidgetStateProperty.all<
-                                                          RoundedRectangleBorder>(
+                                                          WidgetStateProperty
+                                                              .all<Color>(
+                                                                  primaryColor),
+                                                      shape: WidgetStateProperty
+                                                          .all<
+                                                              RoundedRectangleBorder>(
                                                         RoundedRectangleBorder(
                                                           borderRadius:
                                                               BorderRadius
@@ -438,18 +448,19 @@ class _CreateEstimateFormState extends State<CreateEstimateForm> {
                                     );
                                   },
                                 );
-              
+
                                 if (gstConfirmed != null) {
                                   String billingType =
                                       gstConfirmed["billingType"];
                                   String igst = gstConfirmed["igst"];
-              
-                                  String gstBill = "0"; // default regular invoice
-              
+
+                                  String gstBill =
+                                      "0"; // default regular invoice
+
                                   if (billingType == "gst") {
                                     gstBill = "1"; // GST Invoice
                                   }
-              
+
                                   Map<String, dynamic> formData = {
                                     "full_name":
                                         fullNameController.text.toString(),
@@ -460,9 +471,10 @@ class _CreateEstimateFormState extends State<CreateEstimateForm> {
                                     "gst_number":
                                         gstNumberController.text.toString(),
                                     "gst_bill": gstBill,
-                                    "igst": billingType == "regular" ? "0" : igst,
+                                    "igst":
+                                        billingType == "regular" ? "0" : igst,
                                   };
-              
+
                                   context.read<JobSheetBloc>().add(
                                         AddEstimate(formData: formData),
                                       );
@@ -594,7 +606,7 @@ class _CreateEstimateFormState extends State<CreateEstimateForm> {
                                       _nameValidate = text.trim().isEmpty;
                                     },
                                   );
-                
+
                                   if (text.trim().length >= 3) {
                                     context.read<SearchBloc>().add(
                                           SearchCustomerDetails(
@@ -641,11 +653,11 @@ class _CreateEstimateFormState extends State<CreateEstimateForm> {
                                 () {
                                   fullNameController.text =
                                       suggestion.fullName!;
-                
+
                                   adressController.text = suggestion.address!;
-                
+
                                   emailController.text = suggestion.email!;
-                
+
                                   phoneNumberController.text =
                                       suggestion.mobileNumber!;
                                   fullNameController.selection =

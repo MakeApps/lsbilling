@@ -87,7 +87,6 @@ class JobSheetApi extends Api {
   }
 
   //delete invoice
-
   Future<dynamic> deleteInvoice(jsonData) async {
     try {
       final result = await requestDELETE(
@@ -196,7 +195,6 @@ class JobSheetApi extends Api {
   }
 
   ////customer complaints/////
-
   Future<dynamic> searchCustomerComplaints(jsonData) async {
     try {
       final apiResponse = await requestGET(
@@ -207,33 +205,6 @@ class JobSheetApi extends Api {
     }
   }
 
-  // search customer
-  Future<dynamic> searchCustomerDetails(
-    jsonData,
-  ) async {
-    try {
-      final apiResponse =
-          await requestGET(path: '/get-customers', parameters: jsonData);
-      return apiResponse['customers'];
-    } catch (er) {
-      print("Error is---------$er");
-    }
-  }
-
-//search invoice list
-  Future<dynamic> searchEstimateDetails(dynamic jsonData) async {
-    final apiResponse =
-        await requestGET(path: '/get_estimates', parameters: jsonData);
-    return apiResponse['Estimates'];
-  }
-
-//search invoice list
-  Future<dynamic> searchInvoiceList(dynamic jsonData) async {
-    final apiResponse =
-        await requestGET(path: '/get_invoices', parameters: jsonData);
-    return apiResponse['Invoice'];
-  }
-
 //job sheet search
   Future<dynamic> searchJobSheet(dynamic jsonData) async {
     final apiResponse =
@@ -242,7 +213,6 @@ class JobSheetApi extends Api {
   }
 
   //profile information
-
   Future<dynamic> profileInformation(jsonData) async {
     try {
       final profileInformation =
@@ -630,6 +600,21 @@ class JobSheetApi extends Api {
     }
   }
 
+  //get customer list
+  Future<dynamic> getCustomerList(Map<String, String> jsonData) async {
+    try {
+      final customerDetailList =
+          await requestGET(path: '/get-customers', parameters: jsonData)
+              .timeout(
+        const Duration(seconds: 30),
+      );
+      return customerDetailList['customers'];
+    } catch (e, _) {
+      print(e);
+      return null;
+    }
+  }
+
   //for staff section
   Future<dynamic> getStaffList(Map<String, String> jsonData) async {
     try {
@@ -693,6 +678,38 @@ class JobSheetApi extends Api {
       return locationList['stock_locations'];
     } catch (e, _) {
       print(e);
+    }
+  }
+
+  Future<dynamic> createCustomer(jsonData) async {
+    try {
+      final apiResponse =
+          await requestPOST(path: '/create-customers', parameters: jsonData);
+      return apiResponse;
+    } catch (e, _) {
+      print(e);
+    }
+  }
+
+  //get customer details to update
+  Future<dynamic> getCustomerInfo(jsonData) async {
+    try {
+      final response = await requestGET(
+          path: '/customer_details/${jsonData['id']}', parameters: jsonData);
+      return response['customer'];
+    } catch (er) {
+      print("Error is---------$er");
+    }
+  }
+
+  //update customer info
+  Future<dynamic> updateCustomerInfo(jsonData, String id) async {
+    try {
+      final result =
+          await requestPUT(path: '/update_customer/$id', parameters: jsonData);
+      return result;
+    } catch (er) {
+      print("Error is------$er");
     }
   }
 

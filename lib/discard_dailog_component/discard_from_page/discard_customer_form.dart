@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:local_shout_billing/config/colors.dart';
 
-class DiscardVendorPage extends StatelessWidget {
-  const DiscardVendorPage({super.key});
+class DiscardCustomerForm extends StatelessWidget {
+  const DiscardCustomerForm({super.key});
 
   Future<bool?> showDiscardCustomerFormDailog(BuildContext context) async {
     return await showDialog<bool>(
@@ -17,7 +17,7 @@ class DiscardVendorPage extends StatelessWidget {
                 ),
               ),
               title: const Text(
-                'Are you sure you want to discard the Customer Form?',
+                'Are you sure you want to discard the Vendor?',
                 style: TextStyle(
                     color: blackColor,
                     fontSize: 13,

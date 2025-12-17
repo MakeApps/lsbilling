@@ -13,14 +13,14 @@ class SearchBlocState extends Equatable {
   List<CustomerModel>? customerList;
   List<CustomerComplaintModel>? customerComplaintList;
   List<EstimateListingModel>? estimateList;
-  SearchBlocState(
-      {this.status = SearchStatus.initial,
-      this.vendorStatus = VendorSearchStatus.initial,
-      this.vehicleDetails = const [],
-      this.customerList = const [],
-      this.customerComplaintList = const [],
-      this.estimateList = const [],
-      this.vendorList = const [],
+  SearchBlocState({
+    this.status = SearchStatus.initial,
+    this.vendorStatus = VendorSearchStatus.initial,
+    this.vehicleDetails = const [],
+    this.customerList = const [],
+    this.customerComplaintList = const [],
+    this.estimateList = const [],
+    this.vendorList = const [],
   });
 
   @override
@@ -41,7 +41,7 @@ class SearchBlocState extends Equatable {
       List<CustomerModel>? customerList,
       List<CustomerComplaintModel>? customerComplaintList,
       List<EstimateListingModel>? estimateList,
-        List<StockVendorModel>? vendorList}) {
+      List<StockVendorModel>? vendorList}) {
     return SearchBlocState(
         status: status ?? this.status,
         vendorStatus: vendorStatus ?? this.vendorStatus,
@@ -50,7 +50,6 @@ class SearchBlocState extends Equatable {
         customerComplaintList:
             customerComplaintList ?? this.customerComplaintList,
         estimateList: estimateList ?? this.estimateList,
-        vendorList: vendorList??this.vendorList
-        );
+        vendorList: vendorList ?? this.vendorList);
   }
 }
