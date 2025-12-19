@@ -15,3 +15,14 @@ class UpdateCustomerInfo extends CustomerDetailsEvent {
   final String? id;
   const UpdateCustomerInfo({this.formData, required this.id});
 }
+class FetchEstimateInvoice extends CustomerDetailsEvent {
+  final String filter; // Estimate | Invoice
+  final int? vehicleId;
+  final String customerId;
+
+  const FetchEstimateInvoice({
+    required this.filter,
+    required this.vehicleId,
+    required this.customerId,
+  });
+}

@@ -454,8 +454,7 @@ class _CreateEstimateFormState extends State<CreateEstimateForm> {
                                       gstConfirmed["billingType"];
                                   String igst = gstConfirmed["igst"];
 
-                                  String gstBill =
-                                      "0"; // default regular invoice
+                                  String gstBill = "0";
 
                                   if (billingType == "gst") {
                                     gstBill = "1"; // GST Invoice

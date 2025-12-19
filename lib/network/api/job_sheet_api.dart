@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:developer';
 import 'package:local_shout_billing/config.dart' as app_instance;
 import 'package:local_shout_billing/config.dart';
 import 'package:local_shout_billing/isar/admin_profile_information/profile_information_isar.dart';
@@ -146,7 +147,8 @@ class JobSheetApi extends Api {
   Future<dynamic> getEstimateDetails(jsonData) async {
     try {
       final getEstimateResponse = await requestGET(
-          path: 'get_estimate/${jsonData['id']}', parameters: jsonData);
+          path: '/get_estimate/${jsonData['id']}', parameters: jsonData);
+
       return getEstimateResponse['Estimate'];
     } catch (er) {
       print("Error is---------$er");
@@ -157,7 +159,7 @@ class JobSheetApi extends Api {
   Future<dynamic> getInvoiceByInvoiceId(jsonData) async {
     try {
       final getEstimateResponse = await requestGET(
-          path: 'get_invoice_by_id/${jsonData['id']}', parameters: jsonData);
+          path: '/get_invoice_by_id/${jsonData['id']}', parameters: jsonData);
       return getEstimateResponse['Invoice'];
     } catch (er) {
       print("Error is---------$er");
@@ -328,7 +330,7 @@ class JobSheetApi extends Api {
     try {
       final result =
           await requestPUT(path: '/update-gst-bill/$id', parameters: jsonData);
-
+      log("--result updateGstBill---$result");
       return result;
     } catch (e, _) {
       print(e);
@@ -710,6 +712,18 @@ class JobSheetApi extends Api {
       return result;
     } catch (er) {
       print("Error is------$er");
+    }
+  }
+
+  Future<dynamic> getCustomersEstimateInvoice(
+      String customerId, Map<String, String> jsonData) async {
+    try {
+      final apiResponse = await requestGET(
+              path: '/customer_info/$customerId', parameters: jsonData)
+          .timeout(const Duration(seconds: 30));
+      return apiResponse['customer_info'];
+    } catch (e, _) {
+      print(e);
     }
   }
 

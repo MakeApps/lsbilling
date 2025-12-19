@@ -123,9 +123,10 @@ class CustomerDetailsModel extends Equatable {
     alternateNumber: "",
     gstNumber: "",
     updatedAt: "",
+    vehicles:[]
   );
 
   @override
   String toString() =>
-      '{id: $id,companyId:$companyId, address: $address,  createdAt: $createdAt, deletedAt: $deletedAt, email: $email, fullName: $fullName, mobileNumber: $mobileNumber,alternateNumber:$alternateNumber,gstNumber:$gstNumber, updatedAt: $updatedAt}';
+      '{id: $id,companyId:$companyId, address: $address,  createdAt: $createdAt, deletedAt: $deletedAt, email: $email, fullName: $fullName, mobileNumber: $mobileNumber,alternateNumber:$alternateNumber,gstNumber:$gstNumber, updatedAt: $updatedAt,vehicles:$vehicles}';
 }

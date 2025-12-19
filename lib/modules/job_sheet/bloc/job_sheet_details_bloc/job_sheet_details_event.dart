@@ -27,16 +27,16 @@ class GetInvoiceByInvoice extends JobSheetDetailsEvent {
   });
 }
 
-class GetEstimateDetailsByJobSheet extends JobSheetDetailsEvent {
+class GetInvoiceByJobSheet extends JobSheetDetailsEvent {
   final String id;
-  const GetEstimateDetailsByJobSheet({
+  const GetInvoiceByJobSheet({
     required this.id,
   });
 }
 
-class GetInvoiceByJobSheet extends JobSheetDetailsEvent {
+class GetEstimateDetailsByJobSheet extends JobSheetDetailsEvent {
   final String id;
-  const GetInvoiceByJobSheet({
+  const GetEstimateDetailsByJobSheet({
     required this.id,
   });
 }

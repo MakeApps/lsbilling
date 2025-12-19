@@ -7,83 +7,83 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:local_shout_billing/components/center_loader.dart';
 import 'package:local_shout_billing/components/drawer.dart';
 import 'package:local_shout_billing/components/no_leading_space_formatter.dart';
+import 'package:local_shout_billing/config.dart' as app_instance;
 import 'package:local_shout_billing/config/app_icons.dart';
 import 'package:local_shout_billing/config/colors.dart';
 import 'package:local_shout_billing/config/data.dart';
 import 'package:local_shout_billing/main_layout.dart';
-import 'package:local_shout_billing/modules/Estimate/edit_customer_jobsheet.dart';
+import 'package:local_shout_billing/modules/estimate/component/add_spare_part.dart';
+import 'package:local_shout_billing/modules/estimate/edit_customer.dart';
 import 'package:local_shout_billing/modules/invoices/invoice_details_page.dart';
-import 'package:local_shout_billing/modules/job_sheet/bloc/job_sheet_bloc/job_sheet_bloc.dart';
 import 'package:local_shout_billing/modules/job_sheet/bloc/job_sheet_details_bloc/job_sheet_details_bloc.dart';
-import 'package:local_shout_billing/config.dart' as app_instance;
-import 'component/add_spare_part.dart';
 
-class EstimatePage extends StatefulWidget {
-  const EstimatePage({
+class GenerateEstimate extends StatefulWidget {
+  const GenerateEstimate({
     super.key,
   });
+
   @override
-  State<EstimatePage> createState() => _EstimatePageState();
+  State<GenerateEstimate> createState() => _GenerateEstimateState();
 }
 
-class _EstimatePageState extends State<EstimatePage> {
+class _GenerateEstimateState extends State<GenerateEstimate> {
   final _formKey = GlobalKey<FormState>();
   final formKey = GlobalKey<FormState>();
+  int? id;
   String? productId;
+  List<dynamic> tasksList = [];
+  List<dynamic> assignProductList = [];
   List<dynamic> sparePartsList = [];
   List<dynamic> sparePartsListNew = [];
-  List<dynamic> sparePart = [];
   int updateIndex = 0;
+  List<dynamic> sparePart = [];
   final FocusNode nameFocusNode = FocusNode();
   bool? showUpdateButton = false;
   bool addNewMode = false;
+  String manufacturerController = '';
   int productTotalValue = 0;
   String unitProductControlller = "PCS";
-  String gstController = "None";
   TextEditingController productNameController = TextEditingController();
   TextEditingController sparePartNameController = TextEditingController();
   TextEditingController quantityProductController =
       TextEditingController(text: '1');
   TextEditingController rateProductController =
       TextEditingController(text: '00');
+  String gstController = "None";
   TextEditingController hsnCodeProductController = TextEditingController();
   TextEditingController _fullNameController = TextEditingController();
   TextEditingController _adressController = TextEditingController();
   TextEditingController _emailController = TextEditingController();
   TextEditingController _phoneNumberController = TextEditingController();
+  TextEditingController _vehicleNumberController = TextEditingController();
+  TextEditingController _vehicleNameController = TextEditingController();
   TextEditingController _estimateDateController = TextEditingController();
   DateTime _selectedDate = DateTime.now();
-  String? estimateTotalValue;
   double sgst = 0.0;
   double cgst = 0.0;
   String? gstFlag;
   String? gstBill;
   String? igstBill;
+  double subtotalWithGst = 0.0;
   String? roleId;
   bool isQuantityHidden = false;
-  bool? isGenerate = false;
-  bool isSaved = false;
-  bool isModified = false;
-  bool isFromOutside = false;
   Timer? _debounce;
-
-  @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-    isFromOutside = true;
-  }
+  bool? isGenerate = false;
+  bool isModified = false;
+  bool isSaved = false;
 
   assignValues(JobSheetDetailsState state) {
-    _fullNameController.text = state.estimateModel!.fullName.toString();
-    _adressController.text = state.estimateModel!.address.toString();
-    _emailController.text = state.estimateModel!.email.toString();
-    _phoneNumberController.text = state.estimateModel!.mobileNumber.toString();
-    _estimateDateController.text = state.estimateModel!.tempDate.toString();
-    sparePartsList = state.estimateModel!.invoiceProducts!.toList();
-    estimateTotalValue = state.estimateModel!.estimateTotal.toString();
-    gstFlag = state.estimateModel!.gstFlag.toString();
-    gstBill = state.estimateModel!.gstBill.toString();
-    igstBill = state.estimateModel!.igstBill.toString();
+    _fullNameController.text = state.jobcardEstimateModel!.fullName.toString();
+    _adressController.text = state.jobcardEstimateModel!.address.toString();
+    _emailController.text = state.jobcardEstimateModel!.email.toString();
+    _phoneNumberController.text =
+        state.jobcardEstimateModel!.mobileNumber.toString();
+    _estimateDateController.text =
+        state.jobcardEstimateModel!.tempDate.toString();
+    sparePartsList = state.jobcardEstimateModel!.invoiceProducts!.toList();
+    gstFlag = state.jobcardEstimateModel!.gstFlag.toString();
+    gstBill = state.jobcardEstimateModel!.gstBill.toString();
+    igstBill = state.jobcardEstimateModel!.igstBill.toString();
   }
 
   Future<void> _loadRoleId() async {
@@ -98,9 +98,18 @@ class _EstimatePageState extends State<EstimatePage> {
     super.dispose();
     _debounce?.cancel();
     productNameController.dispose();
+    sparePartNameController.dispose();
     quantityProductController.dispose();
     rateProductController.dispose();
     _estimateDateController.dispose();
+    _fullNameController.dispose();
+    _adressController.dispose();
+    _emailController.dispose();
+    _phoneNumberController.dispose();
+    _vehicleNumberController.dispose();
+    _vehicleNameController.dispose();
+
+    nameFocusNode.dispose();
   }
 
   Future<void> _selectDate(BuildContext context) async {
@@ -114,12 +123,13 @@ class _EstimatePageState extends State<EstimatePage> {
           data: Theme.of(context).copyWith(
             colorScheme: const ColorScheme.light(
               primary: primaryColor,
-              onPrimary: blackColor,
+              onPrimary: whiteColor,
               onSurface: blackColor,
             ),
             textButtonTheme: TextButtonThemeData(
               style: TextButton.styleFrom(
-                foregroundColor: blackColor,
+                backgroundColor: primaryColor,
+                foregroundColor: whiteColor,
               ),
             ),
           ),
@@ -141,19 +151,8 @@ class _EstimatePageState extends State<EstimatePage> {
     return BlocConsumer<JobSheetDetailsBloc, JobSheetDetailsState>(
       listener: (context, state) async {
         if (state.status == JobSheetDetailsStatus.success) {
-          CenterLoader.hide();
           assignValues(state);
           _loadRoleId();
-          if (isFromOutside &&
-              (calculateSubtotalGst() > 0 ||
-                  calculateSparePartSubtotal() > 0)) {
-            setState(() {
-              isSaved = true;
-            });
-          }
-          context.read<JobSheetBloc>().add(
-                const FetchEstimateList(status: JobSheetStatus.success),
-              );
         }
         if (state.status == JobSheetDetailsStatus.estimPdfLoading) {
           CenterLoader.show(context);
@@ -167,11 +166,22 @@ class _EstimatePageState extends State<EstimatePage> {
           CenterLoader.hide();
           context.read<JobSheetDetailsBloc>().add(
                 GetEstimateDetailsByEstimate(
-                  id: state.estimateModel!.estimateId.toString(),
+                  id: state.jobcardEstimateModel!.estimateId.toString(),
                 ),
               );
         }
-        if (state.status == JobSheetDetailsStatus.invoiceUpdated) {
+        if (state.status == JobSheetDetailsStatus.invoiceUpdated &&
+            state.currentInvoiceIdByJobSheet != null) {
+          context.read<JobSheetDetailsBloc>().add(
+                ResetLastInvoiceId(),
+              );
+
+          context.read<JobSheetDetailsBloc>().add(
+                GetInvoiceByInvoice(
+                  id: state.currentInvoiceIdByJobSheet.toString(),
+                ),
+              );
+
           Navigator.push(
             context,
             MaterialPageRoute(
@@ -186,16 +196,19 @@ class _EstimatePageState extends State<EstimatePage> {
             context.read<JobSheetDetailsBloc>().add(
                   ResetLastEstimateId(),
                 );
-            context.read<JobSheetBloc>().add(
-                  const FetchEstimateList(status: JobSheetStatus.success),
-                );
-            Navigator.pushReplacementNamed(context, '/estimate_listing');
 
+            Future.microtask(
+              () {
+                if (mounted) {
+                  Navigator.pushNamed(context, '/invoice_page_listing');
+                }
+              },
+            );
             return true;
           },
           child: MainLayout(
             title: const Text(
-              "Edit Estimate",
+              "Create Estimate",
               style: TextStyle(
                   fontSize: 17, color: whiteColor, fontWeight: FontWeight.w600),
             ),
@@ -210,10 +223,19 @@ class _EstimatePageState extends State<EstimatePage> {
                 context.read<JobSheetDetailsBloc>().add(
                       ResetLastEstimateId(),
                     );
-                context.read<JobSheetBloc>().add(
-                      const FetchEstimateList(status: JobSheetStatus.success),
-                    );
-                Navigator.pushNamed(context, '/estimate_listing');
+                Future.microtask(
+                  () {
+                    if (mounted) {
+                      Future.microtask(
+                        () {
+                          if (mounted) {
+                            Navigator.pushNamed(context, '/estimate_listing');
+                          }
+                        },
+                      );
+                    }
+                  },
+                );
               },
               icon: const Icon(backarrow, color: whiteColor),
             ),
@@ -251,7 +273,7 @@ class _EstimatePageState extends State<EstimatePage> {
                                     : calculateSparePartSubtotal().toString(),
                                 style: const TextStyle(
                                     color: blackColor,
-                                    fontSize: 15,
+                                    fontSize: 14,
                                     fontWeight: FontWeight.w500),
                                 textAlign: TextAlign.start,
                               ),
@@ -263,12 +285,6 @@ class _EstimatePageState extends State<EstimatePage> {
                     Flexible(
                       child: ElevatedButton(
                         style: ButtonStyle(
-                          minimumSize: WidgetStateProperty.all(
-                            const Size(70, 40),
-                          ),
-                          padding: WidgetStateProperty.all(
-                            const EdgeInsets.symmetric(horizontal: 15),
-                          ),
                           foregroundColor:
                               WidgetStateProperty.all<Color>(whiteColor),
                           backgroundColor:
@@ -285,27 +301,28 @@ class _EstimatePageState extends State<EstimatePage> {
                               (calculateSubtotalGst() > 0 ||
                                   calculateSparePartSubtotal() > 0)) {
                             Map<String, dynamic> formData = {
-                              "address":
-                                  state.estimateModel!.address.toString(),
-                              "company_id": state.estimateModel!.companyId,
-                              "created_at_date":
-                                  state.estimateModel!.createdAtDate.toString(),
-                              "created_at_time":
-                                  state.estimateModel!.createdAtTime.toString(),
-                              "customer_id": state.estimateModel!.customerId,
-                              "deleted_at":
-                                  state.estimateModel!.deletedAt.toString(),
-                              "email": state.estimateModel!.email.toString(),
+                              "address": state.jobcardEstimateModel!.address
+                                  .toString(),
+                              "company_id":
+                                  state.jobcardEstimateModel!.companyId,
+                              "created_at_date": state
+                                  .jobcardEstimateModel!.createdAtDate
+                                  .toString(),
+                              "created_at_time": state
+                                  .jobcardEstimateModel!.createdAtTime
+                                  .toString(),
+                              "customer_id":
+                                  state.jobcardEstimateModel!.customerId,
+                              "deleted_at": state
+                                  .jobcardEstimateModel!.deletedAt
+                                  .toString(),
+                              "email":
+                                  state.jobcardEstimateModel!.email.toString(),
                               "estimateTotal": gstBill == "1"
                                   ? calculateSubtotalGst()
                                   : calculateSparePartSubtotal(),
-                              "estimate_id": state.estimateModel!.estimateId,
-                              "estimate_number": state
-                                  .estimateModel!.estimateNumber
-                                  .toString(),
                               "gst_flag": gstFlag.toString(),
                               "gst_bill": gstBill.toString(),
-                              "igst": igstBill.toString(),
                               "igstTotal": igstBill == "1"
                                   ? calculateFinalIgstTotal()
                                   : 0,
@@ -318,46 +335,53 @@ class _EstimatePageState extends State<EstimatePage> {
                               "scgtTotal": (gstBill == "1" && igstBill == "0")
                                   ? calculateCgst()
                                   : 0,
-                              "full_name":
-                                  state.estimateModel!.fullName.toString(),
+                              "estimate_id":
+                                  state.jobcardEstimateModel!.estimateId,
+                              "estimate_number": state
+                                  .jobcardEstimateModel!.estimateNumber
+                                  .toString(),
+                              "full_name": state.jobcardEstimateModel!.fullName
+                                  .toString(),
                               "invoice_labours": "",
                               "invoice_products": mergeSparePart().isEmpty
                                   ? ''
                                   : jsonEncode(mergeSparePart()),
                               "labourTotal": 0,
                               "last_estimate_id":
-                                  state.estimateModel!.lastEstimateId,
-                              "mobile_number":
-                                  state.estimateModel!.mobileNumber.toString(),
+                                  state.currentEstimateIdByJobSheet,
+                              "mobile_number": state
+                                  .jobcardEstimateModel!.mobileNumber
+                                  .toString(),
                               "productTotal": gstBill == "1"
                                   ? calculateSubtotalGst()
                                   : calculateSparePartSubtotal(),
                               "temp_date": _estimateDateController.text,
-                              "updated_at":
-                                  state.estimateModel!.updatedAt.toString(),
+                              "updated_at": state
+                                  .jobcardEstimateModel!.updatedAt
+                                  .toString(),
                             };
                             context.read<JobSheetDetailsBloc>().add(
                                   EstimateAdd(
-                                      id: state.estimateModel!.estimateId
+                                      id: state.jobcardEstimateModel!.estimateId
                                           .toString(),
                                       formData: formData),
                                 );
-
                             Fluttertoast.showToast(
-                              toastLength: Toast.LENGTH_SHORT,
-                              msg: "Estimate updated successfully",
-                              backgroundColor: successDarkColor,
-                            );
-
-                            isGenerate = true;
-                            isSaved = true;
-                            isModified = false;
+                                toastLength: Toast.LENGTH_SHORT,
+                                msg: "Estimate added successfully",
+                                backgroundColor: successDarkColor);
+                            id = state.jobcardEstimateModel!.estimateId;
+                            setState(() {
+                              isGenerate = true;
+                              isSaved = true;
+                              isModified = false;
+                            });
                           } else {
                             showDialog(
                               context: context,
                               builder: (context) => AlertDialog(
                                 content: const Text(
-                                  "Please add at least one spare part",
+                                  "Please add at least one spare part ",
                                   style: TextStyle(
                                       color: blackColorDark,
                                       fontSize: 14,
@@ -367,6 +391,7 @@ class _EstimatePageState extends State<EstimatePage> {
                                   Center(
                                     child: ElevatedButton(
                                       style: ElevatedButton.styleFrom(
+                                        foregroundColor: whiteColor,
                                         backgroundColor: primaryColor,
                                         shape: RoundedRectangleBorder(
                                           borderRadius:
@@ -394,17 +419,14 @@ class _EstimatePageState extends State<EstimatePage> {
                             );
                           }
                         },
-                        child: Text(
-                          isSaved ? 'Update' : 'Save',
-                          style: const TextStyle(
+                        child: const Text(
+                          "Save",
+                          style: TextStyle(
                               fontWeight: FontWeight.normal, fontSize: 14),
                         ),
                       ),
                     ),
-                    if (((isSaved && !isModified) &&
-                            (calculateSubtotalGst() > 0 ||
-                                calculateSparePartSubtotal() > 0)) ||
-                        isGenerate == true)
+                    if ((isSaved && !isModified) || isGenerate == true)
                       ElevatedButton(
                         style: ButtonStyle(
                           foregroundColor:
@@ -423,30 +445,28 @@ class _EstimatePageState extends State<EstimatePage> {
                               (calculateSubtotalGst() > 0 ||
                                   calculateSparePartSubtotal() > 0)) {
                             Map<String, dynamic> formData = {
-                              "address":
-                                  state.estimateModel!.address.toString(),
-                              "company_id": state.estimateModel!.companyId,
-                              "created_at_date":
-                                  state.estimateModel!.createdAtDate.toString(),
-                              "created_at_time":
-                                  state.estimateModel!.createdAtTime.toString(),
-                              "customer_id": state.estimateModel!.customerId,
-                              "deleted_at":
-                                  state.estimateModel!.deletedAt.toString(),
-                              "email": state.estimateModel!.email.toString(),
+                              "address": state.jobcardEstimateModel!.address
+                                  .toString(),
+                              "company_id":
+                                  state.jobcardEstimateModel!.companyId,
+                              "created_at_date": state
+                                  .jobcardEstimateModel!.createdAtDate
+                                  .toString(),
+                              "created_at_time": state
+                                  .jobcardEstimateModel!.createdAtTime
+                                  .toString(),
+                              "customer_id":
+                                  state.jobcardEstimateModel!.customerId,
+                              "deleted_at": state
+                                  .jobcardEstimateModel!.deletedAt
+                                  .toString(),
+                              "email":
+                                  state.jobcardEstimateModel!.email.toString(),
                               "estimateTotal": gstBill == "1"
                                   ? calculateSubtotalGst()
                                   : calculateSparePartSubtotal(),
-                              "estimate_id": state.estimateModel!.estimateId,
-                              "estimate_number": state
-                                  .estimateModel!.estimateNumber
-                                  .toString(),
                               "gst_flag": gstFlag.toString(),
-                              "igst": igstBill.toString(),
                               "gst_bill": gstBill.toString(),
-                              "igstTotal": igstBill == "1"
-                                  ? calculateFinalIgstTotal()
-                                  : 0,
                               "taxablevalueTotal": gstBill == "1"
                                   ? calculateSparePartSubtotal()
                                   : 0,
@@ -456,37 +476,46 @@ class _EstimatePageState extends State<EstimatePage> {
                               "scgtTotal": (gstBill == "1" && igstBill == "0")
                                   ? calculateCgst()
                                   : 0,
-                              "full_name":
-                                  state.estimateModel!.fullName.toString(),
+                              "igstTotal": igstBill == "1"
+                                  ? calculateFinalIgstTotal()
+                                  : 0,
+                              "estimate_id":
+                                  state.jobcardEstimateModel!.estimateId,
+                              "estimate_number": state
+                                  .jobcardEstimateModel!.estimateNumber
+                                  .toString(),
+                              "full_name": state.jobcardEstimateModel!.fullName
+                                  .toString(),
                               "invoice_labours": "",
                               "invoice_products": mergeSparePart().isEmpty
                                   ? ''
                                   : jsonEncode(mergeSparePart()),
                               "labourTotal": 0,
                               "last_estimate_id":
-                                  state.estimateModel!.lastEstimateId,
-                              "mobile_number":
-                                  state.estimateModel!.mobileNumber.toString(),
+                                  state.currentEstimateIdByJobSheet,
+                              "mobile_number": state
+                                  .jobcardEstimateModel!.mobileNumber
+                                  .toString(),
                               "productTotal": gstBill == "1"
                                   ? calculateSubtotalGst()
                                   : calculateSparePartSubtotal(),
                               "temp_date": _estimateDateController.text,
-                              "updated_at":
-                                  state.estimateModel!.updatedAt.toString(),
+                              "updated_at": state
+                                  .jobcardEstimateModel!.updatedAt
+                                  .toString(),
                             };
                             context.read<JobSheetDetailsBloc>().add(
                                   EstimateAdd(
-                                      id: state.estimateModel!.estimateId
+                                      id: state.jobcardEstimateModel!.estimateId
                                           .toString(),
                                       formData: formData),
                                 );
-
                             await Future.delayed(
                               const Duration(milliseconds: 300),
                             );
                             context.read<JobSheetDetailsBloc>().add(
                                   DownloadEstimatePdf(
-                                    id: state.estimateModel!.estimateId
+                                    id: state.currentEstimateIdByJobSheet
                                         .toString(),
                                   ),
                                 );
@@ -505,6 +534,7 @@ class _EstimatePageState extends State<EstimatePage> {
                                   Center(
                                     child: ElevatedButton(
                                       style: ElevatedButton.styleFrom(
+                                        foregroundColor: whiteColor,
                                         backgroundColor: primaryColor,
                                         shape: RoundedRectangleBorder(
                                           borderRadius:
@@ -533,14 +563,12 @@ class _EstimatePageState extends State<EstimatePage> {
                           }
                         },
                         child: const Icon(
+                          color: whiteColor,
                           Icons.download,
                           size: 20,
                         ),
                       ),
-                    if (((isSaved && !isModified) &&
-                            (calculateSubtotalGst() > 0 ||
-                                calculateSparePartSubtotal() > 0)) ||
-                        isGenerate == true)
+                    if ((isSaved && !isModified) || isGenerate == true)
                       ElevatedButton(
                         style: ButtonStyle(
                           foregroundColor:
@@ -559,23 +587,30 @@ class _EstimatePageState extends State<EstimatePage> {
                               (calculateSubtotalGst() > 0 ||
                                   calculateSparePartSubtotal() > 0)) {
                             Map<String, dynamic> formData = {
-                              "address":
-                                  state.estimateModel!.address.toString(),
-                              "comments": "",
-                              "company_id": state.estimateModel!.companyId,
-                              "created_at_date":
-                                  state.estimateModel!.createdAtDate.toString(),
-                              "created_at_time":
-                                  state.estimateModel!.createdAtTime.toString(),
-                              "customer_id": state.estimateModel!.customerId,
-                              "deleted_at":
-                                  state.estimateModel!.deletedAt.toString(),
-                              "email": state.estimateModel!.email.toString(),
+                              "address": state.jobcardEstimateModel!.address
+                                  .toString(),
+                              "company_id":
+                                  state.jobcardEstimateModel!.companyId,
+                              "created_at_date": state
+                                  .jobcardEstimateModel!.createdAtDate
+                                  .toString(),
+                              "created_at_time": state
+                                  .jobcardEstimateModel!.createdAtTime
+                                  .toString(),
+                              "customer_id":
+                                  state.jobcardEstimateModel!.customerId,
+                              "deleted_at": state
+                                  .jobcardEstimateModel!.deletedAt
+                                  .toString(),
+                              "email":
+                                  state.jobcardEstimateModel!.email.toString(),
                               "estimateTotal": gstBill == "1"
                                   ? calculateSubtotalGst()
                                   : calculateSparePartSubtotal(),
+                              "invoiceTotal": gstBill == "1"
+                                  ? calculateSubtotalGst()
+                                  : calculateSparePartSubtotal(),
                               "gst_flag": gstFlag.toString(),
-                              "igst": igstBill.toString(),
                               "gst_bill": gstBill.toString(),
                               "igstTotal": igstBill == "1"
                                   ? calculateFinalIgstTotal()
@@ -589,38 +624,37 @@ class _EstimatePageState extends State<EstimatePage> {
                               "scgtTotal": (gstBill == "1" && igstBill == "0")
                                   ? calculateCgst()
                                   : 0,
-                              "estimate_id": state.estimateModel!.estimateId,
+                              "estimate_id":
+                                  state.jobcardEstimateModel!.estimateId,
                               "estimate_number": state
-                                  .estimateModel!.estimateNumber
+                                  .jobcardEstimateModel!.estimateNumber
                                   .toString(),
-                              "full_name":
-                                  state.estimateModel!.fullName.toString(),
+                              "full_name": state.jobcardEstimateModel!.fullName
+                                  .toString(),
                               "invoice_labours": "",
                               "invoice_products": mergeSparePart().isEmpty
                                   ? ''
                                   : jsonEncode(mergeSparePart()),
                               "labourTotal": 0,
                               "last_estimate_id":
-                                  state.estimateModel!.lastEstimateId,
-                              "mobile_number":
-                                  state.estimateModel!.mobileNumber.toString(),
+                                  state.currentEstimateIdByJobSheet,
+                              "mobile_number": state
+                                  .jobcardEstimateModel!.mobileNumber
+                                  .toString(),
                               "productTotal": gstBill == "1"
                                   ? calculateSubtotalGst()
                                   : calculateSparePartSubtotal(),
                               "temp_date": _estimateDateController.text,
-                              "updated_at":
-                                  state.estimateModel!.updatedAt.toString(),
-                              "invoiceTotal": gstBill == "1"
-                                  ? calculateSubtotalGst()
-                                  : calculateSparePartSubtotal(),
+                              "updated_at": state
+                                  .jobcardEstimateModel!.updatedAt
+                                  .toString(),
                             };
                             context.read<JobSheetDetailsBloc>().add(
                                   GenerateInvoiceEvent(
-                                      id: state.estimateModel!.estimateId
+                                      id: state.jobcardEstimateModel!.estimateId
                                           .toString(),
                                       formData: formData),
                                 );
-
                             Fluttertoast.showToast(
                                 msg: "Invoice Updated Successfully",
                                 backgroundColor: successDarkColor,
@@ -630,9 +664,9 @@ class _EstimatePageState extends State<EstimatePage> {
                               context: context,
                               builder: (context) => AlertDialog(
                                 content: const Text(
-                                  "Please add at least one spare part and labour",
+                                  "Please add at least one spare part ",
                                   style: TextStyle(
-                                      color: blackColorDark,
+                                      color: whiteColor,
                                       fontSize: 14,
                                       fontWeight: FontWeight.w600),
                                 ),
@@ -640,6 +674,7 @@ class _EstimatePageState extends State<EstimatePage> {
                                   Center(
                                     child: ElevatedButton(
                                       style: ElevatedButton.styleFrom(
+                                        foregroundColor: whiteColor,
                                         backgroundColor: primaryColor,
                                         shape: RoundedRectangleBorder(
                                           borderRadius:
@@ -670,7 +705,9 @@ class _EstimatePageState extends State<EstimatePage> {
                         child: const Text(
                           'Invoice',
                           style: TextStyle(
-                              fontWeight: FontWeight.normal, fontSize: 14),
+                              color: whiteColor,
+                              fontWeight: FontWeight.normal,
+                              fontSize: 14),
                         ),
                       )
                   ],
@@ -705,10 +742,10 @@ class _EstimatePageState extends State<EstimatePage> {
                                             MainAxisAlignment.spaceBetween,
                                         children: [
                                           Text(
-                                            state.estimateModel!.fullName
+                                            state.jobcardEstimateModel!.fullName
                                                 .toString(),
                                             style: const TextStyle(
-                                                fontSize: 16,
+                                                fontSize: 15,
                                                 fontWeight: FontWeight.w600,
                                                 color: blackColor),
                                           ),
@@ -717,8 +754,8 @@ class _EstimatePageState extends State<EstimatePage> {
                                               showGeneralDialog(
                                                 barrierLabel: "Label",
                                                 barrierDismissible: true,
-                                                barrierColor:
-                                                    blackColor.withOpacity(0.5),
+                                                barrierColor: Colors.black
+                                                    .withOpacity(0.5),
                                                 transitionDuration:
                                                     const Duration(
                                                         milliseconds: 300),
@@ -729,105 +766,79 @@ class _EstimatePageState extends State<EstimatePage> {
                                                     child: Align(
                                                       alignment: Alignment
                                                           .bottomCenter,
-                                                      child: SafeArea(
-                                                        child: Container(
-                                                          height: 75,
-                                                          margin:
+                                                      child: Container(
+                                                        height: 80,
+                                                        margin: const EdgeInsets
+                                                            .only(
+                                                            bottom: 30,
+                                                            left: 20,
+                                                            right: 20),
+                                                        decoration:
+                                                            BoxDecoration(
+                                                          color: whiteColor,
+                                                          borderRadius:
+                                                              BorderRadius
+                                                                  .circular(5),
+                                                        ),
+                                                        child: Padding(
+                                                          padding:
                                                               const EdgeInsets
-                                                                  .only(
-                                                                  bottom: 20,
-                                                                  left: 20,
-                                                                  right: 20),
-                                                          decoration:
-                                                              BoxDecoration(
-                                                            color: whiteColor,
-                                                            borderRadius:
-                                                                BorderRadius
-                                                                    .circular(
-                                                                        5),
-                                                          ),
-                                                          child: Padding(
-                                                            padding:
-                                                                const EdgeInsets
-                                                                    .all(20.0),
-                                                            child: Material(
-                                                              color: whiteColor,
-                                                              child: Column(
-                                                                children: [
-                                                                  const SizedBox(
-                                                                    height: 10,
+                                                                  .all(20.0),
+                                                          child: Material(
+                                                            color: Colors.white,
+                                                            child: Column(
+                                                              children: [
+                                                                const SizedBox(
+                                                                  height: 10,
+                                                                ),
+                                                                GestureDetector(
+                                                                  onTap: () {
+                                                                    setState(
+                                                                      () {
+                                                                        Navigator.of(context)
+                                                                            .pop();
+                                                                        showDialog(
+                                                                          context:
+                                                                              context,
+                                                                          builder:
+                                                                              (BuildContext context) {
+                                                                            return EditCustomerBox(
+                                                                              id: state.jobcardEstimateModel!.estimateId,
+                                                                              fullname: state.jobcardEstimateModel!.fullName.toString(),
+                                                                              address: state.jobcardEstimateModel!.address.toString(),
+                                                                              email: state.jobcardEstimateModel!.email.toString(),
+                                                                              phoneno: state.jobcardEstimateModel!.mobileNumber.toString(),
+                                                                            );
+                                                                          },
+                                                                        );
+                                                                      },
+                                                                    );
+                                                                  },
+                                                                  child: Row(
+                                                                    children: [
+                                                                      Icon(
+                                                                        Icons
+                                                                            .edit_outlined,
+                                                                        color: Colors
+                                                                            .grey
+                                                                            .shade600,
+                                                                      ),
+                                                                      const SizedBox(
+                                                                        width:
+                                                                            20,
+                                                                      ),
+                                                                      const Text(
+                                                                        'Edit Customer',
+                                                                        style: TextStyle(
+                                                                            fontSize:
+                                                                                14,
+                                                                            fontWeight:
+                                                                                FontWeight.w500),
+                                                                      )
+                                                                    ],
                                                                   ),
-                                                                  GestureDetector(
-                                                                    onTap:
-                                                                        () async {
-                                                                      Navigator.of(
-                                                                              context)
-                                                                          .pop();
-                                                                      await showDialog(
-                                                                        context:
-                                                                            context,
-                                                                        builder:
-                                                                            (BuildContext
-                                                                                context) {
-                                                                          return EditCustomerByEstimate(
-                                                                            id: state.estimateModel!.estimateId,
-                                                                            fullname:
-                                                                                state.estimateModel!.fullName.toString(),
-                                                                            address:
-                                                                                state.estimateModel!.address.toString(),
-                                                                            email:
-                                                                                state.estimateModel!.email.toString(),
-                                                                            phoneno:
-                                                                                state.estimateModel!.mobileNumber.toString(),
-                                                                          );
-                                                                        },
-                                                                      );
-                                                                      if (!mounted)
-                                                                        return;
-                                                                      // Safe setState after async gap
-                                                                      setState(
-                                                                          () {
-                                                                        sparePartsList
-                                                                            .clear();
-                                                                        sparePartsListNew
-                                                                            .clear();
-                                                                      });
-
-                                                                      if (!mounted)
-                                                                        return;
-                                                                      context
-                                                                          .read<
-                                                                              JobSheetDetailsBloc>()
-                                                                          .add(
-                                                                            GetEstimateDetailsByEstimate(
-                                                                              id: state.estimateModel!.estimateId.toString(),
-                                                                            ),
-                                                                          );
-                                                                    },
-                                                                    child: Row(
-                                                                      children: [
-                                                                        Icon(
-                                                                          Icons
-                                                                              .edit_outlined,
-                                                                          color: Colors
-                                                                              .grey
-                                                                              .shade600,
-                                                                        ),
-                                                                        const SizedBox(
-                                                                          width:
-                                                                              20,
-                                                                        ),
-                                                                        const Text(
-                                                                          'Edit Customer',
-                                                                          style: TextStyle(
-                                                                              fontSize: 14,
-                                                                              fontWeight: FontWeight.w500),
-                                                                        )
-                                                                      ],
-                                                                    ),
-                                                                  ),
-                                                                ],
-                                                              ),
+                                                                ),
+                                                              ],
                                                             ),
                                                           ),
                                                         ),
@@ -869,7 +880,7 @@ class _EstimatePageState extends State<EstimatePage> {
                                           ),
                                           const SizedBox(width: 5),
                                           Text(
-                                            state.estimateModel!.email
+                                            state.jobcardEstimateModel!.email
                                                 .toString(),
                                             style: const TextStyle(
                                                 fontSize: 12,
@@ -900,7 +911,7 @@ class _EstimatePageState extends State<EstimatePage> {
                                                   ),
                                                   const SizedBox(width: 5),
                                                   Text(
-                                                    state.estimateModel!
+                                                    state.jobcardEstimateModel!
                                                         .mobileNumber
                                                         .toString(),
                                                     style: const TextStyle(
@@ -936,7 +947,8 @@ class _EstimatePageState extends State<EstimatePage> {
                                                     const SizedBox(width: 5),
                                                     Expanded(
                                                       child: Text(
-                                                        state.estimateModel!
+                                                        state
+                                                            .jobcardEstimateModel!
                                                             .address
                                                             .toString(),
                                                         style: const TextStyle(
@@ -945,6 +957,8 @@ class _EstimatePageState extends State<EstimatePage> {
                                                               FontWeight.w400,
                                                           color: blackColor,
                                                         ),
+                                                        // overflow: TextOverflow
+                                                        //     .ellipsis,
                                                         maxLines: 3,
                                                       ),
                                                     ),
@@ -956,13 +970,6 @@ class _EstimatePageState extends State<EstimatePage> {
                                         ],
                                       )
                                     ],
-                                  ),
-                                  const Padding(
-                                    padding: EdgeInsets.only(
-                                        top: 4, left: 6, right: 5),
-                                    child: Divider(
-                                      color: hintTextColor,
-                                    ),
                                   ),
                                 ],
                               ),
@@ -995,11 +1002,12 @@ class _EstimatePageState extends State<EstimatePage> {
                                               0.5,
                                           child: const Text(
                                             'Estimate Date:',
+                                            maxLines: 3,
                                             textAlign: TextAlign.start,
                                             style: TextStyle(
                                                 color: blackColor,
                                                 fontFamily: 'Mulish',
-                                                fontSize: 14,
+                                                fontSize: 15,
                                                 fontWeight: FontWeight.w600),
                                           ),
                                         ),
@@ -1007,10 +1015,9 @@ class _EstimatePageState extends State<EstimatePage> {
                                     ],
                                   ),
                                   TextFormField(
-                                    style: const TextStyle(
-                                        fontSize: 13, color: blackColor),
                                     controller: _estimateDateController,
                                     decoration: InputDecoration(
+                                      labelText: 'Estimate Date',
                                       suffixIcon: IconButton(
                                         icon: const Icon(
                                             Icons.calendar_month_sharp),
@@ -1038,7 +1045,7 @@ class _EstimatePageState extends State<EstimatePage> {
                               children: [
                                 Padding(
                                   padding: const EdgeInsets.only(
-                                      left: 0, right: 10, bottom: 5, top: 8),
+                                      right: 10, bottom: 5, top: 8),
                                   child: Row(
                                     mainAxisAlignment:
                                         MainAxisAlignment.spaceBetween,
@@ -1048,7 +1055,8 @@ class _EstimatePageState extends State<EstimatePage> {
                                             MainAxisAlignment.start,
                                         children: [
                                           Text(
-                                            'Items:',
+                                            'Spare Parts:',
+                                            maxLines: 3,
                                             textAlign: TextAlign.start,
                                             style: TextStyle(
                                                 color: blackColor,
@@ -1060,7 +1068,7 @@ class _EstimatePageState extends State<EstimatePage> {
                                             padding: EdgeInsets.only(
                                                 left: 15, top: 4),
                                             child: Text(
-                                              "Items .  Qty  .   Rate",
+                                              "Spare Parts  .  Qty  .   Rate",
                                               style: TextStyle(
                                                   color: hintTextColor,
                                                   fontWeight: FontWeight.w500,
@@ -1077,8 +1085,10 @@ class _EstimatePageState extends State<EstimatePage> {
                                             onPressed: () {
                                               showAddSpareParts(context);
                                             },
-                                            icon: const Icon(addIcon,
-                                                color: whiteColor, size: 18),
+                                            icon: const Icon(
+                                              addIcon,
+                                              color:whiteColor,
+                                            ),
                                             label: const Text(
                                               'Add',
                                               style: TextStyle(
@@ -1109,11 +1119,12 @@ class _EstimatePageState extends State<EstimatePage> {
                                 ),
                                 const Padding(
                                   padding: EdgeInsets.only(
-                                      left: 13, right: 10, top: 3, bottom: 6),
+                                      left: 15, right: 10, top: 3, bottom: 6),
                                   child: Divider(
                                     color: hintTextColor,
                                   ),
                                 ),
+                                ////////////////////////////////////
                                 if (sparePartsList.isNotEmpty) ...[
                                   Column(
                                     children: [
@@ -1233,7 +1244,8 @@ class _EstimatePageState extends State<EstimatePage> {
 
                                                           int newIndex = index;
 
-                                                          state.estimateModel!
+                                                          state
+                                                              .jobcardEstimateModel!
                                                               .invoiceProducts!
                                                               .removeAt(
                                                                   newIndex);
@@ -1267,20 +1279,22 @@ class _EstimatePageState extends State<EstimatePage> {
                                                     Row(
                                                       children: [
                                                         const Text(
-                                                          "Qty:",
+                                                          "Qty: ",
                                                           style: TextStyle(
-                                                              fontSize: 12,
-                                                              color:
-                                                                  hintTextColor),
+                                                            fontSize: 12,
+                                                            color:
+                                                                hintTextColor,
+                                                          ),
                                                         ),
                                                         const SizedBox(
                                                             width: 2),
                                                         Text(
                                                           "${formatQty(spareParts['product_qty'], spareParts['flag'])} ${spareParts['product_unit']}",
-                                                          style: const TextStyle(
-                                                              fontSize: 13,
-                                                              color:
-                                                                  blackColor),
+                                                          style:
+                                                              const TextStyle(
+                                                            fontSize: 13,
+                                                            color: blackColor,
+                                                          ),
                                                         ),
                                                       ],
                                                     ),
@@ -1299,11 +1313,7 @@ class _EstimatePageState extends State<EstimatePage> {
                                                             size: 12,
                                                             color: blackColor),
                                                         Text(
-                                                          double.parse(spareParts[
-                                                                      'product_price']
-                                                                  .toString())
-                                                              .toStringAsFixed(
-                                                                  2)
+                                                          "${double.parse(spareParts['product_price'].toString()).toStringAsFixed(2)}"
                                                               .toString(),
                                                           style: const TextStyle(
                                                               fontSize: 13,
@@ -1404,13 +1414,11 @@ class _EstimatePageState extends State<EstimatePage> {
                                                     ),
                                                     Row(
                                                       children: [
-                                                        const Text(
-                                                          "Total: ",
-                                                          style: TextStyle(
-                                                              fontSize: 12,
-                                                              color:
-                                                                  hintTextColor),
-                                                        ),
+                                                        const Text("Total: ",
+                                                            style: TextStyle(
+                                                                fontSize: 12,
+                                                                color:
+                                                                    hintTextColor)),
                                                         const Icon(
                                                           Icons
                                                               .currency_rupee_sharp,
@@ -1449,7 +1457,7 @@ class _EstimatePageState extends State<EstimatePage> {
                                                       child: Row(
                                                         children: [
                                                           const Text(
-                                                            "Qty:",
+                                                            "Qty: ",
                                                             style: TextStyle(
                                                                 fontSize: 12,
                                                                 color:
@@ -1457,10 +1465,11 @@ class _EstimatePageState extends State<EstimatePage> {
                                                           ),
                                                           Text(
                                                             "${formatQty(spareParts['product_qty'], spareParts['flag'])} ${spareParts['product_unit']}",
-                                                            style: const TextStyle(
-                                                                fontSize: 13,
-                                                                color:
-                                                                    blackColor),
+                                                            style:
+                                                                const TextStyle(
+                                                              fontSize: 13,
+                                                              color: blackColor,
+                                                            ),
                                                           ),
                                                         ],
                                                       ),
@@ -1482,7 +1491,11 @@ class _EstimatePageState extends State<EstimatePage> {
                                                               color:
                                                                   blackColor),
                                                           Text(
-                                                            "${double.parse(spareParts['product_price'].toString()).toStringAsFixed(2)}"
+                                                            double.parse(spareParts[
+                                                                        'product_price']
+                                                                    .toString())
+                                                                .toStringAsFixed(
+                                                                    2)
                                                                 .toString(),
                                                             style: const TextStyle(
                                                                 fontSize: 13,
@@ -1495,13 +1508,11 @@ class _EstimatePageState extends State<EstimatePage> {
                                                     Flexible(
                                                       child: Row(
                                                         children: [
-                                                          const Text(
-                                                            "Total: ",
-                                                            style: TextStyle(
-                                                                fontSize: 12,
-                                                                color:
-                                                                    hintTextColor),
-                                                          ),
+                                                          const Text("Total: ",
+                                                              style: TextStyle(
+                                                                  fontSize: 12,
+                                                                  color:
+                                                                      hintTextColor)),
                                                           const Icon(
                                                             Icons
                                                                 .currency_rupee_sharp,
@@ -1538,6 +1549,7 @@ class _EstimatePageState extends State<EstimatePage> {
                                     ],
                                   )
                                 ],
+                                //New spare part list
                                 if (sparePartsListNew.isNotEmpty) ...[
                                   Column(
                                     children: [
@@ -1551,14 +1563,15 @@ class _EstimatePageState extends State<EstimatePage> {
                                             children: [
                                               Row(
                                                 mainAxisAlignment:
-                                                    MainAxisAlignment.start,
+                                                    MainAxisAlignment
+                                                        .spaceBetween,
                                                 children: [
                                                   Expanded(
                                                     child: Text(
                                                       spareParts['product_name']
                                                           .toString(),
                                                       style: const TextStyle(
-                                                          fontSize: 15,
+                                                          fontSize: 14,
                                                           color: blackColor,
                                                           fontWeight:
                                                               FontWeight.w400),
@@ -1588,11 +1601,11 @@ class _EstimatePageState extends State<EstimatePage> {
                                                         const PopupMenuItem(
                                                           value: 'delete',
                                                           child: Text('Delete'),
-                                                        )
+                                                        ),
                                                     ],
                                                     onSelected: (value) {
                                                       if (value == 'edit') {
-                                                        gstBill == "1"
+                                                        (gstBill == "1")
                                                             ? showEditAddSparePartNewListWithGst(
                                                                 context,
                                                                 spareParts['product_name']
@@ -1624,8 +1637,7 @@ class _EstimatePageState extends State<EstimatePage> {
                                                                         spareParts))
                                                             : showEditAddSparePartNewList(
                                                                 context,
-                                                                spareParts[
-                                                                        'product_name']
+                                                                spareParts['product_name']
                                                                     .toString(),
                                                                 spareParts[
                                                                         'product_price']
@@ -1645,33 +1657,44 @@ class _EstimatePageState extends State<EstimatePage> {
                                                                     'flag'],
                                                                 sparePartsListNew
                                                                     .indexOf(
-                                                                        spareParts),
-                                                              );
+                                                                        spareParts));
                                                       } else if (value ==
                                                           'delete') {
                                                         int index =
                                                             sparePartsListNew
                                                                 .indexOf(
                                                                     spareParts);
-                                                        setState(() {
-                                                          sparePartsListNew
-                                                              .removeAt(index);
-                                                          if (index ==
-                                                              updateIndex) {
-                                                            showUpdateButton =
-                                                                false;
-                                                            updateIndex = -1;
-                                                          }
-                                                        });
+                                                        setState(
+                                                          () {
+                                                            sparePartsListNew
+                                                                .removeAt(
+                                                                    index);
+                                                            if (index ==
+                                                                updateIndex) {
+                                                              showUpdateButton =
+                                                                  false;
+                                                              updateIndex = -1;
+                                                              productNameController
+                                                                  .clear();
+                                                              quantityProductController
+                                                                  .clear();
+                                                              rateProductController
+                                                                  .clear();
+                                                              sparePartNameController
+                                                                  .clear();
+                                                            }
+                                                          },
+                                                        );
                                                       }
                                                     },
                                                     child: const Icon(
-                                                        Icons.more_vert,
-                                                        color: blackColorDark,
-                                                        size: 25),
+                                                      Icons.more_vert,
+                                                      color: hintTextColor,
+                                                    ),
                                                   )
                                                 ],
                                               ),
+
                                               const SizedBox(height: 8),
 
                                               /// GST ON → 4 rows layout
@@ -1685,7 +1708,7 @@ class _EstimatePageState extends State<EstimatePage> {
                                                     Row(
                                                       children: [
                                                         const Text(
-                                                          "Qty:",
+                                                          "Qty: ",
                                                           style: TextStyle(
                                                               fontSize: 12,
                                                               color:
@@ -1693,10 +1716,13 @@ class _EstimatePageState extends State<EstimatePage> {
                                                         ),
                                                         Text(
                                                           "${formatQty(spareParts['product_qty'], spareParts['flag'])} ${spareParts['product_unit']}",
-                                                          style: const TextStyle(
-                                                              fontSize: 13,
-                                                              color:
-                                                                  blackColor),
+                                                          style:
+                                                              const TextStyle(
+                                                            fontSize: 13,
+                                                            fontWeight:
+                                                                FontWeight.w500,
+                                                            color: blackColor,
+                                                          ),
                                                         ),
                                                       ],
                                                     ),
@@ -1764,6 +1790,12 @@ class _EstimatePageState extends State<EstimatePage> {
                                                               fontSize: 12,
                                                               color:
                                                                   hintTextColor),
+                                                        ),
+                                                        const Icon(
+                                                          Icons
+                                                              .currency_rupee_sharp,
+                                                          size: 13,
+                                                          color: blackColor,
                                                         ),
                                                         Text(
                                                           calculateSubProductTotalNewList(
@@ -1859,7 +1891,7 @@ class _EstimatePageState extends State<EstimatePage> {
                                                     Row(
                                                       children: [
                                                         const Text(
-                                                          "Qty:",
+                                                          "Qty: ",
                                                           style: TextStyle(
                                                             fontSize: 12,
                                                             color:
@@ -1870,6 +1902,9 @@ class _EstimatePageState extends State<EstimatePage> {
                                                           "${formatQty(spareParts['product_qty'], spareParts['flag'])} ${spareParts['product_unit']}",
                                                           style: const TextStyle(
                                                               fontSize: 13,
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .w500,
                                                               color:
                                                                   blackColor),
                                                         ),
@@ -1944,7 +1979,7 @@ class _EstimatePageState extends State<EstimatePage> {
                                           ),
                                         ),
                                     ],
-                                  )
+                                  ),
                                 ] else
                                   const SizedBox.shrink(),
                                 if (sparePartsList.isNotEmpty ||
@@ -2027,15 +2062,59 @@ class _EstimatePageState extends State<EstimatePage> {
     );
   }
 
-  String formatQty(dynamic qty, dynamic flag) {
-    if (flag == 0) return "-";
-
-    final double value = double.tryParse(qty.toString()) ?? 0;
-    if (value == value.toInt()) {
-      return value.toInt().toString(); // 20.0 → 20
-    } else {
-      return value.toString(); // e.g. 20.5 → 20.5
-    }
+  Future<void> showEditCustomer(BuildContext context) async {
+    await showDialog(
+      context: context,
+      builder: (context) {
+        return SimpleDialog(
+          title: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              const Text('Edit Customer Details'),
+              IconButton(
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+                icon: const Icon(cancelIcon),
+              )
+            ],
+          ),
+          children: [
+            const Padding(
+              padding: EdgeInsets.only(left: 13),
+              child: Text('Full name:'),
+            ),
+            Padding(
+              padding:
+                  const EdgeInsets.only(left: 13, right: 10, bottom: 5, top: 3),
+              child: TextFormField(
+                keyboardType: TextInputType.text,
+                inputFormatters: [
+                  NoLeadingSpaceFormatter(),
+                ],
+                decoration: InputDecoration(
+                  hintStyle: const TextStyle(
+                      color: hintTextColor, fontFamily: 'Mulish', fontSize: 14),
+                  contentPadding: const EdgeInsets.only(
+                    left: 15,
+                    right: 20.0,
+                  ),
+                  filled: true,
+                  fillColor: lightGreyColor,
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(8),
+                    borderSide: const BorderSide(
+                      width: 0,
+                      style: BorderStyle.none,
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          ],
+        );
+      },
+    );
   }
 
   Future<void> showAddSpareParts(BuildContext context) async {
@@ -2049,8 +2128,8 @@ class _EstimatePageState extends State<EstimatePage> {
             isModified = true;
           });
         },
-        gstBill: gstBill,
         igstBill: igstBill,
+        gstBill: gstBill,
       ),
     );
   }
@@ -2091,7 +2170,7 @@ class _EstimatePageState extends State<EstimatePage> {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         const Text(
-                          'Edit Item',
+                          'Edit Spare Part',
                           style: TextStyle(
                               fontSize: 15,
                               fontWeight: FontWeight.bold,
@@ -2109,7 +2188,7 @@ class _EstimatePageState extends State<EstimatePage> {
                     const Align(
                         alignment: Alignment.topLeft,
                         child: Text(
-                          'Item Name:',
+                          'Spare Part Name:',
                           style: TextStyle(fontSize: 14, color: blackColor),
                         )),
                     const SizedBox(height: 5),
@@ -2128,9 +2207,9 @@ class _EstimatePageState extends State<EstimatePage> {
                           ),
                           contentPadding:
                               const EdgeInsets.only(left: 15, right: 20),
-                          hintText: 'Enter Item Name',
+                          hintText: 'Enter Spare Part Name',
                           filled: true,
-                          fillColor: textfieldBg,
+                          fillColor: lightGreyColor,
                           border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(5),
                             borderSide: const BorderSide(
@@ -2183,7 +2262,7 @@ class _EstimatePageState extends State<EstimatePage> {
                                               left: 15, right: 20),
                                           hintText: '0',
                                           filled: true,
-                                          fillColor: textfieldBg,
+                                          fillColor: lightGreyColor,
                                           border: OutlineInputBorder(
                                             borderRadius:
                                                 BorderRadius.circular(5),
@@ -2247,7 +2326,7 @@ class _EstimatePageState extends State<EstimatePage> {
                                   dropdownColor: whiteColor,
                                   decoration: InputDecoration(
                                     filled: true,
-                                    fillColor: textfieldBg,
+                                    fillColor: lightGreyColor,
                                     border: OutlineInputBorder(
                                       borderRadius: BorderRadius.circular(5),
                                       borderSide: const BorderSide(
@@ -2342,7 +2421,7 @@ class _EstimatePageState extends State<EstimatePage> {
                               const EdgeInsets.only(left: 15, right: 20),
                           hintText: '00',
                           filled: true,
-                          fillColor: textfieldBg,
+                          fillColor: lightGreyColor,
                           border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(5),
                             borderSide: const BorderSide(
@@ -2386,15 +2465,6 @@ class _EstimatePageState extends State<EstimatePage> {
     );
   }
 
-  List<String> get currentGstList {
-    if (gstBill == "1" && igstBill == "1") {
-      return igstList; // IGST list
-    } else if (gstBill == "1" && igstBill == "0") {
-      return gstList; // SGST/CGST list
-    }
-    return []; // default empty
-  }
-
   Future<void> showEditAddSparePartWithGst(
       BuildContext context,
       String productname,
@@ -2413,6 +2483,7 @@ class _EstimatePageState extends State<EstimatePage> {
     unitProductControlller = unit.toString();
     gstController = productGst.toString();
     hsnCodeProductController = TextEditingController(text: hsnCode);
+
     productId = sparePartproductId;
     bool isHideButtonSelected = showQuantity;
     await showDialog(
@@ -2436,7 +2507,7 @@ class _EstimatePageState extends State<EstimatePage> {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         const Text(
-                          'Edit Item',
+                          'Edit Spare Part',
                           style: TextStyle(
                               fontSize: 15,
                               fontWeight: FontWeight.bold,
@@ -2451,16 +2522,16 @@ class _EstimatePageState extends State<EstimatePage> {
                       ],
                     ),
                     const Align(
-                      alignment: Alignment.topLeft,
-                      child: Text(
-                        'Item Name:',
-                        style: TextStyle(fontSize: 14, color: blackColor),
-                      ),
-                    ),
+                        alignment: Alignment.topLeft,
+                        child: Text(
+                          'Spare Part Name:',
+                          style: TextStyle(fontSize: 14, color: blackColor),
+                        )),
+                    const SizedBox(height: 5),
                     Padding(
                       padding: const EdgeInsets.only(top: 5),
                       child: TextFormField(
-                        style: const TextStyle(color: blackColor, fontSize: 13),
+                        style: const TextStyle(color: blackColor, fontSize: 14),
                         controller: productNameController,
                         textAlign: TextAlign.start,
                         cursorColor: blackColor,
@@ -2472,9 +2543,9 @@ class _EstimatePageState extends State<EstimatePage> {
                           ),
                           contentPadding:
                               const EdgeInsets.only(left: 15, right: 20),
-                          hintText: 'Enter Item Name',
+                          hintText: 'Enter Spare Part Name',
                           filled: true,
-                          fillColor: textfieldBg,
+                          fillColor: lightGreyColor,
                           border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(5),
                             borderSide: const BorderSide(
@@ -2510,7 +2581,7 @@ class _EstimatePageState extends State<EstimatePage> {
                                         controller: quantityProductController,
                                         keyboardType: TextInputType.number,
                                         style: const TextStyle(
-                                            color: blackColor, fontSize: 13),
+                                            color: blackColor, fontSize: 14),
                                         inputFormatters: [
                                           NoLeadingSpaceFormatter()
                                         ],
@@ -2526,7 +2597,7 @@ class _EstimatePageState extends State<EstimatePage> {
                                               left: 15, right: 20),
                                           hintText: '',
                                           filled: true,
-                                          fillColor: textfieldBg,
+                                          fillColor: lightGreyColor,
                                           border: OutlineInputBorder(
                                             borderRadius:
                                                 BorderRadius.circular(5),
@@ -2547,7 +2618,7 @@ class _EstimatePageState extends State<EstimatePage> {
                                               isHideButtonSelected = value!;
                                               if (isHideButtonSelected) {
                                                 quantityProductController.text =
-                                                    "1"; // Set quantity to 1 when hiding
+                                                    "1";
                                               }
                                             });
                                           },
@@ -2583,14 +2654,14 @@ class _EstimatePageState extends State<EstimatePage> {
                                     const EdgeInsets.only(top: 5, right: 18),
                                 child: DropdownButtonFormField(
                                   style: const TextStyle(
-                                      color: blackColor, fontSize: 13),
+                                      color: blackColor, fontSize: 14),
                                   menuMaxHeight: 450,
                                   isExpanded: true,
                                   value: unitProductControlller,
                                   dropdownColor: whiteColor,
                                   decoration: InputDecoration(
                                     filled: true,
-                                    fillColor: textfieldBg,
+                                    fillColor: lightGreyColor,
                                     border: OutlineInputBorder(
                                       borderRadius: BorderRadius.circular(5),
                                       borderSide: const BorderSide(
@@ -2660,7 +2731,7 @@ class _EstimatePageState extends State<EstimatePage> {
                       alignment: Alignment.topLeft,
                       child: Text(
                         'Rate:',
-                        style: TextStyle(fontSize: 14, color: blackColor),
+                        style: TextStyle(fontSize: 16, color: blackColor),
                       ),
                     ),
                     const SizedBox(height: 5),
@@ -2669,7 +2740,6 @@ class _EstimatePageState extends State<EstimatePage> {
                       child: TextFormField(
                         controller: rateProductController,
                         keyboardType: TextInputType.number,
-                        style: const TextStyle(fontSize: 13, color: blackColor),
                         inputFormatters: [
                           NoLeadingSpaceFormatter(),
                           LengthLimitingTextInputFormatter(7)
@@ -2684,7 +2754,7 @@ class _EstimatePageState extends State<EstimatePage> {
                               const EdgeInsets.only(left: 15, right: 20),
                           hintText: '',
                           filled: true,
-                          fillColor: textfieldBg,
+                          fillColor: lightGreyColor,
                           border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(5),
                             borderSide: const BorderSide(
@@ -2695,14 +2765,11 @@ class _EstimatePageState extends State<EstimatePage> {
                         ),
                       ),
                     ),
-                    const SizedBox(
-                      height: 5,
-                    ),
                     const Align(
                       alignment: Alignment.topLeft,
                       child: Text(
                         'GST:',
-                        style: TextStyle(fontSize: 14, color: blackColor),
+                        style: TextStyle(fontSize: 16, color: blackColor),
                       ),
                     ),
                     const SizedBox(height: 5),
@@ -2710,13 +2777,12 @@ class _EstimatePageState extends State<EstimatePage> {
                       padding: const EdgeInsets.only(top: 5, right: 18),
                       child: DropdownButtonFormField(
                         menuMaxHeight: 450,
-                        style: const TextStyle(fontSize: 13, color: blackColor),
                         isExpanded: true,
                         value: gstController,
                         dropdownColor: whiteColor,
                         decoration: InputDecoration(
                           filled: true,
-                          fillColor: textfieldBg,
+                          fillColor: lightGreyColor,
                           border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(5),
                             borderSide: const BorderSide(
@@ -2749,9 +2815,6 @@ class _EstimatePageState extends State<EstimatePage> {
                         },
                       ),
                     ),
-                    const SizedBox(
-                      height: 5,
-                    ),
                     const Align(
                       alignment: Alignment.topLeft,
                       child: Text(
@@ -2779,7 +2842,7 @@ class _EstimatePageState extends State<EstimatePage> {
                               const EdgeInsets.only(left: 15, right: 20),
                           hintText: 'Enter HSN Code',
                           filled: true,
-                          fillColor: textfieldBg,
+                          fillColor: lightGreyColor,
                           border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(5),
                             borderSide: const BorderSide(
@@ -2879,7 +2942,7 @@ class _EstimatePageState extends State<EstimatePage> {
                     const Align(
                       alignment: Alignment.topLeft,
                       child: Text(
-                        'Item Name:',
+                        'Spare Part Name:',
                         style: TextStyle(fontSize: 14, color: blackColor),
                       ),
                     ),
@@ -2897,9 +2960,9 @@ class _EstimatePageState extends State<EstimatePage> {
                           ),
                           contentPadding:
                               const EdgeInsets.only(left: 15, right: 20),
-                          hintText: 'Enter Item Name',
+                          hintText: 'Enter Spare Part Name',
                           filled: true,
-                          fillColor: textfieldBg,
+                          fillColor: lightGreyColor,
                           border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(5),
                             borderSide: const BorderSide(
@@ -2945,7 +3008,7 @@ class _EstimatePageState extends State<EstimatePage> {
                                               left: 15, right: 20),
                                           hintText: '',
                                           filled: true,
-                                          fillColor: textfieldBg,
+                                          fillColor: lightGreyColor,
                                           border: OutlineInputBorder(
                                             borderRadius:
                                                 BorderRadius.circular(5),
@@ -3007,7 +3070,7 @@ class _EstimatePageState extends State<EstimatePage> {
                                   dropdownColor: whiteColor,
                                   decoration: InputDecoration(
                                     filled: true,
-                                    fillColor: textfieldBg,
+                                    fillColor: lightGreyColor,
                                     border: OutlineInputBorder(
                                       borderRadius: BorderRadius.circular(5),
                                       borderSide: const BorderSide(
@@ -3092,7 +3155,7 @@ class _EstimatePageState extends State<EstimatePage> {
                               const EdgeInsets.only(left: 15, right: 20),
                           hintText: '',
                           filled: true,
-                          fillColor: textfieldBg,
+                          fillColor: lightGreyColor,
                           border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(5),
                             borderSide: const BorderSide(
@@ -3137,6 +3200,47 @@ class _EstimatePageState extends State<EstimatePage> {
     );
   }
 
+  void addEditSparePartNewList(
+      int index, String productId, bool showQuantity, int flag) {
+    setState(() {
+      final newProductNameController = productNameController.text;
+      final newQuantityController = quantityProductController.text;
+      final newRateController = rateProductController.text;
+      final newUnitListController = unitProductControlller;
+      if (newProductNameController.isNotEmpty &&
+          newUnitListController.isNotEmpty) {
+        sparePartsListNew[index]['product_name'] = newProductNameController;
+        sparePartsListNew[index]['product_price'] =
+            double.parse(newRateController.toString());
+        sparePartsListNew[index]['product_id'] = productId.toString().isNotEmpty
+            ? int.parse(productId.toString())
+            : "";
+        sparePartsListNew[index]['product_qty'] =
+            double.parse(newQuantityController.toString());
+
+        ///
+        if (!showQuantity && newQuantityController == "1") {
+          sparePartsListNew[index]['showQuantity'] = false;
+          sparePartsListNew[index]['flag'] = 1;
+        } else {
+          sparePartsListNew[index]['showQuantity'] = showQuantity;
+          sparePartsListNew[index]['flag'] = showQuantity == false ? 1 : 0;
+        }
+        sparePartsListNew[index]['product_unit'] = newUnitListController;
+        isModified = true;
+      }
+    });
+  }
+
+  List<String> get currentGstList {
+    if (gstBill == "1" && igstBill == "1") {
+      return igstList; // IGST list
+    } else if (gstBill == "1" && igstBill == "0") {
+      return gstList; // SGST/CGST list
+    }
+    return []; // default empty
+  }
+
   Future<void> showEditAddSparePartNewListWithGst(
       BuildContext context,
       String productname,
@@ -3153,8 +3257,8 @@ class _EstimatePageState extends State<EstimatePage> {
     rateProductController = TextEditingController(text: rate);
     quantityProductController = TextEditingController(text: qty);
     unitProductControlller = unit.toString();
-    gstController = productGst.toString();
     hsnCodeProductController = TextEditingController(text: hsnCode);
+    gstController = productGst.toString();
     productId = sparePartProductId;
     bool isHideButtonSelected = showQuantity;
     await showDialog(
@@ -3195,7 +3299,7 @@ class _EstimatePageState extends State<EstimatePage> {
                     const Align(
                       alignment: Alignment.topLeft,
                       child: Text(
-                        'Item Name:',
+                        'Spare Part Name:',
                         style: TextStyle(fontSize: 14, color: blackColor),
                       ),
                     ),
@@ -3203,7 +3307,6 @@ class _EstimatePageState extends State<EstimatePage> {
                       padding: const EdgeInsets.only(top: 5),
                       child: TextFormField(
                         controller: productNameController,
-                        style: const TextStyle(fontSize: 13, color: blackColor),
                         textAlign: TextAlign.start,
                         decoration: InputDecoration(
                           hintStyle: const TextStyle(
@@ -3213,9 +3316,9 @@ class _EstimatePageState extends State<EstimatePage> {
                           ),
                           contentPadding:
                               const EdgeInsets.only(left: 15, right: 20),
-                          hintText: 'Enter Item Name',
+                          hintText: 'Enter Spare Part Name',
                           filled: true,
-                          fillColor: textfieldBg,
+                          fillColor: lightGreyColor,
                           border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(5),
                             borderSide: const BorderSide(
@@ -3246,8 +3349,6 @@ class _EstimatePageState extends State<EstimatePage> {
                                       child: TextFormField(
                                         controller: quantityProductController,
                                         keyboardType: TextInputType.number,
-                                        style: const TextStyle(
-                                            fontSize: 13, color: blackColor),
                                         inputFormatters: [
                                           NoLeadingSpaceFormatter()
                                         ],
@@ -3262,7 +3363,7 @@ class _EstimatePageState extends State<EstimatePage> {
                                               left: 15, right: 20),
                                           hintText: '',
                                           filled: true,
-                                          fillColor: textfieldBg,
+                                          fillColor: lightGreyColor,
                                           border: OutlineInputBorder(
                                             borderRadius:
                                                 BorderRadius.circular(5),
@@ -3319,14 +3420,12 @@ class _EstimatePageState extends State<EstimatePage> {
                                     const EdgeInsets.only(top: 5, right: 18),
                                 child: DropdownButtonFormField(
                                   menuMaxHeight: 450,
-                                  style: const TextStyle(
-                                      fontSize: 13, color: blackColor),
                                   isExpanded: true,
                                   value: unitProductControlller,
                                   dropdownColor: whiteColor,
                                   decoration: InputDecoration(
                                     filled: true,
-                                    fillColor: textfieldBg,
+                                    fillColor: lightGreyColor,
                                     border: OutlineInputBorder(
                                       borderRadius: BorderRadius.circular(5),
                                       borderSide: const BorderSide(
@@ -3387,7 +3486,7 @@ class _EstimatePageState extends State<EstimatePage> {
                       alignment: Alignment.topLeft,
                       child: Text(
                         'Rate:',
-                        style: TextStyle(fontSize: 14, color: blackColor),
+                        style: TextStyle(fontSize: 16, color: blackColor),
                       ),
                     ),
                     Padding(
@@ -3409,7 +3508,7 @@ class _EstimatePageState extends State<EstimatePage> {
                               const EdgeInsets.only(left: 15, right: 20),
                           hintText: '',
                           filled: true,
-                          fillColor: textfieldBg,
+                          fillColor: lightGreyColor,
                           border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(5),
                             borderSide: const BorderSide(
@@ -3420,27 +3519,24 @@ class _EstimatePageState extends State<EstimatePage> {
                         ),
                       ),
                     ),
-                    const SizedBox(
-                      height: 5,
-                    ),
                     const Align(
                       alignment: Alignment.topLeft,
                       child: Text(
                         'GST:',
-                        style: TextStyle(fontSize: 14, color: blackColor),
+                        style: TextStyle(fontSize: 16, color: blackColor),
                       ),
                     ),
+                    const SizedBox(height: 5),
                     Padding(
                       padding: const EdgeInsets.only(top: 5, right: 18),
                       child: DropdownButtonFormField(
                         menuMaxHeight: 450,
                         isExpanded: true,
-                        style: const TextStyle(fontSize: 13, color: blackColor),
                         value: gstController,
                         dropdownColor: whiteColor,
                         decoration: InputDecoration(
                           filled: true,
-                          fillColor: textfieldBg,
+                          fillColor: lightGreyColor,
                           border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(5),
                             borderSide: const BorderSide(
@@ -3473,9 +3569,6 @@ class _EstimatePageState extends State<EstimatePage> {
                         },
                       ),
                     ),
-                    const SizedBox(
-                      height: 5,
-                    ),
                     const Align(
                       alignment: Alignment.topLeft,
                       child: Text(
@@ -3487,7 +3580,7 @@ class _EstimatePageState extends State<EstimatePage> {
                     Padding(
                       padding: const EdgeInsets.only(top: 5, right: 18),
                       child: TextFormField(
-                        style: const TextStyle(fontSize: 13, color: blackColor),
+                        style: const TextStyle(fontSize: 13),
                         controller: hsnCodeProductController,
                         keyboardType: TextInputType.text,
                         inputFormatters: [
@@ -3503,7 +3596,7 @@ class _EstimatePageState extends State<EstimatePage> {
                               const EdgeInsets.only(left: 15, right: 20),
                           hintText: 'Enter HSN Code',
                           filled: true,
-                          fillColor: textfieldBg,
+                          fillColor: lightGreyColor,
                           border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(5),
                             borderSide: const BorderSide(
@@ -3514,7 +3607,7 @@ class _EstimatePageState extends State<EstimatePage> {
                         ),
                       ),
                     ),
-                    const SizedBox(height: 10),
+                    const SizedBox(height: 20),
                     Padding(
                       padding: const EdgeInsets.only(right: 10),
                       child: SizedBox(
@@ -3548,20 +3641,44 @@ class _EstimatePageState extends State<EstimatePage> {
     );
   }
 
-  List mergeSparePart() {
-    List<Map<String, dynamic>> updatedSparePartsList =
-        sparePartsListNew.map((sparePart) {
-      final updatedSparePart = Map<String, dynamic>.from(sparePart);
-      updatedSparePart.remove('is_delete');
-      return updatedSparePart;
-    }).toList();
+  void addEditSparePartNewListWithGst(
+      int index, String productId, bool showQuantity, int flag) {
     setState(() {
-      sparePartsListNew = updatedSparePartsList;
+      final newProductNameController = productNameController.text;
+      final newQuantityController = quantityProductController.text;
+      final newRateController = rateProductController.text;
+      final newUnitListController = unitProductControlller;
+      final newGstController = gstController;
+      final newHsnCodeController = hsnCodeProductController.text;
+      if (newProductNameController.isNotEmpty &&
+          newUnitListController.isNotEmpty &&
+          newGstController.isNotEmpty) {
+        sparePartsListNew[index]['product_name'] = newProductNameController;
+        sparePartsListNew[index]['product_price'] =
+            double.parse(newRateController.toString());
+        sparePartsListNew[index]['product_id'] = productId.toString().isNotEmpty
+            ? int.parse(productId.toString())
+            : "";
+        sparePartsListNew[index]['product_qty'] =
+            double.parse(newQuantityController.toString());
+        sparePartsListNew[index]['product_unit'] = newUnitListController;
+
+        ///
+        if (!showQuantity && newQuantityController == "1") {
+          sparePartsListNew[index]['showQuantity'] = false;
+          sparePartsListNew[index]['flag'] = 1;
+        } else {
+          sparePartsListNew[index]['showQuantity'] = showQuantity;
+          sparePartsListNew[index]['flag'] = showQuantity == false ? 1 : 0;
+        }
+        sparePartsListNew[index]['product_gst'] = newGstController;
+        sparePartsListNew[index]['hsn_code'] = newHsnCodeController;
+        isModified = true;
+      }
     });
-    return sparePart = sparePartsList + sparePartsListNew;
   }
 
-  deleteProduct(int spareParts) {
+  deleteProduct(dynamic spareParts) {
     setState(() {
       sparePartsList.removeAt(spareParts);
       if (spareParts == updateIndex) {
@@ -3633,73 +3750,28 @@ class _EstimatePageState extends State<EstimatePage> {
     });
   }
 
-  void addEditSparePartNewList(
-      int index, String productId, bool showQuantity, int flag) {
+  List sparePartUpdateList() {
+    List<Map<String, dynamic>> updateNewSparePart =
+        sparePartsListNew.map((sparePart) {
+      final updateNewSparePartList = Map<String, dynamic>.from(sparePart);
+      updateNewSparePartList.remove('is_delete');
+      return updateNewSparePartList;
+    }).toList();
     setState(() {
-      final newProductNameController = productNameController.text;
-      final newQuantityController = quantityProductController.text;
-      final newRateController = rateProductController.text;
-      final newUnitListController = unitProductControlller;
-      if (newProductNameController.isNotEmpty &&
-          newUnitListController.isNotEmpty) {
-        sparePartsListNew[index]['product_name'] = newProductNameController;
-        sparePartsListNew[index]['product_price'] =
-            double.parse(newRateController.toString());
-        sparePartsListNew[index]['product_id'] = productId.toString().isNotEmpty
-            ? int.parse(productId.toString())
-            : "";
-        sparePartsListNew[index]['product_qty'] =
-            double.parse(newQuantityController.toString());
-
-        ///
-        if (!showQuantity && newQuantityController == "1") {
-          sparePartsListNew[index]['showQuantity'] = false;
-          sparePartsListNew[index]['flag'] = 1;
-        } else {
-          sparePartsListNew[index]['showQuantity'] = showQuantity;
-          sparePartsListNew[index]['flag'] = showQuantity == false ? 1 : 0;
-        }
-        sparePartsListNew[index]['product_unit'] = newUnitListController;
-        isModified = true;
-      }
+      sparePartsListNew = updateNewSparePart;
     });
+    return sparePartsListNew;
   }
 
-  void addEditSparePartNewListWithGst(
-      int index, String productId, bool showQuantity, int flag) {
-    setState(() {
-      final newProductNameController = productNameController.text;
-      final newQuantityController = quantityProductController.text;
-      final newRateController = rateProductController.text;
-      final newUnitListController = unitProductControlller;
-      final newGstController = gstController;
-      final newHsnCodeController = hsnCodeProductController.text;
-      if (newProductNameController.isNotEmpty &&
-          newUnitListController.isNotEmpty &&
-          newGstController.isNotEmpty) {
-        sparePartsListNew[index]['product_name'] = newProductNameController;
-        sparePartsListNew[index]['product_price'] =
-            double.parse(newRateController.toString());
-        sparePartsListNew[index]['product_id'] = productId.toString().isNotEmpty
-            ? int.parse(productId.toString())
-            : "";
-        sparePartsListNew[index]['product_qty'] =
-            double.parse(newQuantityController.toString());
-        sparePartsListNew[index]['product_unit'] = newUnitListController;
-
-        ///
-        if (!showQuantity && newQuantityController == "1") {
-          sparePartsListNew[index]['showQuantity'] = false;
-          sparePartsListNew[index]['flag'] = 1;
-        } else {
-          sparePartsListNew[index]['showQuantity'] = showQuantity;
-          sparePartsListNew[index]['flag'] = showQuantity == false ? 1 : 0;
-        }
-        sparePartsListNew[index]['product_gst'] = newGstController;
-        sparePartsListNew[index]['hsn_code'] = newHsnCodeController;
-        isModified = true;
-      }
-    });
+  // Function to calculate SparePartSubtotal
+  double calculateSparePartSubtotal() {
+    double subtotal = 0.0;
+    if (calculateSparePartListTotal() != 0 ||
+        calculateSparePartListNewTotal() != 0) {
+      subtotal =
+          calculateSparePartListTotal() + calculateSparePartListNewTotal();
+    }
+    return double.parse(subtotal.toStringAsFixed(2));
   }
 
   // Function to calculate SparePartListTotal
@@ -3726,52 +3798,19 @@ class _EstimatePageState extends State<EstimatePage> {
     return double.parse(subtotal.toStringAsFixed(2));
   }
 
-  // Function to calculate SparePartSubtotal
-  double calculateSparePartSubtotal() {
-    double subtotal = 0.0;
-    if (calculateSparePartListTotal() != 0 ||
-        calculateSparePartListNewTotal() != 0) {
-      subtotal =
-          calculateSparePartListTotal() + calculateSparePartListNewTotal();
-    }
-    return double.parse(subtotal.toStringAsFixed(2));
+  updateSparePart() {
+    if (productNameController.text.isNotEmpty &&
+        productNameController.text.isNotEmpty) {
+      sparePartsList[updateIndex] = productNameController.text;
+      productNameController.clear();
+    } else {}
+    setState(() {
+      showUpdateButton = false;
+    });
   }
 
   //calculation of total new spare part amount applying gst
   double calculateTotalWithGstSparePartList(Map<String, dynamic> spareParts) {
-    double price =
-        double.tryParse(spareParts['product_price'].toString()) ?? 0.0;
-    double qty = double.tryParse(spareParts['product_qty'].toString()) ?? 0.0;
-    double baseTotal = price * qty;
-    String gstValue = spareParts['product_gst'].toString();
-    double gstPercentage = 0.0;
-    double cessPercentage = 0.0;
-    if (gstValue.contains('@')) {
-      List<String> parts = gstValue.split('+');
-      String gstPart = parts[0].trim();
-      if (gstPart.contains('@')) {
-        gstPercentage =
-            double.tryParse(gstPart.split('@')[1].replaceAll('%', '').trim()) ??
-                0.0;
-      }
-      if (parts.length > 1) {
-        String cessPart = parts[1].trim();
-        if (cessPart.contains('@')) {
-          cessPercentage = double.tryParse(
-                  cessPart.split('@')[1].replaceAll('%', '').trim()) ??
-              0.0;
-        }
-      }
-    }
-    double gstAmount = (baseTotal * gstPercentage) / 100;
-    double cessAmount = (baseTotal * cessPercentage) / 100;
-    double totalWithGst = baseTotal + gstAmount + cessAmount;
-    return totalWithGst;
-  }
-
-  //calculation of total spare part amount applying gst
-  double calculateTotalWithGstSparePartListNew(
-      Map<String, dynamic> spareParts) {
     double price =
         double.tryParse(spareParts['product_price'].toString()) ?? 0.0;
     double qty = double.tryParse(spareParts['product_qty'].toString()) ?? 0.0;
@@ -3820,20 +3859,44 @@ class _EstimatePageState extends State<EstimatePage> {
     return productPrice * productQty;
   }
 
-  double getGstPercentage(String gstString) {
-    if (gstString == "None" || gstString == "Exempted") {
-      return 0.0; // No GST
+  //calculation of total spare part amount applying gst
+  double calculateTotalWithGstSparePartListNew(
+      Map<String, dynamic> spareParts) {
+    double price =
+        double.tryParse(spareParts['product_price'].toString()) ?? 0.0;
+    double qty = double.tryParse(spareParts['product_qty'].toString()) ?? 0.0;
+    double baseTotal = price * qty;
+    String gstValue = spareParts['product_gst'].toString();
+    double gstPercentage = 0.0;
+    double cessPercentage = 0.0;
+    if (gstValue.contains('@')) {
+      List<String> parts = gstValue.split('+');
+      String gstPart = parts[0].trim();
+      if (gstPart.contains('@')) {
+        gstPercentage =
+            double.tryParse(gstPart.split('@')[1].replaceAll('%', '').trim()) ??
+                0.0;
+      }
+      if (parts.length > 1) {
+        String cessPart = parts[1].trim();
+        if (cessPart.contains('@')) {
+          cessPercentage = double.tryParse(
+                  cessPart.split('@')[1].replaceAll('%', '').trim()) ??
+              0.0;
+        }
+      }
     }
+    double gstAmount = (baseTotal * gstPercentage) / 100;
+    double cessAmount = (baseTotal * cessPercentage) / 100;
+    double totalWithGst = baseTotal + gstAmount + cessAmount;
+    return totalWithGst;
+  }
 
-    // Match all percentages in the string, e.g., both GST and Cess
-    final matches = RegExp(r"(\d+(\.\d+)?)%").allMatches(gstString);
-
-    double totalPercentage = 0.0;
-    for (var match in matches) {
-      totalPercentage += double.tryParse(match.group(1)!) ?? 0.0;
-    }
-
-    return totalPercentage;
+  //Gst Sub Total calculation for sparePartList and sparePartListNew
+  double calculateSubtotalGst() {
+    double totalGstList = calculateSubTotalWithGst();
+    double totalGstNewList = calculateSubTotalWithGstNew();
+    return totalGstList + totalGstNewList;
   }
 
   //Gst Sub Total calculation for sparePartList
@@ -3856,7 +3919,7 @@ class _EstimatePageState extends State<EstimatePage> {
     return subtotalWithGst;
   }
 
-  //Gst Sub Total calculation for sparePartListNew
+//Gst Sub Total calculation for sparePartListNew
   double calculateSubTotalWithGstNew() {
     double subtotalWithGst = 0.0;
     for (var spareParts in sparePartsListNew) {
@@ -3876,14 +3939,23 @@ class _EstimatePageState extends State<EstimatePage> {
     return subtotalWithGst;
   }
 
-  //Gst Sub Total calculation for sparePartList and sparePartListNew
-  double calculateSubtotalGst() {
-    double totalGstList = calculateSubTotalWithGst();
-    double totalGstNewList = calculateSubTotalWithGstNew();
-    return totalGstList + totalGstNewList;
+  double getGstPercentage(String gstString) {
+    if (gstString == "None" || gstString == "Exempted") {
+      return 0.0; // No GST
+    }
+
+    // Match all percentages in the string, e.g., both GST and Cess
+    final matches = RegExp(r"(\d+(\.\d+)?)%").allMatches(gstString);
+
+    double totalPercentage = 0.0;
+    for (var match in matches) {
+      totalPercentage += double.tryParse(match.group(1)!) ?? 0.0;
+    }
+
+    return totalPercentage;
   }
 
-// Function to calculate total GST (from taxable subtotal)
+  // Function to calculate total GST (from taxable subtotal)
   double calculateTotalGst() {
     double totalGst = calculateSubtotalGst() - calculateSparePartSubtotal();
     return double.parse(totalGst.toStringAsFixed(2));
@@ -3893,7 +3965,6 @@ class _EstimatePageState extends State<EstimatePage> {
     double totalGst = calculateTotalGst();
     return double.parse((totalGst / 2).toStringAsFixed(2));
   }
-
 
   double calculateSubTotalWithIGst() {
     double subtotalWithGst = 0.0;
@@ -3947,5 +4018,29 @@ class _EstimatePageState extends State<EstimatePage> {
     double finalIgst = list1Igst + list2Igst;
 
     return double.parse(finalIgst.toStringAsFixed(2));
+  }
+
+  List mergeSparePart() {
+    List<Map<String, dynamic>> updatedSparePartsList =
+        sparePartsListNew.map((sparePart) {
+      final updatedSparePart = Map<String, dynamic>.from(sparePart);
+      updatedSparePart.remove('is_delete');
+      return updatedSparePart;
+    }).toList();
+    setState(() {
+      sparePartsListNew = updatedSparePartsList;
+    });
+    return sparePart = sparePartsList + sparePartsListNew;
+  }
+
+  String formatQty(dynamic qty, dynamic flag) {
+    if (flag == 0) return "-";
+
+    final double value = double.tryParse(qty.toString()) ?? 0;
+    if (value == value.toInt()) {
+      return value.toInt().toString(); // 20.0 → 20
+    } else {
+      return value.toString(); // e.g. 20.5 → 20.5
+    }
   }
 }

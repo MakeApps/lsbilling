@@ -355,12 +355,18 @@ class JobSheetRepository extends Repository {
   Future<dynamic> createCustomer(jsonData) async {
     return jobSheetApi.createCustomer(jsonData);
   }
-    // get single customer details
+
+  // get single customer details
   Future<dynamic> getCustomerInfo(jsonData) {
     return jobSheetApi.getCustomerInfo(jsonData);
   }
- Future<dynamic> updateCustomerInfo(jsonData, String id) {
+
+  Future<dynamic> updateCustomerInfo(jsonData, String id) {
     return jobSheetApi.updateCustomerInfo(jsonData, id);
+  }
+
+  Future<dynamic> getCustomersEstimateInvoice(String customerId, jsonData) async {
+    return jobSheetApi.getCustomersEstimateInvoice(customerId,  jsonData);
   }
 
   Future<void> logoutUser(String token) async {

@@ -5,6 +5,7 @@ import 'package:local_shout_billing/config/app_icons.dart';
 import 'package:local_shout_billing/config/colors.dart';
 import 'package:local_shout_billing/models/customer_model.dart';
 import 'package:local_shout_billing/modules/customers/bloc/customer_details_bloc/customer_details_bloc.dart';
+import '../../job_sheet/bloc/job_sheet_details_bloc/job_sheet_details_bloc.dart';
 
 class CustomerDetailsRow extends StatefulWidget {
   final CustomerModel? customerListing;
@@ -34,7 +35,14 @@ class _CustomerDetailsRowState extends State<CustomerDetailsRow> {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () {},
+      onTap: () {
+        context.read<CustomerDetailsBloc>().add(
+              GetCustomerDetail(
+                id: widget.customerListing!.id.toString(),
+              ),
+            );
+        Navigator.pushNamed(context, '/customer_details_screen');
+      },
       child: Form(
         key: _formKey,
         child: Padding(
@@ -76,44 +84,70 @@ class _CustomerDetailsRowState extends State<CustomerDetailsRow> {
                             ),
                           ),
                           PopupMenuButton<String>(
-                            elevation: 6, // shadow
                             color: whiteColor,
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(6),
-                              side: const BorderSide(
-                                  color: Colors.black12, width: 1),
-                            ),
-                            itemBuilder: (context) => [
-                              const PopupMenuItem<String>(
+                            itemBuilder: (context) => const [
+                              PopupMenuItem(
                                 value: 'estimate',
-                                child: Text(
-                                  'Estimate',
-                                  style: TextStyle(
-                                    fontSize: 14,
-                                    fontWeight: FontWeight.w500,
-                                    color: greyColor,
-                                  ),
-                                ),
+                                child: Text('Estimate'),
                               ),
-                              const PopupMenuItem<String>(
+                              PopupMenuItem(
                                 value: 'invoice',
-                                child: Text(
-                                  'Invoice',
-                                  style: TextStyle(
-                                    fontSize: 14,
-                                    fontWeight: FontWeight.w500,
-                                    color: greyColor,
-                                  ),
-                                ),
+                                child: Text('Invoice'),
                               ),
                             ],
-                            onSelected: (value) {
-                              if (value == 'estimate') {
-                              } else if (value == 'invoice') {}
+                            onSelected: (value) async {
+                              final result =
+                                  await showBillingTypeDialog(context);
+
+                              if (result != null) {
+                                String? billingType = result["billingType"];
+                                String? igst = result["igst"];
+
+                                String gstBill = "0";
+
+                                if (billingType == "gst") {
+                                  gstBill = "1"; // GST Invoice
+                                }
+
+                                Map<String, dynamic> formData = {
+                                  "id": "",
+                                  "gst_bill": gstBill,
+                                  "igst": billingType == "regular" ? "0" : igst,
+                                };
+                                context.read<JobSheetDetailsBloc>().add(
+                                      UpdateGstBillEvent(
+                                        source: value == "estimate"
+                                            ? GstActionSource.estimate
+                                            : GstActionSource.invoice,
+                                        id: widget.customerListing!.id
+                                            .toString(),
+                                        formData: formData,
+                                      ),
+                                    );
+
+                                if (value == "estimate") {
+                                  context.read<JobSheetDetailsBloc>().add(
+                                        GetEstimateDetailsByJobSheet(
+                                          id: widget.customerListing!.id
+                                              .toString(),
+                                        ),
+                                      );
+                                  Navigator.pushNamed(
+                                      context, '/generate_estimate');
+                                } else {
+                                  context.read<JobSheetDetailsBloc>().add(
+                                        GetInvoiceByJobSheet(
+                                          id: widget.customerListing!.id
+                                              .toString(),
+                                        ),
+                                      );
+                                  Navigator.pushNamed(
+                                      context, '/customer_invoice_page');
+                                }
+                              }
                             },
-                            child: const Icon(verticleDot,
-                                color: hintTextColor, size: 30),
-                          ),
+                            child: const Icon(verticleDot, size: 30),
+                          )
                         ],
                       ),
                     ],
@@ -203,6 +237,175 @@ class _CustomerDetailsRowState extends State<CustomerDetailsRow> {
           ),
         ),
       ),
+    );
+  }
+
+  Future<Map<String, String>?> showBillingTypeDialog(BuildContext context) {
+    return showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (context) {
+        String billingType = "gst"; // DEFAULT: GST Invoice
+        String gstOption = "CGST/SGST"; // DEFAULT: CGST/SGST
+        return StatefulBuilder(
+          builder: (context, setState) {
+            return AlertDialog(
+              backgroundColor: whiteColor,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(8),
+              ),
+              title: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  const Text(
+                    "Billing Type",
+                    style: TextStyle(
+                        fontSize: 15,
+                        color: blackColor,
+                        fontWeight: FontWeight.w600),
+                  ),
+                  InkWell(
+                    onTap: () => Navigator.pop(context),
+                    child: const Icon(Icons.close, size: 20, color: blackColor),
+                  )
+                ],
+              ),
+              content: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  /// Regular Invoice
+                  RadioListTile(
+                    title: const Text(
+                      "Regular Invoice",
+                      style: TextStyle(
+                          fontSize: 13,
+                          color: blackColor,
+                          fontWeight: FontWeight.w500),
+                    ),
+                    value: "regular",
+                    groupValue: billingType,
+                    onChanged: (value) =>
+                        setState(() => billingType = value.toString()),
+                  ),
+
+                  /// GST Invoice
+                  RadioListTile(
+                    title: const Text(
+                      "GST Invoice",
+                      style: TextStyle(
+                          fontSize: 13,
+                          color: blackColor,
+                          fontWeight: FontWeight.w500),
+                    ),
+                    value: "gst",
+                    groupValue: billingType,
+                    onChanged: (value) =>
+                        setState(() => billingType = value.toString()),
+                  ),
+
+                  const SizedBox(height: 10),
+
+                  /// Dropdown only when GST Invoice selected
+                  if (billingType == "gst") ...[
+                    const Align(
+                      alignment: Alignment.centerLeft,
+                      child: Text(
+                        "Select:",
+                        style: TextStyle(
+                            fontSize: 14,
+                            color: blackColor,
+                            fontWeight: FontWeight.w600),
+                      ),
+                    ),
+                    const SizedBox(height: 5),
+                    Container(
+                      width: double.infinity,
+                      padding: const EdgeInsets.symmetric(horizontal: 12),
+                      decoration: BoxDecoration(
+                        color: whiteColor,
+                        border: Border.all(color: hintTextColor),
+                        borderRadius: BorderRadius.circular(6),
+                      ),
+                      child: DropdownButtonHideUnderline(
+                        child: DropdownButton(
+                          value: gstOption,
+                          items: const [
+                            DropdownMenuItem(
+                              value: "CGST/SGST",
+                              child: Text(
+                                "CGST/SGST",
+                                style: TextStyle(
+                                    fontSize: 12,
+                                    color: blackColor,
+                                    fontWeight: FontWeight.w500),
+                              ),
+                            ),
+                            DropdownMenuItem(
+                              value: "IGST",
+                              child: Text(
+                                "IGST",
+                                style: TextStyle(
+                                    fontSize: 12,
+                                    color: blackColor,
+                                    fontWeight: FontWeight.w500),
+                              ),
+                            ),
+                          ],
+                          onChanged: (val) =>
+                              setState(() => gstOption = val.toString()),
+                        ),
+                      ),
+                    ),
+                  ],
+
+                  const SizedBox(height: 20),
+
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      TextButton(
+                        child: const Text(
+                          "Cancel",
+                          style: TextStyle(
+                              fontSize: 13,
+                              color: bluecolorprimary,
+                              fontWeight: FontWeight.w500),
+                        ),
+                        onPressed: () => Navigator.pop(context),
+                      ),
+                      ElevatedButton(
+                        style: ButtonStyle(
+                          backgroundColor:
+                              WidgetStateProperty.all<Color>(primaryColor),
+                          shape:
+                              WidgetStateProperty.all<RoundedRectangleBorder>(
+                            RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(5),
+                            ),
+                          ),
+                        ),
+                        child: const Text(
+                          "Continue",
+                          style: TextStyle(
+                              fontSize: 13,
+                              color: whiteColor,
+                              fontWeight: FontWeight.w500),
+                        ),
+                        onPressed: () {
+                          Navigator.pop(context, {
+                            "billingType": billingType,
+                            "igst": gstOption == "IGST" ? "1" : "0"
+                          });
+                        },
+                      ),
+                    ],
+                  )
+                ],
+              ),
+            );
+          },
+        );
+      },
     );
   }
 }

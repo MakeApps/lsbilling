@@ -17,7 +17,7 @@ class DiscardCustomerForm extends StatelessWidget {
                 ),
               ),
               title: const Text(
-                'Are you sure you want to discard the Vendor?',
+                'Are you sure you want to discard the Customer Form?',
                 style: TextStyle(
                     color: blackColor,
                     fontSize: 13,
