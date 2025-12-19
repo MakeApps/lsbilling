@@ -6,6 +6,9 @@ import 'package:local_shout_billing/modules/Profile/pages/update_admin_profile.d
 import 'package:local_shout_billing/modules/Profile/profile.dart';
 import 'package:local_shout_billing/modules/customers/bloc/customer_bloc/customer_bloc.dart';
 import 'package:local_shout_billing/modules/customers/customer_listing.dart';
+import 'package:local_shout_billing/modules/customers/pages/customer_detail_page.dart';
+import 'package:local_shout_billing/modules/customers/pages/customer_estimate_page.dart';
+import 'package:local_shout_billing/modules/customers/pages/customer_invoice_page.dart';
 import 'package:local_shout_billing/modules/customers/pages/edit_customer.dart';
 import 'package:local_shout_billing/modules/estimate/estimate_listing.dart';
 import 'package:local_shout_billing/modules/invoices/invoice_details_page.dart';
@@ -95,7 +98,7 @@ class AppRouter {
             child: const VendorListingPage(),
           ),
         );
-        
+
       case '/customer_page':
         return MaterialPageRoute(
           builder: (_) => BlocProvider<CustomerBloc>(
@@ -111,7 +114,10 @@ class AppRouter {
         return MaterialPageRoute(
           builder: (_) => const EditCustomerForm(),
         );
-
+      case '/customer_details_screen':
+        return MaterialPageRoute(
+          builder: (_) => const CustomerDetailsScreen(),
+        );
       case '/profile_info_page':
         return MaterialPageRoute(
             builder: (_) => BlocProvider(
@@ -136,6 +142,14 @@ class AppRouter {
       case '/estimate_page':
         return MaterialPageRoute(
           builder: (_) => const EstimatePage(),
+        );
+      case '/generate_estimate':
+        return MaterialPageRoute(
+          builder: (_) => const GenerateEstimate(),
+        );
+      case '/customer_invoice_page':
+        return MaterialPageRoute(
+          builder: (_) => const GenerateInvoiceByJobSHeet(),
         );
       case '/update_proifile':
         return MaterialPageRoute(

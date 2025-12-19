@@ -37,6 +37,7 @@ class _AddSparePartsDialogState extends State<AddSparePartsDialog> {
   bool isQuantityHidden = false;
   String? productId;
   Timer? _debounce;
+
   @override
   void initState() {
     productNameController = TextEditingController(text: '');

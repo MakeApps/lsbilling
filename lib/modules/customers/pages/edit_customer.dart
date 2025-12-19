@@ -34,18 +34,20 @@ class _EditCustomerFormState extends State<EditCustomerForm> {
 
   assignValues(CustomerDetailsState state) {
     if (mounted) {
-      setState(() {
-        customerNameController.text =
-            state.customerDetailsList!.fullName.toString();
-        adressController.text = state.customerDetailsList!.address.toString();
-        emailController.text = state.customerDetailsList!.email.toString();
-        phoneNumberController.text =
-            state.customerDetailsList!.mobileNumber.toString();
-        gstNumberController.text =
-            state.customerDetailsList!.gstNumber.toString();
-        alternateNumberController.text =
-            state.customerDetailsList!.alternateNumber.toString();
-      });
+      setState(
+        () {
+          customerNameController.text =
+              state.customerDetailsList!.fullName.toString();
+          adressController.text = state.customerDetailsList!.address.toString();
+          emailController.text = state.customerDetailsList!.email.toString();
+          phoneNumberController.text =
+              state.customerDetailsList!.mobileNumber.toString();
+          gstNumberController.text =
+              state.customerDetailsList!.gstNumber.toString();
+          alternateNumberController.text =
+              state.customerDetailsList!.alternateNumber.toString();
+        },
+      );
     }
   }
 
@@ -368,6 +370,14 @@ class _EditCustomerFormState extends State<EditCustomerForm> {
                               if (value == null || value.trim().isEmpty) {
                                 return 'Mobile number is required';
                               }
+
+                              final cleanedNumber =
+                                  value.replaceAll('+91', '').trim();
+
+                              if (cleanedNumber.length != 10) {
+                                return 'Please enter a valid mobile number';
+                              }
+
                               return null;
                             },
                             decoration: InputDecoration(

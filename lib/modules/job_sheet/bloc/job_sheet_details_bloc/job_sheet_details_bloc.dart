@@ -29,6 +29,7 @@ class JobSheetDetailsBloc
     //invoce event call
     on<GenerateInvoiceEvent>(_onGenerateInvoice);
     on<GetInvoiceByInvoice>(_onGetInvoiceByInvoice);
+    on<GetInvoiceByJobSheet>(_onGetInvoiceByJobSheet);
     on<DownloadInvoicePdf>(_onDownloadInvoicebyInvoicePdf);
 
     on<GetInvoicePayment>(_onGetInvoicePayment);
@@ -182,7 +183,7 @@ class JobSheetDetailsBloc
     };
     final result =
         await app_instance.jobSheetRepository.getEstimateDetails(jsonData);
-    print("--GetEstimateDetailsByJobSheet----$result");
+
     if (result != null && result.isNotEmpty) {
       return emit(
         state.copyWith(
@@ -451,6 +452,40 @@ class JobSheetDetailsBloc
         state.copyWith(
           status: JobSheetDetailsStatus.failed,
           invoiceModel: InvoiceModel.empty,
+        ),
+      );
+    }
+  }
+
+  //create new invoice using jobsheet id
+  Future<void> _onGetInvoiceByJobSheet(
+      GetInvoiceByJobSheet event, Emitter<JobSheetDetailsState> emit) async {
+    emit(
+      state.copyWith(
+        status: JobSheetDetailsStatus.invoiceLoadingJobcard,
+      ),
+    );
+    dynamic jwtToken = await app_instance.storage.read(key: "token");
+
+    Map<String, Object> jsonData = {
+      "token": jwtToken.toString(),
+      "id": event.id.toString(),
+      "filter": 'jobsheet',
+    };
+
+    final result =
+        await app_instance.jobSheetRepository.getInvoiceByInvoiceId(jsonData);
+    if (result != null && result.isNotEmpty) {
+      return emit(
+        state.copyWith(
+          status: JobSheetDetailsStatus.invoiceSuccessJobcard,
+          invoiceModel: InvoiceModel.fromJson(result),
+        ),
+      );
+    } else {
+      emit(
+        state.copyWith(
+          status: JobSheetDetailsStatus.invoicefailedJobcard,
         ),
       );
     }
