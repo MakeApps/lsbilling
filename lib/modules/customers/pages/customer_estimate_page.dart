@@ -1087,7 +1087,7 @@ class _GenerateEstimateState extends State<GenerateEstimate> {
                                             },
                                             icon: const Icon(
                                               addIcon,
-                                              color: whiteColor,
+                                              color:whiteColor,
                                             ),
                                             label: const Text(
                                               'Add',
