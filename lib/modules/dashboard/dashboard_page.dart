@@ -294,6 +294,7 @@ class _DashboardPageState extends State<DashboardPage> {
                                     imageColor: redColor,
                                     boxBgColor: dashboardbox1,
                                     imagePath: 'assets/icons/estimate.png',
+                                    route: '/estimate_listing',
                                   ),
                                   const SizedBox(
                                     height: 10,
@@ -304,7 +305,8 @@ class _DashboardPageState extends State<DashboardPage> {
                                         .toString(),
                                     imageColor: optButton,
                                     boxBgColor: dashboardbox2,
-                                    imagePath: 'assets/icons/estimate.png',
+                                    imagePath: 'assets/icons/invoice.png',
+                                    route: '/invoice_page_listing',
                                   ),
                                   const SizedBox(
                                     height: 10,
@@ -315,7 +317,8 @@ class _DashboardPageState extends State<DashboardPage> {
                                         .toString(),
                                     imageColor: stockImage,
                                     boxBgColor: dashboardbox4,
-                                    imagePath: 'assets/icons/estimate.png',
+                                    imagePath: 'assets/icons/stocks.png',
+                                    route: '/stock_listing_screen',
                                   ),
                                   const SizedBox(
                                     height: 20,
@@ -560,10 +563,11 @@ class _DashboardPageState extends State<DashboardPage> {
     required Color imageColor,
     required Color boxBgColor,
     required String imagePath,
+    required String route,
   }) {
     return GestureDetector(
       onTap: () {
-        Navigator.pushNamed(context, '');
+        Navigator.pushNamed(context, route);
       },
       child: Container(
         width: (MediaQuery.of(context).size.width - 25),

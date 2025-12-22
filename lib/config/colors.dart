@@ -18,7 +18,7 @@ const Color darkBlue = Color.fromARGB(255, 44, 126, 251);
 const Color indigo = Color.fromARGB(255, 102, 78, 250);
 const Color blackbutton = Color.fromARGB(255, 20, 20, 23);
 const Color signBg = Color.fromARGB(255, 39, 39, 46);
-const Color optButton = Color.fromARGB(255, 255, 203, 10);
+const Color optButton = Color.fromARGB(255, 236, 188, 11);
 const Color dashboardyellow = Color.fromARGB(255, 255, 234, 157);
 const Color commentBg = Color.fromARGB(255, 217, 217, 217);
 const Color outlineButton = Color.fromARGB(255, 54, 128, 239);
@@ -55,7 +55,7 @@ const Color buttonColor = Color.fromARGB(1, 115, 69, 183);
 
 const Color textfieldBg = Color.fromARGB(255, 243, 244, 246);
 const Color dashboardbox1 = Color.fromARGB(255, 250, 234, 234);
-const Color dashboardbox2 = Color.fromARGB(255, 247, 226, 193);
+const Color dashboardbox2 = Color.fromARGB(255, 245, 226, 196);
 const Color dashboardbox3 = Color.fromARGB(255, 152, 43, 170);
 const Color dashboardbox4 = Color.fromARGB(255, 249, 235, 251);
 const Color stockImage = Color.fromARGB(255, 186, 52, 208);

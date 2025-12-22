@@ -72,13 +72,4 @@ class DisplayCustomerSelectedImage extends StatelessWidget {
       );
     }
   }
-
-  // Function to download PDF from URL to local storage
-  // Future<String> _downloadFile(String url) async {
-  //   final response = await http.get(Uri.parse(url));
-  //   final dir = await getTemporaryDirectory();
-  //   final file = File('${dir.path}/downloaded.pdf');
-  //   await file.writeAsBytes(response.bodyBytes);
-  //   return file.path;
-  // }
 }
