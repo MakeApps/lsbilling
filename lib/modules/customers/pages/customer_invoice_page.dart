@@ -54,7 +54,6 @@ class _GenerateInvoiceByJobSHeetState extends State<GenerateInvoiceByJobSHeet> {
       TextEditingController(text: '00');
   String gstController = "None";
   TextEditingController hsnCodeProductController = TextEditingController();
-
   TextEditingController _fullNameController = TextEditingController();
   TextEditingController _adressController = TextEditingController();
   TextEditingController _emailController = TextEditingController();
@@ -87,6 +86,7 @@ class _GenerateInvoiceByJobSHeetState extends State<GenerateInvoiceByJobSHeet> {
     sparePartsList = state.invoiceModel!.invoiceProducts!.toList();
     gstFlag = state.invoiceModel!.gstFlag.toString();
     gstBill = state.invoiceModel!.gstBill.toString();
+    igstBill = state.invoiceModel!.igstBill.toString();
     discountController.text = state.invoiceModel!.discountAmount.toString();
   }
 
@@ -899,7 +899,8 @@ class _GenerateInvoiceByJobSHeetState extends State<GenerateInvoiceByJobSHeet> {
                                             onPressed: () {
                                               showAddSpareParts(context);
                                             },
-                                            icon: const Icon(addIcon,color: whiteColor),
+                                            icon: const Icon(addIcon,
+                                                color: whiteColor),
                                             label: const Text(
                                               'Add',
                                               style: TextStyle(
@@ -2217,7 +2218,7 @@ class _GenerateInvoiceByJobSHeetState extends State<GenerateInvoiceByJobSHeet> {
     );
   }
 
-   void addEditSparePartNewList(
+  void addEditSparePartNewList(
       int index, String productId, bool showQuantity, int flag) {
     setState(() {
       final newProductNameController = productNameController.text;
@@ -2570,7 +2571,7 @@ class _GenerateInvoiceByJobSHeetState extends State<GenerateInvoiceByJobSHeet> {
     finalAmountAfterDiscount = subTotal - discountAmount;
   }
 
-   Future<void> showEditAddSparePart(
+  Future<void> showEditAddSparePart(
       BuildContext context,
       String productname,
       String rate,
@@ -2618,9 +2619,7 @@ class _GenerateInvoiceByJobSHeetState extends State<GenerateInvoiceByJobSHeet> {
     );
   }
 
-  
-
-    Future<void> showEditAddSparePartWithGst(
+  Future<void> showEditAddSparePartWithGst(
       BuildContext context,
       String productname,
       String rate,
@@ -2678,7 +2677,6 @@ class _GenerateInvoiceByJobSHeetState extends State<GenerateInvoiceByJobSHeet> {
       ),
     );
   }
-  
 
   double calculateSubProductTotal(Map<String, dynamic> spareParts) {
     double productPrice =

@@ -323,7 +323,7 @@ class _PurchesAddSparePartDialogState extends State<PurchesAddSparePartDialog> {
                 },
                 child: const Text(
                   'Add',
-                  style: TextStyle(fontSize: 15, color: blackColor),
+                  style: TextStyle(fontSize: 15, color: whiteColor),
                 ),
               ),
             )
