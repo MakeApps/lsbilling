@@ -245,8 +245,8 @@ class _CustomerDetailsRowState extends State<CustomerDetailsRow> {
       context: context,
       barrierDismissible: false,
       builder: (context) {
-        String billingType = "gst"; // DEFAULT: GST Invoice
-        String gstOption = "CGST/SGST"; // DEFAULT: CGST/SGST
+        String billingType = "gst";
+        String gstOption = "CGST/SGST";
         return StatefulBuilder(
           builder: (context, setState) {
             return AlertDialog(
@@ -392,10 +392,13 @@ class _CustomerDetailsRowState extends State<CustomerDetailsRow> {
                               fontWeight: FontWeight.w500),
                         ),
                         onPressed: () {
-                          Navigator.pop(context, {
-                            "billingType": billingType,
-                            "igst": gstOption == "IGST" ? "1" : "0"
-                          });
+                          Navigator.pop(
+                            context,
+                            {
+                              "billingType": billingType,
+                              "igst": gstOption == "IGST" ? "1" : "0"
+                            },
+                          );
                         },
                       ),
                     ],
