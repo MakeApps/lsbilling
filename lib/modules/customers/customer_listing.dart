@@ -53,25 +53,6 @@ class _CustomerListingState extends State<CustomerListing> {
     }
   }
 
-  void _searchEstimates() {
-    final keyword = searchController.text;
-    context.read<CustomerBloc>().add(
-          FetchCustomerList(
-            status: CustomerStatus.success,
-            timestamp: null,
-            searchKeyword: keyword,
-            direction: 'down',
-          ),
-        );
-  }
-
-  void _onSearchChanged(String value) {
-    _debounce?.cancel();
-    _debounce = Timer(const Duration(milliseconds: 100), () {
-      _searchEstimates();
-    });
-  }
-
   @override
   Widget build(BuildContext context) {
     return WillPopScope(
@@ -161,8 +142,8 @@ class _CustomerListingState extends State<CustomerListing> {
         showFloatingActionButton: true,
         drawer: const DrawerWidget(),
         body: SafeArea(
-          child: Stack(
-            children:[ Column(
+          child: Stack(children: [
+            Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
                 BlocBuilder<CustomerBloc, CustomerState>(
@@ -187,7 +168,25 @@ class _CustomerListingState extends State<CustomerListing> {
                               child: TextField(
                                 style: const TextStyle(color: whiteColor),
                                 controller: searchController,
-                                onChanged: _onSearchChanged,
+                                onChanged: (value) {
+                                  if (value.length > 2) {
+                                    context.read<CustomerBloc>().add(
+                                          FetchCustomerList(
+                                            searchKeyword:
+                                                searchController.text,
+                                            status: CustomerStatus.loading,
+                                            direction: 'down',
+                                          ),
+                                        );
+                                  } else if (value.isEmpty) {
+                                    context.read<CustomerBloc>().add(
+                                          const FetchCustomerList(
+                                            searchKeyword: "",
+                                            status: CustomerStatus.loading,
+                                          ),
+                                        );
+                                  }
+                                },
                                 decoration: InputDecoration(
                                   hintStyle: TextStyle(
                                     fontWeight: FontWeight.w600,
@@ -258,11 +257,12 @@ class _CustomerListingState extends State<CustomerListing> {
                                 decoration: BoxDecoration(
                                   color: blackColor,
                                   borderRadius: BorderRadius.circular(12),
-                                  border:
-                                      Border.all(color: hintTextColor, width: 0),
+                                  border: Border.all(
+                                      color: hintTextColor, width: 0),
                                 ),
                                 child: Icon(Icons.refresh_rounded,
-                                    color: whiteColor.withOpacity(0.8), size: 22),
+                                    color: whiteColor.withOpacity(0.8),
+                                    size: 22),
                               ),
                             ),
                           ],
@@ -289,10 +289,12 @@ class _CustomerListingState extends State<CustomerListing> {
                               itemBuilder: (context, index) {
                                 return (index >= state.customerInfoList.length)
                                     ? const Padding(
-                                        padding: EdgeInsets.symmetric(vertical: 10),
+                                        padding:
+                                            EdgeInsets.symmetric(vertical: 10),
                                         child: Center(
                                           child: CircularProgressIndicator(
-                                              color: primaryColor, strokeWidth: 2),
+                                              color: primaryColor,
+                                              strokeWidth: 2),
                                         ),
                                       )
                                     : CustomerDetailsRow(
@@ -308,7 +310,7 @@ class _CustomerListingState extends State<CustomerListing> {
                 )
               ],
             ),
-             Positioned(
+            Positioned(
               right: 16,
               bottom: 20,
               child: FloatingActionButton(
@@ -327,8 +329,7 @@ class _CustomerListingState extends State<CustomerListing> {
                 child: const Icon(Icons.add),
               ),
             ),
-            ]
-          ),
+          ]),
         ),
       ),
     );
